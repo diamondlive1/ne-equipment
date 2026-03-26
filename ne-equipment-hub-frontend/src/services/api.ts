@@ -337,12 +337,11 @@ api.defaults.adapter = async (config) => {
         }); 
       } catch (err) {
         console.error('[Mock API Error]', err);
-        return resolve({ 
-          status: 500, 
-          statusText: 'Internal Error', 
-          headers: {}, 
-          config, 
-          data: { message: 'Internal Mock Error' } 
+        return reject({
+          response: {
+            status: 500,
+            data: { message: 'Internal Mock Error' }
+          }
         });
       }
     }, 300);

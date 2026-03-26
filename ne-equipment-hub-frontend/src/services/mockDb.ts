@@ -41,14 +41,24 @@ export const getDb = (): MockDBState => {
   const data = localStorage.getItem(MOCK_DB_KEY);
   if (data) {
     try {
-      return JSON.parse(data);
+      const parsed = JSON.parse(data);
+      return {
+        ...defaultDB,
+        ...parsed,
+        users: parsed.users || defaultDB.users,
+        products: parsed.products || defaultDB.products,
+        categories: parsed.categories || defaultDB.categories,
+        quotes: parsed.quotes || defaultDB.quotes,
+        orders: parsed.orders || defaultDB.orders,
+        notifications: parsed.notifications || defaultDB.notifications,
+        settings: parsed.settings || defaultDB.settings
+      };
     } catch {
       return defaultDB;
     }
   }
   return defaultDB;
 };
-
 export const saveDb = (db: MockDBState) => {
   localStorage.setItem(MOCK_DB_KEY, JSON.stringify(db));
 };

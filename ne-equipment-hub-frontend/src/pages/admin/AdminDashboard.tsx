@@ -122,7 +122,14 @@ const AdminDashboard = () => {
     </div>
   );
 
-  const { kpis, revenueData, statusDistribution, funnelData, recentOrders, alerts = [] } = data;
+  const { 
+    kpis = [], 
+    revenueData = [], 
+    statusDistribution = [], 
+    funnelData = [], 
+    recentOrders = [], 
+    alerts = [] 
+  } = data;
   
   const getIcon = (iconName: string) => {
     switch(iconName) {
