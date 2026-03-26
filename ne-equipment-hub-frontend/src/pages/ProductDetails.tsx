@@ -12,9 +12,7 @@ import { toast } from 'sonner';
 import api from '@/services/api';
 import { useQuote } from '@/contexts/QuoteContext';
 
-const formatPrice = (price: number | string) => {
-    return new Intl.NumberFormat('pt-MZ', { style: 'decimal', minimumFractionDigits: 2 }).format(Number(price));
-};
+
 
 interface ProductImage {
     id: number;
@@ -121,11 +119,7 @@ const ProductDetails = () => {
                     <div className="lg:col-span-5 h-auto">
                         <div className="flex gap-4 h-full flex-col md:flex-row-reverse lg:flex-row-reverse">
                             <div className="flex-1 rounded-2xl overflow-hidden bg-white border border-gray-100 p-4 aspect-square relative group">
-                                {product.old_price && (
-                                    <Badge className="absolute top-4 left-4 z-10 bg-red-600 text-white font-bold border-none px-3 py-1">
-                                        Oferta
-                                    </Badge>
-                                )}
+
                                 <motion.img
                                     key={activeImage}
                                     initial={{ opacity: 0 }}
@@ -171,23 +165,7 @@ const ProductDetails = () => {
                             <span className="text-sm font-medium text-gray-500">24 vendidos</span>
                         </div>
 
-                        <div className="bg-primary/5 p-4 rounded-xl mb-6 border border-primary/10">
-                            <div className="flex items-baseline gap-3">
-                                <span className="text-3xl md:text-4xl font-extrabold text-navy-dark">
-                                    {formatPrice(product.price)} <span className="text-lg">MT</span>
-                                </span>
-                            </div>
-                            {product.old_price && (
-                                <div className="flex items-center gap-2 mt-1">
-                                    <span className="text-sm text-gray-400 line-through">
-                                        {formatPrice(product.old_price)} MT
-                                    </span>
-                                    <span className="text-xs font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded">
-                                        -{Math.round((1 - Number(product.price) / Number(product.old_price)) * 100)}%
-                                    </span>
-                                </div>
-                            )}
-                        </div>
+
 
                         <p className="text-sm text-muted-foreground mb-8">
                             {product.description}

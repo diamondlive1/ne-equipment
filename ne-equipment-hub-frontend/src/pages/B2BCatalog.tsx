@@ -76,11 +76,7 @@ const B2BCatalog = () => {
       specifications: `${product.brand} | ${product.sku}`
     });
     toast.success(t.b2bCatalog.addedToQuote, { 
-      description: product.name,
-      action: {
-        label: t.nav.requestQuote,
-        onClick: () => openQuoteForm()
-      }
+      description: product.name
     });
   };
 
@@ -108,7 +104,7 @@ const B2BCatalog = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-64 bg-white/10 border-white/20 text-white placeholder:text-white/50 rounded-xl"
               />
-              <Button className="bg-gold hover:bg-gold-light text-navy-dark font-bold rounded-xl">{t.b2bCatalog.registerCompany}</Button>
+              <Button onClick={() => navigate('/register')} className="bg-gold hover:bg-gold-light text-navy-dark font-bold rounded-xl">{t.b2bCatalog.registerCompany}</Button>
             </motion.div>
           </div>
         </div>
@@ -124,7 +120,7 @@ const B2BCatalog = () => {
                   const Icon = cat.icon;
                   const isActive = selectedCategory === cat.id || (!selectedCategory && cat.id === 'all');
                   return (
-                    <button key={cat.id} onClick={() => setSelectedCategory(cat.id === 'all' ? null : cat.id)} className={`w-full text-left px-3 py-2.5 rounded-xl text-sm transition-colors flex items-center gap-2 ${isActive ? 'bg-navy-dark/10 text-navy-dark font-semibold' : 'hover:bg-muted text-muted-foreground hover:text-foreground'}`}>
+                    <button key={cat.id} onClick={() => setSelectedCategory(cat.id === 'all' ? null : String(cat.id))} className={`w-full text-left px-3 py-2.5 rounded-xl text-sm transition-colors flex items-center gap-2 ${isActive ? 'bg-navy-dark/10 text-navy-dark font-semibold' : 'hover:bg-muted text-muted-foreground hover:text-foreground'}`}>
                       <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-gold' : ''}`} />
                       <span className="truncate">{cat.name}</span>
                       {cat.id !== 'all' && (

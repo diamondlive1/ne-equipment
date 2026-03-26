@@ -93,7 +93,7 @@ const HeroSection = ({ onQuoteClick }: HeroSectionProps) => {
                   {t.hero.requestQuote}
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
-                <Button variant="outline" size="lg" className="border-white/30 text-white hover:bg-white/10 px-8 rounded-full backdrop-blur-sm" asChild>
+                <Button variant="outline" size="lg" className="bg-transparent border-white/30 text-white hover:bg-white/10 px-8 rounded-full backdrop-blur-sm" asChild>
                   <a href="#catalogo">{t.hero.viewCatalog}</a>
                 </Button>
               </div>

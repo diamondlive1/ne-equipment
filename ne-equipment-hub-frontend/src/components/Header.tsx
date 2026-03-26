@@ -113,13 +113,7 @@ const Header = ({ currentPage, onNavigate, onQuoteClick, onTransportClick }: Hea
             <div className="flex items-center gap-3">
 
 
-              <Button
-                onClick={onQuoteClick}
-                size="sm"
-                className="hidden md:flex bg-gold hover:bg-gold-light text-navy-dark font-bold rounded-full px-6 shadow-lg"
-              >
-                {t.nav.requestQuote}
-              </Button>
+
 
               {/* User Account / Auth Button */}
               {isAuthenticated ? (
@@ -285,15 +279,7 @@ const Header = ({ currentPage, onNavigate, onQuoteClick, onTransportClick }: Hea
                   {language === 'PT' ? 'Sair da conta' : 'Logout'}
                 </button>
               )}
-              <div className="pt-4 mt-2 border-t border-border/50 space-y-2">
 
-                <Button
-                  onClick={() => { onQuoteClick(); setMobileMenuOpen(false); }}
-                  className="w-full bg-gold hover:bg-gold-light text-navy-dark font-bold"
-                >
-                  {t.nav.requestQuote}
-                </Button>
-              </div>
             </nav>
           </motion.div>
         )}
