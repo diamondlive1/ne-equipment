@@ -330,9 +330,51 @@ const MyQuotes = () => {
           </DialogHeader>
           <div className="flex flex-col h-[60vh] min-h-[400px] max-h-[600px]">
             <div className="flex-1 overflow-y-auto bg-muted/20 p-3 space-y-3 rounded-md border border-border">
-                
+                {/* Quote Summary Table for Client */}
+                {selectedQuote && (
+                  <div className="bg-white border border-border rounded-lg overflow-hidden mb-3">
+                    <div className="bg-muted/30 px-3 py-2 border-b border-border">
+                      <h4 className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider flex items-center gap-1">
+                        <FileText className="w-3 h-3" /> Resumo da Proposta Atual
+                      </h4>
+                    </div>
+                    <table className="w-full text-left border-collapse">
+                      <thead className="bg-muted/10 text-[9px] uppercase font-bold text-muted-foreground border-b border-border">
+                        <tr>
+                          <th className="px-3 py-1">Produto</th>
+                          <th className="px-1 py-1 text-center">Qtd</th>
+                          <th className="px-3 py-1 text-right">Total c/ IVA</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-border/50 text-[11px]">
+                        {selectedQuote.items.map((item, idx) => {
+                          const p = item.approved_price || item.requested_price || 0;
+                          const totalWithIva = (p * item.quantity) * 1.16;
+                          return (
+                            <tr key={idx} className="hover:bg-muted/5">
+                              <td className="px-3 py-2 font-medium">{item.product?.name}</td>
+                              <td className="px-1 py-2 text-center text-muted-foreground">{item.quantity}</td>
+                              <td className="px-3 py-2 text-right font-bold text-primary">
+                                {totalWithIva.toLocaleString('pt-MZ')} MT
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                      <tfoot className="bg-primary/5 text-[11px] font-bold">
+                        <tr>
+                          <td colSpan={2} className="px-3 py-2 text-right uppercase text-[9px]">Total Final (c/ IVA):</td>
+                          <td className="px-3 py-2 text-right text-primary text-sm">
+                            {(selectedQuote.items.reduce((sum, item) => sum + (item.approved_price || item.requested_price || 0) * item.quantity, 0) * 1.16).toLocaleString('pt-MZ')} MT
+                          </td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                )}
+
                 {/* Bank Details section */}
-                {(selectedQuote?.status === 'approved' || selectedQuote?.status === 'converted') && (
+                {(selectedQuote?.status === 'approved' || selectedQuote?.status === 'converted' || selectedQuote?.status === 'responded') && (
                   <div className="bg-navy-dark text-white p-3 rounded-lg shadow-md border-l-4 border-gold mb-2 animate-in fade-in zoom-in duration-300">
                     <div className="flex items-center gap-2 mb-2">
                       <Banknote className="w-4 h-4 text-gold" />
@@ -343,14 +385,14 @@ const MyQuotes = () => {
                         <div className="space-y-1 bg-white/10 p-2 rounded-lg">
                           <p className="text-gold font-bold">{settings.bank_1_name}</p>
                           <p className="font-mono">Conta: {settings.bank_1_account}</p>
-                          <p className="font-mono">NIB: {settings.bank_1_nib}</p>
+                          <p className="font-mono">IBAN/NIB: {settings.bank_1_nib}</p>
                         </div>
                       )}
                       {settings.bank_2_name && (
                         <div className="space-y-1 bg-white/10 p-2 rounded-lg">
                           <p className="text-gold font-bold">{settings.bank_2_name}</p>
                           <p className="font-mono">Conta: {settings.bank_2_account}</p>
-                          <p className="font-mono">NIB: {settings.bank_2_nib}</p>
+                          <p className="font-mono">IBAN/NIB: {settings.bank_2_nib}</p>
                         </div>
                       )}
                     </div>

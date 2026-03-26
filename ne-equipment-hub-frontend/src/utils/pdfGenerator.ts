@@ -150,13 +150,15 @@ export const generateQuotePDF = (quote: QuoteData, settings: Settings) => {
         <tbody>
           ${quote.items.map(item => {
             const price = item.approved_price || item.requested_price || 0;
-            const itemTotal = price * item.quantity;
+            const subtotal = price * item.quantity;
+            const itemIva = subtotal * 0.16;
+            const itemTotal = subtotal + itemIva;
             return `
               <tr>
                 <td>${item.product.name}</td>
                 <td class="text-center">${item.quantity}</td>
                 <td class="text-right">${price.toLocaleString('pt-MZ')}</td>
-                <td class="text-center">16%</td>
+                <td class="text-center">${itemIva.toLocaleString('pt-MZ')}</td>
                 <td class="text-right">${itemTotal.toLocaleString('pt-MZ')}</td>
               </tr>
             `;

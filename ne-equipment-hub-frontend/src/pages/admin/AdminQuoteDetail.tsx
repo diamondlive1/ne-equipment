@@ -41,7 +41,7 @@ interface QuoteMessage {
 }
 
 interface QuoteItem {
-  id: number;
+  id: string | number;
   product_id: number;
   quantity: number;
   requested_price: number | null;
@@ -49,6 +49,7 @@ interface QuoteItem {
   product: {
     name: string;
     description: string;
+    images?: { image_path: string; is_primary: boolean }[];
   };
 }
 
@@ -80,7 +81,7 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  const [editedItems, setEditedItems] = useState<Record<number, string>>({});
+  const [editedItems, setEditedItems] = useState<Record<string | number, string>>({});
   const [status, setStatus] = useState('');
   const [adminNotes, setAdminNotes] = useState('');
   const [messages, setMessages] = useState<QuoteMessage[]>([]);
@@ -107,7 +108,7 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
       setStatus(quoteRes.data.status);
       setSettings(settingsRes.data);
 
-      const itemsMap: Record<number, string> = {};
+      const itemsMap: Record<string | number, string> = {};
       quoteRes.data.items.forEach((item: QuoteItem) => {
         itemsMap[item.id] = (item.approved_price ?? item.requested_price ?? 0).toString();
       });
@@ -120,7 +121,7 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
     }
   };
 
-  const handlePriceChange = (itemId: number, value: string) => {
+  const handlePriceChange = (itemId: string | number, value: string) => {
     setEditedItems(prev => ({
       ...prev,
       [itemId]: value
@@ -130,19 +131,27 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
   const handleSave = async (silent = false) => {
     setSaving(true);
     try {
-      // 1. Atualizar Itens
+      if (!quote) return;
+      
+      // 1. Atualizar Itens - Preservar quantidade e ID do produto
       const itemsPayload = {
-        items: Object.entries(editedItems).map(([id, price]) => ({
-          id: parseInt(id),
-          approved_price: parseFloat(price)
+        items: quote.items.map(item => ({
+          ...item,
+          product_id: item.product_id || (item as any).product?.id,
+          quantity: item.quantity || 1,
+          approved_price: parseFloat(editedItems[item.id]) || 0
         }))
       };
       await api.put(`/admin/quotes/${quoteId}/items`, itemsPayload);
 
-      // 2. Atualizar Quote Geral
+      // 2. Atualizar Quote Geral 
+      // Calculamos o novo total localmente para enviar
+      const total = itemsPayload.items.reduce((sum, item) => sum + (item.approved_price * item.quantity), 0);
+      
       await api.put(`/admin/quotes/${quoteId}`, {
         status,
-        admin_notes: adminNotes
+        admin_notes: adminNotes,
+        total_estimated_value: total
       });
 
       // Recarregar dados
@@ -163,21 +172,26 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
 
   const handleSendQuote = async () => {
     try {
+      if (!quote) return;
       setSaving(true);
-      // Forçar status para responded se estiver pendente ou em negociação
       const newStatus = 'responded';
       
       const itemsPayload = {
-        items: Object.entries(editedItems).map(([id, price]) => ({
-          id: parseInt(id),
-          approved_price: parseFloat(price)
+        items: quote.items.map(item => ({
+          ...item,
+          product_id: item.product_id || (item as any).product?.id,
+          quantity: item.quantity || 1,
+          approved_price: parseFloat(editedItems[item.id]) || 0
         }))
       };
       await api.put(`/admin/quotes/${quoteId}/items`, itemsPayload);
 
+      const total = itemsPayload.items.reduce((sum, item) => sum + (item.approved_price * item.quantity), 0);
+
       await api.put(`/admin/quotes/${quoteId}`, {
         status: newStatus,
-        admin_notes: adminNotes
+        admin_notes: adminNotes,
+        total_estimated_value: total
       });
 
       // Enviar mensagem automática
@@ -296,24 +310,26 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
                   <tr>
                     <th className="px-4 py-3 font-medium">Produto</th>
                     <th className="px-4 py-3 font-medium text-center">Quantidade</th>
-                    <th className="px-4 py-3 font-medium text-right">Preço Aprovado (MT)</th>
-                    <th className="px-4 py-3 font-medium text-right">Subtotal</th>
+                    <th className="px-4 py-3 font-medium text-right">Preço Unit. (MT)</th>
+                    <th className="px-4 py-3 font-medium text-center">IVA</th>
+                    <th className="px-4 py-3 font-medium text-right">Total c/ IVA</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
                   {quote.items.map((item) => {
                     const price = parseFloat(editedItems[item.id]) || 0;
-                    const subtotal = price * item.quantity;
+                    const itemQuantity = item.quantity || 0;
+                    const subtotal = price * itemQuantity;
                     return (
                       <tr key={item.id} className="hover:bg-muted/30">
                         <td className="px-4 py-4">
                           <p className="font-medium">{item.product?.name || 'Produto não encontrado'}</p>
                           {item.requested_price && (
-                            <p className="text-xs text-muted-foreground mt-1">Preço Sugerido: €{item.requested_price}</p>
+                            <p className="text-xs text-muted-foreground mt-1">Preço Sugerido: {item.requested_price} MT</p>
                           )}
                         </td>
                         <td className="px-4 py-4 text-center font-medium">
-                          {item.quantity} un
+                          {item.quantity || 0} un
                         </td>
                         <td className="px-4 py-4 max-w-[150px]">
                           <Input 
@@ -322,11 +338,14 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
                             min="0"
                             value={editedItems[item.id]}
                             onChange={(e) => handlePriceChange(item.id, e.target.value)}
-                            className="text-right border-primary/50 focus-visible:ring-primary"
+                            className="text-right border-primary/50 focus-visible:ring-primary h-8 text-xs font-bold"
                           />
                         </td>
+                        <td className="px-4 py-4 text-center text-xs text-muted-foreground">
+                          16%
+                        </td>
                         <td className="px-4 py-4 text-right font-semibold text-primary">
-                          {subtotal.toLocaleString('pt-MZ')} MT
+                          {(subtotal * 1.16).toLocaleString('pt-MZ')} MT
                         </td>
                       </tr>
                     );
@@ -334,9 +353,21 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
                 </tbody>
                 <tfoot className="bg-muted/10 border-t border-border">
                   <tr>
-                    <td colSpan={3} className="px-4 py-4 text-right font-medium">Valor Total Estimado:</td>
-                    <td className="px-4 py-4 text-right font-bold text-lg text-primary">
+                    <td colSpan={3} className="px-4 py-4 text-right font-medium text-muted-foreground">Subtotal s/ IVA:</td>
+                    <td className="px-4 py-4 text-right font-semibold">
                       {liveTotal.toLocaleString('pt-MZ')} MT
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colSpan={3} className="px-4 py-4 text-right font-medium text-muted-foreground">IVA (16%):</td>
+                    <td className="px-4 py-4 text-right font-semibold">
+                      {(liveTotal * 0.16).toLocaleString('pt-MZ')} MT
+                    </td>
+                  </tr>
+                  <tr className="bg-primary/5">
+                    <td colSpan={3} className="px-4 py-4 text-right font-black uppercase tracking-wider text-primary">Total Final (MT):</td>
+                    <td className="px-4 py-4 text-right font-black text-xl text-primary">
+                      {(liveTotal * 1.16).toLocaleString('pt-MZ')} MT
                     </td>
                   </tr>
                 </tfoot>
