@@ -48,6 +48,7 @@ class ProductController extends Controller
         return DB::transaction(function () use ($request) {
             $productData = $request->except('images');
             $productData['slug'] = Str::slug($request->name) . '-' . uniqid();
+            $productData['sku'] = $request->sku ?: null;
             
             $product = Product::create($productData);
 
@@ -100,7 +101,11 @@ class ProductController extends Controller
         ]);
 
         return DB::transaction(function () use ($request, $product) {
-            $product->update($request->except(['images', 'remove_images']));
+            $updateData = $request->except(['images', 'remove_images']);
+            if ($request->has('sku')) {
+                $updateData['sku'] = $request->sku ?: null;
+            }
+            $product->update($updateData);
 
             // Remove selected images
             if ($request->has('remove_images')) {
