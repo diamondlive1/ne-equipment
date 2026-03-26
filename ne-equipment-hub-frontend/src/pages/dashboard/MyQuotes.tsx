@@ -23,6 +23,7 @@ import { toast } from 'sonner';
 import api from '@/services/api';
 import { formatDistanceToNow, format, isValid } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { generateQuotePDF } from '@/utils/pdfGenerator';
 
 const safeFormatDistance = (dateStr: string | undefined | null) => {
   if (!dateStr) return 'agora mesmo';
@@ -62,6 +63,7 @@ interface Quote {
   total_estimated_value: number;
   created_at: string;
   updated_at: string;
+  user: { name: string; email: string };
   items: QuoteItem[];
   messages: QuoteMessage[];
   invoice_path: string | null;
@@ -286,6 +288,14 @@ const MyQuotes = () => {
                       Pagamento Confirmado
                     </Button>
                   )}
+                  <Button 
+                    variant="outline" 
+                    onClick={() => generateQuotePDF(quote, settings)} 
+                    className="w-full font-bold border-gold text-gold hover:bg-gold hover:text-navy-dark gap-2 text-sm rounded-xl"
+                  >
+                    <FileDown className="w-4 h-4" />
+                    Exportar PDF
+                  </Button>
                   <Button variant="outline" onClick={() => { setSelectedQuote(quote); setChatOpen(true); }} className="w-full font-semibold border-gray-200 text-gray-600 gap-2 text-sm rounded-xl">
                     Ver Detalhes
                   </Button>
@@ -306,8 +316,17 @@ const MyQuotes = () => {
 
       <Dialog open={chatOpen} onOpenChange={setChatOpen}>
         <DialogContent className="max-w-2xl sm:max-w-3xl">
-          <DialogHeader>
+          <DialogHeader className="flex flex-row items-center justify-between gap-4">
             <DialogTitle>Chat da Negociação: #{selectedQuote?.quote_number}</DialogTitle>
+            <Button 
+              size="sm" 
+              variant="outline" 
+              onClick={() => selectedQuote && generateQuotePDF(selectedQuote, settings)}
+              className="border-gold text-gold hover:bg-gold hover:text-navy-dark font-bold gap-2 rounded-lg"
+            >
+              <FileDown className="w-4 h-4" />
+              Exportar PDF
+            </Button>
           </DialogHeader>
           <div className="flex flex-col h-[60vh] min-h-[400px] max-h-[600px]">
             <div className="flex-1 overflow-y-auto bg-muted/20 p-3 space-y-3 rounded-md border border-border">

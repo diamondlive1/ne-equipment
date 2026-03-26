@@ -244,7 +244,7 @@ api.defaults.adapter = async (config) => {
            if (quote) {
              quote.items = data.items;
              saveDb(db);
-             return response(200, quote);
+             return response(200, populateQuote(quote, db));
            }
         }
         if (url.match(/^\/admin\/quotes\/[^/]+$/) && method === 'put') {
@@ -253,7 +253,7 @@ api.defaults.adapter = async (config) => {
            if (quote) {
              quote.status = data.status || quote.status;
              saveDb(db);
-             return response(200, quote);
+             return response(200, populateQuote(quote, db));
            }
         }
 

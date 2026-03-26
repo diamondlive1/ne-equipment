@@ -23,6 +23,7 @@ import { format, isValid } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { toast } from 'sonner';
 import api from '@/services/api';
+import { generateQuotePDF } from '@/utils/pdfGenerator';
 
 const safeDateFormat = (dateStr: string | undefined | null, formatStr: string) => {
   if (!dateStr) return 'Data não disponível';
@@ -87,6 +88,7 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
   const [sendingMsg, setSendingMsg] = useState(false);
   const [uploadingInvoice, setUploadingInvoice] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [settings, setSettings] = useState<any>({});
 
   useEffect(() => {
     fetchQuoteDetail();
@@ -95,13 +97,15 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
   const fetchQuoteDetail = async () => {
     try {
       setLoading(true);
-      const [quoteRes, messagesRes] = await Promise.all([
+      const [quoteRes, messagesRes, settingsRes] = await Promise.all([
         api.get(`/admin/quotes/${quoteId}`),
-        api.get(`/admin/quotes/${quoteId}/messages`)
+        api.get(`/admin/quotes/${quoteId}/messages`),
+        api.get('/settings')
       ]);
       setQuote(quoteRes.data);
       setAdminNotes(quoteRes.data.admin_notes || '');
       setStatus(quoteRes.data.status);
+      setSettings(settingsRes.data);
 
       const itemsMap: Record<number, string> = {};
       quoteRes.data.items.forEach((item: QuoteItem) => {
@@ -147,6 +151,40 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
     } catch (error) {
       console.error('Error saving quote:', error);
       toast.error('Erro ao salvar a cotação', { description: 'Verifique os dados e tente novamente.' });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleSendToClient = async () => {
+    setSaving(true);
+    try {
+      // 1. Atualizar Itens
+      const itemsPayload = {
+        items: Object.entries(editedItems).map(([id, price]) => ({
+          id: parseInt(id),
+          approved_price: parseFloat(price)
+        }))
+      };
+      await api.put(`/admin/quotes/${quoteId}/items`, itemsPayload);
+
+      // 2. Atualizar Status para 'responded'
+      await api.put(`/admin/quotes/${quoteId}`, {
+        status: 'responded',
+        admin_notes: adminNotes
+      });
+
+      // 3. Enviar mensagem automática
+      await api.post(`/admin/quotes/${quoteId}/messages`, { 
+        message: "Cotação enviada com sucesso! Verifique os novos preços no painel e já pode baixar o PDF da negociação para processar o pagamento." 
+      });
+
+      // Recarregar dados
+      fetchQuoteDetail();
+      toast.success('Cotação enviada ao cliente com sucesso!');
+    } catch (error) {
+      console.error('Error sending quote:', error);
+      toast.error('Erro ao enviar a cotação');
     } finally {
       setSaving(false);
     }
@@ -221,10 +259,22 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
           </p>
         </div>
         <div className="ml-auto flex gap-3">
+          <Button 
+            onClick={handleSendToClient} 
+            disabled={saving} 
+            className="gap-2 bg-whatsapp hover:bg-whatsapp-dark text-white font-bold"
+          >
+            {saving ? <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div> : <Send className="w-4 h-4" />}
+            Enviar Cotação ao Cliente
+          </Button>
+          <Button variant="outline" onClick={() => generateQuotePDF(quote, settings)} className="gap-2 border-gold text-gold hover:bg-gold hover:text-navy-dark font-bold">
+            <FileDown className="w-4 h-4" />
+            Exportar PDF
+          </Button>
           <Button variant="outline" onClick={onBack}>Cancelar</Button>
-          <Button onClick={handleSave} disabled={saving} className="gap-2">
-            {saving ? <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div> : <Save className="w-4 h-4" />}
-            Salvar Alterações
+          <Button onClick={handleSave} disabled={saving} className="gap-2 border-primary text-primary hover:bg-primary/10 bg-transparent">
+            <Save className="w-4 h-4" />
+            Apenas Salvar
           </Button>
         </div>
       </div>
@@ -257,7 +307,7 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
                     return (
                       <tr key={item.id} className="hover:bg-muted/30">
                         <td className="px-4 py-4">
-                          <p className="font-medium">{item.product.name}</p>
+                          <p className="font-medium">{item.product?.name || 'Produto não encontrado'}</p>
                           {item.requested_price && (
                             <p className="text-xs text-muted-foreground mt-1">Preço Sugerido: €{item.requested_price}</p>
                           )}
@@ -377,7 +427,7 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
                       {msg.message}
                     </div>
                     <span className="text-[10px] text-muted-foreground mt-1 px-1">
-                      {msg.is_admin ? 'Você' : msg.user?.name} • {format(new Date(msg.created_at), "HH:mm, dd/MM")}
+                      {msg.is_admin ? 'Você' : msg.user?.name || 'Cliente'} • {safeDateFormat(msg.created_at, "HH:mm, dd/MM")}
                     </span>
                   </div>
                 ))}
