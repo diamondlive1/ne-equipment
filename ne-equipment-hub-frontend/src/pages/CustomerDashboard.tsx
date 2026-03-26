@@ -7,7 +7,7 @@ import { useCart } from '@/hooks/useCart';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import DashboardHome from './dashboard/DashboardHome';
-import MyOrders from './dashboard/MyOrders';
+
 import MyQuotes from './dashboard/MyQuotes';
 import ProfileSettings from './dashboard/ProfileSettings';
 
@@ -39,7 +39,6 @@ const CustomerDashboard = ({ onBack, userName: propUserName = 'Utilizador' }: Cu
 
   const navItems = [
     { id: 'home', label: 'Visão Geral', icon: Home },
-    { id: 'orders', label: 'Histórico de Pedidos', icon: Package },
     { id: 'quotes', label: 'Painel de Negociação', icon: FileText },
     { id: 'profile', label: 'Definições de Conta', icon: User },
   ];
@@ -47,7 +46,6 @@ const CustomerDashboard = ({ onBack, userName: propUserName = 'Utilizador' }: Cu
   const renderContent = () => {
     switch (activeSection) {
       case 'home': return <DashboardHome onNavigate={setActiveSection} />;
-      case 'orders': return <MyOrders />;
       case 'quotes': return <MyQuotes />;
       case 'profile': return <ProfileSettings />;
       default: return <DashboardHome onNavigate={setActiveSection} />;

@@ -176,9 +176,6 @@ const AdminDashboard = () => {
         <Button variant="outline" className="font-semibold gap-2 border-primary text-primary rounded-xl translate-y-0 hover:-translate-y-0.5 transition-transform">
           <Upload className="w-4 h-4" /> Importar do Alibaba
         </Button>
-        <Button variant="outline" className="font-semibold gap-2 rounded-xl">
-          <Eye className="w-4 h-4" /> Ver Pedidos Pendentes
-        </Button>
       </div>
 
       {/* Main Charts Row */}
@@ -304,52 +301,7 @@ const AdminDashboard = () => {
         </Card>
 
       {/* Orders + Alerts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Recent Orders */}
-        <div className="lg:col-span-2">
-          <Card className="glass-card border-border/50 shadow-sm">
-            <CardHeader className="flex flex-row items-center justify-between pb-3">
-              <CardTitle className="text-base font-bold">Pedidos em Tempo Real</CardTitle>
-              <Button variant="ghost" size="sm" className="text-primary gap-1 text-xs hover:bg-primary/5">
-                Painel Completo <ArrowUpRight className="w-3.5 h-3.5" />
-              </Button>
-            </CardHeader>
-            <CardContent className="px-1 sm:px-6">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-border/50 text-muted-foreground text-[10px] uppercase font-bold tracking-widest">
-                      <th className="text-left py-3 font-medium">Ref. Pedido</th>
-                      <th className="text-left py-3 font-medium">Cliente B2B</th>
-                      <th className="text-right py-3 font-medium px-4">Valor</th>
-                      <th className="text-left py-3 font-medium">Estado</th>
-                      <th className="text-left py-3 font-medium">Logística</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-border/20">
-                    {recentOrders.map((order: any) => (
-                      <tr key={order.id} className="hover:bg-muted/30 transition-colors group">
-                        <td className="py-4 font-mono font-bold text-foreground text-xs">{order.id}</td>
-                        <td className="py-4">
-                          <p className="font-bold text-foreground group-hover:text-primary transition-colors">{order.client}</p>
-                          <p className="text-[10px] text-muted-foreground font-mono">NUIT: {order.nuit}</p>
-                        </td>
-                        <td className="py-4 text-right font-black text-foreground px-4">{order.value} MT</td>
-                        <td className="py-4">{getStatusBadge(order.status)}</td>
-                        <td className="py-4">
-                           <div className="flex items-center gap-1.5 text-[11px] font-medium text-muted-foreground">
-                             <Clock className="w-3 h-3 text-orange" />
-                             <span>{order.eta} ({order.origin})</span>
-                           </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+      <div className="grid grid-cols-1 gap-6">
 
         {/* Alerts Center */}
         <Card className="glass-card border-border/50 shadow-sm overflow-hidden">

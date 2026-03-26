@@ -27,8 +27,6 @@ import ProductList from './ProductList';
 import ProductForm from './ProductForm';
 import AdminQuoteList from './AdminQuoteList';
 import AdminQuoteDetail from './AdminQuoteDetail';
-import AdminOrderList from './AdminOrderList';
-import AdminOrderDetail from './AdminOrderDetail';
 import CategoryManagement from './CategoryManagement';
 import api from '@/services/api';
 
@@ -36,7 +34,6 @@ type AdminSection =
   | 'overview'
   | 'products'
   | 'categories'
-  | 'orders'
   | 'rfqs'
   | 'tracking'
   | 'marketplace'
@@ -54,7 +51,6 @@ const navItems: NavItem[] = [
   { id: 'overview', label: 'Dashboard Geral', icon: LayoutDashboard },
   { id: 'products', label: 'Produtos', icon: Package, badge: '248' },
   { id: 'categories', label: 'Categorias', icon: FolderTree },
-  { id: 'orders', label: 'Pedidos', icon: ShoppingCart, badge: '12' },
   { id: 'rfqs', label: 'RFQs', icon: FileText, badge: '5' },
   { id: 'tracking', label: 'Tracking / Logística', icon: Truck },
   { id: 'marketplace', label: 'Marketplace', icon: Store },
@@ -71,7 +67,6 @@ const AdminLayout = () => {
   const [viewingOrderId, setViewingOrderId] = useState<number | null>(null);
   const [counts, setCounts] = useState<{ [key: string]: number }>({
     products: 0,
-    orders: 12,
     rfqs: 5
   });
   const [notifications, setNotifications] = useState<any[]>([]);
@@ -144,16 +139,6 @@ const AdminLayout = () => {
           );
         }
         return <AdminQuoteList onViewQuote={(id) => setViewingQuoteId(id)} />;
-      case 'orders':
-        if (viewingOrderId) {
-          return (
-            <AdminOrderDetail
-              orderId={viewingOrderId}
-              onBack={() => setViewingOrderId(null)}
-            />
-          );
-        }
-        return <AdminOrderList onViewOrder={(id) => setViewingOrderId(id)} />;
       case 'categories':
         return <CategoryManagement />;
       default:

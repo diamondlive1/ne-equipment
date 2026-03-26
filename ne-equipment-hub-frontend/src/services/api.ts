@@ -110,12 +110,12 @@ api.defaults.adapter = async (config) => {
         }
 
         // 3. Categories
-        if (url === '/categories' && method === 'get') return response(200, { data: db.categories });
+        if (url === '/categories' && method === 'get') return response(200, db.categories);
         if (url === '/categories' && method === 'post') {
           const cat = { id: generateId(), name: data.name, slug: data.name.toLowerCase().replace(/ /g, '-') };
           db.categories.push(cat);
           saveDb(db);
-          return response(201, { data: cat });
+          return response(201, cat);
         }
         if (url.match(/^\/categories\/[^/]+$/) && method === 'put') {
           const id = url.split('/').pop();
@@ -123,7 +123,7 @@ api.defaults.adapter = async (config) => {
           if (index !== -1) {
             db.categories[index].name = data.name;
             saveDb(db);
-            return response(200, { data: db.categories[index] });
+            return response(200, db.categories[index]);
           }
         }
         if (url.match(/^\/categories\/[^/]+$/) && method === 'delete') {
@@ -134,7 +134,7 @@ api.defaults.adapter = async (config) => {
         }
 
         // 4. Products
-        if (url === '/products' && method === 'get') return response(200, { data: db.products });
+        if (url === '/products' && method === 'get') return response(200, db.products);
         if (url.match(/^\/products\/[^/]+$/) && method === 'get') {
           const id = url.split('/').pop();
           const item = db.products.find(p => p.id === id || String(p.id) === id);
@@ -149,7 +149,7 @@ api.defaults.adapter = async (config) => {
           const prod = { id: generateId(), ...data, categoryLabel: catLabel };
           db.products.push(prod);
           saveDb(db);
-          return response(201, { data: prod });
+          return response(201, prod);
         }
         if (url.match(/^\/products\/[^/]+$/) && method === 'post') { // App uses POST to update product with FormData (mapped to JSON here loosely)
           const id = url.split('/').pop();
@@ -157,7 +157,7 @@ api.defaults.adapter = async (config) => {
           if (index !== -1) {
             db.products[index] = { ...db.products[index], ...data };
             saveDb(db);
-            return response(200, { data: db.products[index] });
+            return response(200, db.products[index]);
           }
         }
         if (url.match(/^\/products\/[^/]+$/) && method === 'delete') {
@@ -188,10 +188,10 @@ api.defaults.adapter = async (config) => {
         if (url === '/quotes' && method === 'get') {
           const token = localStorage.getItem('auth_token');
           const userQs = db.quotes.filter(q => q.user_id === token);
-          return response(200, { data: userQs });
+          return response(200, userQs);
         }
         // Admin Quotes
-        if (url === '/admin/quotes' && method === 'get') return response(200, { data: db.quotes });
+        if (url === '/admin/quotes' && method === 'get') return response(200, db.quotes);
         if (url.match(/^\/admin\/quotes\/[^/]+$/) && method === 'get') {
           const id = url.split('/').pop();
           const quote = db.quotes.find(q => q.id === id);
@@ -270,11 +270,14 @@ api.defaults.adapter = async (config) => {
         }
 
         // 6. Orders
-        if (url === '/admin/orders' && method === 'get') return response(200, { data: db.orders });
+        if (url === '/admin/orders' && method === 'get') return response(200, db.orders);
         // (Other order endpoints omitted for brevity, fallback will 404)
 
         // 7. Notifications
-        if (url === '/notifications' && method === 'get') return response(200, db.notifications);
+        if (url === '/notifications' && method === 'get') {
+          const unread = db.notifications.filter(n => !n.read_at).length;
+          return response(200, { notifications: db.notifications, unread_count: unread });
+        }
         if (url === '/notifications/read-all' && method === 'post') {
           db.notifications.forEach(n => n.read_at = new Date().toISOString());
           saveDb(db);
