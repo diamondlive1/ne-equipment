@@ -63,6 +63,23 @@ api.defaults.adapter = async (config) => {
           request: {}
         });
 
+        const populateQuote = (quote: any, db: any) => {
+          if (!quote) return null;
+          return {
+            ...quote,
+            items: (quote.items || []).map((item: any) => {
+              const product = db.products.find((p: any) => p.id === item.product_id || String(p.id) === String(item.product_id));
+              return {
+                ...item,
+                product: product ? {
+                  name: product.name,
+                  images: product.images || (product.image ? [{ image_path: product.image, is_primary: true }] : [])
+                } : { name: 'Produto não encontrado', images: [] }
+              };
+            })
+          };
+        };
+
         const error = (status: number, message: string) => reject({
           response: {
             status,
@@ -187,19 +204,19 @@ api.defaults.adapter = async (config) => {
           };
           db.quotes.push(quote);
           saveDb(db);
-          return response(201, { quote });
+          return response(201, { quote: populateQuote(quote, db) });
         }
         if (url === '/quotes' && method === 'get') {
           const token = localStorage.getItem('auth_token');
-          const userQs = db.quotes.filter(q => q.user_id === token);
+          const userQs = db.quotes.filter(q => q.user_id === token).map(q => populateQuote(q, db));
           return response(200, userQs);
         }
         // Admin Quotes
-        if (url === '/admin/quotes' && method === 'get') return response(200, db.quotes);
+        if (url === '/admin/quotes' && method === 'get') return response(200, db.quotes.map(q => populateQuote(q, db)));
         if (url.match(/^\/admin\/quotes\/[^/]+$/) && method === 'get') {
           const id = url.split('/').pop();
           const quote = db.quotes.find(q => q.id === id);
-          return quote ? response(200, quote) : error(404, 'Quote not found');
+          return quote ? response(200, populateQuote(quote, db)) : error(404, 'Quote not found');
         }
         if (url.match(/^\/admin\/quotes\/[^/]+\/messages$/) && method === 'get') {
           const id = url.split('/')[3];
