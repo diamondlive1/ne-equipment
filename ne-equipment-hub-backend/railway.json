@@ -7,6 +7,6 @@
     "startCommand": "php artisan serve --host 0.0.0.0 --port $PORT",
     "restartPolicyType": "ON_FAILURE",
     "healthCheckPath": "/api/health-check",
-    "healthCheckTimeout": 100
+    "healthCheckTimeout": 300
   }
 }

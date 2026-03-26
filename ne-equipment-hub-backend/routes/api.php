@@ -22,13 +22,18 @@ Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/settings', [SettingController::class, 'index']);
 
 // Rota de saúde para debug
+// Rota de saúde extremamente simples para o Railway
 Route::get('/health-check', function() {
+    return response()->json(['status' => 'ok', 'message' => 'API is reachable']);
+});
+
+// Outra rota para debug completo (opcional)
+Route::get('/debug-check', function() {
     try {
         return [
             'status' => 'ok',
             'database' => DB::connection()->getDatabaseName(),
             'user_count' => \App\Models\User::count(),
-            'messages' => 'API is working'
         ];
     } catch (\Exception $e) {
         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
