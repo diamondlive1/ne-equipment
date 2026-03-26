@@ -166,7 +166,7 @@ const B2BCatalog = () => {
               ) : filteredProducts.map((product, index) => {
                 const primaryImage = product.images?.find(img => img.is_primary)?.image_path || product.images?.[0]?.image_path;
                 const imageUrl = primaryImage
-                  ? `${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}/storage/${primaryImage}`
+                  ? (primaryImage.startsWith('data:image') || primaryImage.startsWith('http') ? primaryImage : `${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}/storage/${primaryImage}`)
                   : '/placeholder-product.png';
 
                 return (

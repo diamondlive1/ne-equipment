@@ -204,7 +204,7 @@ const MyQuotes = () => {
         {filtered.length > 0 ? filtered.map((quote) => {
           const firstItem = quote.items[0];
           const primaryImage = firstItem?.product.images?.find((i: any) => i.is_primary)?.image_path || firstItem?.product.images?.[0]?.image_path;
-          const imageUrl = primaryImage ? `${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}/storage/${primaryImage}` : '/placeholder-product.png';
+          const imageUrl = primaryImage ? (primaryImage.startsWith('data:image') || primaryImage.startsWith('http') ? primaryImage : `${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}/storage/${primaryImage}`) : '/placeholder-product.png';
           const displayedPrice = quote.total_estimated_value > 0 ? (Number(quote.total_estimated_value)).toLocaleString('pt-MZ') : 'A definir';
 
           return (

@@ -34,7 +34,7 @@ const HeroSection = ({ onQuoteClick }: HeroSectionProps) => {
           const dynamicImages = productsWithImages.map((p: any) => {
             const primaryImg = p.images.find((i: any) => i.is_primary) || p.images[0];
             return {
-              src: `${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}/storage/${primaryImg.image_path}`,
+              src: primaryImg.image_path?.startsWith('data:image') || primaryImg.image_path?.startsWith('http') ? primaryImg.image_path : `${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}/storage/${primaryImg.image_path}`,
               alt: p.name
             };
           });

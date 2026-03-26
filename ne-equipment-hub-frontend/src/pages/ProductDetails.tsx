@@ -84,7 +84,7 @@ const ProductDetails = () => {
     }
 
     const images = product.images?.length
-        ? product.images.map(img => `${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}/storage/${img.image_path}`)
+        ? product.images.map(img => img.image_path?.startsWith('data:image') || img.image_path?.startsWith('http') ? img.image_path : `${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}/storage/${img.image_path}`)
         : ['/placeholder-product.png'];
 
     const handleAddToCart = (openForm = false) => {

@@ -22,7 +22,7 @@ api.defaults.adapter = async (config) => {
   return new Promise((resolve, reject) => {
     console.log(`[Mock API] ${config.method?.toUpperCase()} ${config.url}`);
     
-    setTimeout(() => {
+    setTimeout(async () => {
       try {
         const url = config.url || '';
         const method = config.method?.toLowerCase();
