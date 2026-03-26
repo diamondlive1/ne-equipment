@@ -1,0 +1,179 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* NE Equipment Design System - Corporate Industrial Aesthetic */
+
+@layer base {
+  :root {
+    /* Corporate Blue Palette */
+    --background: 210 20% 98%;
+    --foreground: 210 100% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 210 100% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 100% 10%;
+
+    /* Primary: Corporate Blue #003366 */
+    --primary: 210 100% 20%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary: Technical Gray */
+    --secondary: 210 10% 96%;
+    --secondary-foreground: 210 100% 15%;
+
+    --muted: 210 15% 94%;
+    --muted-foreground: 210 10% 40%;
+
+    /* Accent: Gold */
+    --accent: 43 74% 49%;
+    --accent-foreground: 210 100% 10%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 210 20% 88%;
+    --input: 210 20% 88%;
+    --ring: 210 100% 20%;
+
+    --radius: 0.5rem;
+
+    /* Custom NE Equipment tokens */
+    --gold: 43 74% 49%;
+    --gold-light: 43 74% 65%;
+    --gold-dark: 43 74% 35%;
+    
+    --navy: 210 100% 25%;
+    --navy-light: 210 80% 35%;
+    --navy-dark: 210 100% 20%;
+    
+    --steel: 210 10% 45%;
+    --steel-light: 210 10% 75%;
+    --steel-muted: 210 10% 92%;
+    
+    /* Orange accent for B2C and highlights */
+    --orange: 24 95% 53%;
+    --orange-light: 24 95% 65%;
+    --orange-dark: 24 95% 45%;
+
+    /* WhatsApp Green */
+    --whatsapp: 142 70% 45%;
+    --steel-light: 210 10% 75%;
+    --steel-muted: 210 10% 92%;
+
+    /* Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(210 100% 15%) 0%, hsl(210 80% 25%) 50%, hsl(210 100% 20%) 100%);
+    --gradient-gold: linear-gradient(135deg, hsl(43 74% 49%) 0%, hsl(43 74% 60%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(210 20% 98%) 100%);
+
+    /* Shadows */
+    --shadow-sm: 0 2px 8px -2px hsl(210 100% 20% / 0.08);
+    --shadow-md: 0 8px 24px -4px hsl(210 100% 20% / 0.12);
+    --shadow-lg: 0 16px 48px -8px hsl(210 100% 20% / 0.15);
+    --shadow-gold: 0 8px 24px -4px hsl(43 74% 49% / 0.25);
+
+    --sidebar-background: 210 100% 15%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 43 74% 49%;
+    --sidebar-primary-foreground: 210 100% 10%;
+    --sidebar-accent: 210 80% 25%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 210 80% 25%;
+    --sidebar-ring: 43 74% 49%;
+  }
+
+  .dark {
+    --background: 210 100% 6%;
+    --foreground: 210 20% 95%;
+
+    --card: 210 100% 10%;
+    --card-foreground: 210 20% 95%;
+
+    --popover: 210 100% 10%;
+    --popover-foreground: 210 20% 95%;
+
+    --primary: 43 74% 49%;
+    --primary-foreground: 210 100% 10%;
+
+    --secondary: 210 80% 15%;
+    --secondary-foreground: 210 20% 95%;
+
+    --muted: 210 80% 15%;
+    --muted-foreground: 210 15% 60%;
+
+    --accent: 43 74% 49%;
+    --accent-foreground: 210 100% 10%;
+
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 210 80% 20%;
+    --input: 210 80% 20%;
+    --ring: 43 74% 49%;
+
+    --sidebar-background: 210 100% 8%;
+    --sidebar-foreground: 210 20% 95%;
+    --sidebar-primary: 43 74% 49%;
+    --sidebar-primary-foreground: 210 100% 10%;
+    --sidebar-accent: 210 80% 15%;
+    --sidebar-accent-foreground: 210 20% 95%;
+    --sidebar-border: 210 80% 15%;
+    --sidebar-ring: 43 74% 49%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Montserrat', system-ui, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', system-ui, sans-serif;
+  }
+}
+
+/* Glassmorphism utilities */
+@layer components {
+  .glass {
+    @apply backdrop-blur-xl bg-white/80 border border-white/20 shadow-lg;
+  }
+  
+  .glass-dark {
+    @apply backdrop-blur-xl bg-navy-dark/80 border border-white/10 shadow-lg;
+  }
+  
+  .glass-card {
+    @apply backdrop-blur-md bg-white/90 border border-white/30 shadow-xl rounded-2xl;
+  }
+}
+
+@layer components {
+  .text-gradient-gold {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(43 74% 49%) 0%, hsl(43 74% 65%) 100%);
+  }
+
+  .bg-hero-pattern {
+    background-image: var(--gradient-hero);
+  }
+
+  .shadow-card {
+    box-shadow: var(--shadow-md);
+  }
+
+  .shadow-card-hover {
+    box-shadow: var(--shadow-lg);
+  }
+
+  .border-gold {
+    border-color: hsl(43 74% 49%);
+  }
+}
