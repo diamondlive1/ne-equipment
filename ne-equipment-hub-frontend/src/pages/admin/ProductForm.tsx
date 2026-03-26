@@ -40,8 +40,6 @@ interface Product {
     description: string;
     brand: string;
     sku: string;
-    price: number | string;
-    old_price: number | string;
     stock_quantity: number;
     category_id: number;
     images?: ProductImage[];
@@ -65,8 +63,6 @@ const ProductForm = ({ product, onSuccess, onCancel }: ProductFormProps) => {
         description: product?.description || '',
         brand: product?.brand || '',
         sku: product?.sku || '',
-        price: product?.price || '',
-        old_price: product?.old_price || '',
         stock_quantity: product?.stock_quantity || 0,
         category_id: product?.category_id?.toString() || '',
     });
@@ -247,33 +243,9 @@ const ProductForm = ({ product, onSuccess, onCancel }: ProductFormProps) => {
                     </div>
                 </div>
 
-                {/* Preços e Inventário */}
+                {/* Inventário e Imagens */}
                 <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="price">Preço Actual (MT) *</Label>
-                            <Input
-                                id="price"
-                                type="number"
-                                step="0.01"
-                                value={formData.price}
-                                onChange={e => setFormData({ ...formData, price: e.target.value })}
-                                required
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="old_price">Preço Anterior (MT)</Label>
-                            <Input
-                                id="old_price"
-                                type="number"
-                                step="0.01"
-                                value={formData.old_price}
-                                onChange={e => setFormData({ ...formData, old_price: e.target.value })}
-                            />
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4 items-end">
+                    <div className="grid grid-cols-1 gap-4">
                         <div className="space-y-2">
                             <Label htmlFor="stock">Quantidade em Stock *</Label>
                             <Input
