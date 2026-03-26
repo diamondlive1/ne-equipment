@@ -19,10 +19,17 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
-import { format } from 'date-fns';
+import { format, isValid } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { toast } from 'sonner';
 import api from '@/services/api';
+
+const safeDateFormat = (dateStr: string | undefined | null, formatStr: string) => {
+  if (!dateStr) return 'Data não disponível';
+  const date = new Date(dateStr);
+  if (!isValid(date)) return 'Data inválida';
+  return format(date, formatStr, { locale: ptBR });
+};
 
 interface QuoteMessage {
   id: number;
@@ -205,11 +212,11 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
           <ChevronLeft className="w-5 h-5" />
         </Button>
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Negociação #{quote.quote_number}</h2>
+          <h2 className="text-2xl font-bold tracking-tight">Negociação #{quote?.quote_number}</h2>
           <p className="text-muted-foreground flex items-center gap-2">
-            Criada em {format(new Date(quote.created_at), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
+            Criada em {safeDateFormat(quote?.created_at, "dd 'de' MMMM 'de' yyyy")}
             <Badge variant="outline" className="ml-2 bg-primary/10 text-primary uppercase">
-              {quote.status}
+              {quote?.status}
             </Badge>
           </p>
         </div>
@@ -298,11 +305,11 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
             <div className="space-y-3 text-sm">
               <div>
                 <p className="text-muted-foreground text-xs uppercase tracking-wider font-semibold">Nome de Contacto</p>
-                <p className="font-medium">{quote.user.name}</p>
+                <p className="font-medium">{quote.user?.name || 'Cliente Desconhecido'}</p>
               </div>
               <div>
                 <p className="text-muted-foreground text-xs uppercase tracking-wider font-semibold">Email de Contacto</p>
-                <p>{quote.contact_email || quote.user.email}</p>
+                <p>{quote.contact_email || quote.user?.email || 'N/A'}</p>
               </div>
               <div className="pt-3 border-t border-border mt-3">
                 <p className="text-muted-foreground text-xs uppercase tracking-wider font-semibold flex items-center gap-1">

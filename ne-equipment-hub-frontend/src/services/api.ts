@@ -66,8 +66,18 @@ api.defaults.adapter = async (config) => {
         const populateQuote = (quote: any, db: any) => {
           if (!quote) return null;
           const now = new Date().toISOString();
+          
+          let quoteUser = quote.user;
+          if (!quoteUser && quote.user_id) {
+            const user = db.users.find((u: any) => u.id === String(quote.user_id));
+            if (user) {
+              quoteUser = { name: user.name, email: user.email };
+            }
+          }
+
           return {
             ...quote,
+            user: quoteUser || { name: 'Utilizador Desconhecido', email: '' },
             created_at: quote.created_at || now,
             updated_at: quote.updated_at || quote.created_at || now,
             items: (quote.items || []).map((item: any) => {
