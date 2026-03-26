@@ -118,17 +118,7 @@ const HeroSection = ({ onQuoteClick }: HeroSectionProps) => {
           </div>
         </div>
 
-        <div className="absolute bottom-0 left-0 right-0 py-8 bg-gradient-to-t from-navy-dark to-transparent">
-          <div className="overflow-hidden">
-            <motion.div className="flex gap-6" animate={{ x: [0, -1920] }} transition={{ duration: 40, repeat: Infinity, ease: "linear" }}>
-              {[...productImages, ...productImages, ...productImages].map((img, index) => (
-                <div key={index} className="flex-shrink-0 w-64 h-40 rounded-2xl overflow-hidden glass-card">
-                  <img src={img.src} alt={img.alt} className="w-full h-full object-cover" />
-                </div>
-              ))}
-            </motion.div>
-          </div>
-        </div>
+
       </div>
 
       {/* Stats Bar */}

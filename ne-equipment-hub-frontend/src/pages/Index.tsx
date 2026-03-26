@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useQuote } from '@/contexts/QuoteContext';
 import Header from '@/components/Header';
@@ -30,11 +30,28 @@ const pageVariants = {
 };
 
 const Index = () => {
-  const [currentPage, setCurrentPage] = useState<PageType>('home');
+  const location = useLocation();
+  const [currentPage, setCurrentPage] = useState<PageType>(() => {
+    return location.pathname === '/dashboard' ? 'dashboard' : 'home';
+  });
   const [transportFormOpen, setTransportFormOpen] = useState(false);
   const { openQuoteForm } = useQuote();
   const { isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (location.pathname === '/dashboard') {
+      if (!isAuthenticated) {
+        navigate('/login', { state: { from: { pathname: '/dashboard' } } });
+      } else if (user?.role === 'admin') {
+        navigate('/admin');
+      } else {
+        setCurrentPage('dashboard');
+      }
+    } else if (location.pathname === '/') {
+      setCurrentPage('home');
+    }
+  }, [location.pathname, isAuthenticated, user, navigate]);
 
   const handleNavigate = (page: PageType) => {
     if (page === 'dashboard') {
@@ -47,6 +64,9 @@ const Index = () => {
         navigate('/admin');
         return;
       }
+      if (location.pathname !== '/dashboard') navigate('/dashboard');
+    } else {
+      if (location.pathname !== '/') navigate('/');
     }
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
