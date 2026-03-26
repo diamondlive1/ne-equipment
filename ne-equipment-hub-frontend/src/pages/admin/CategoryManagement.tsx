@@ -29,6 +29,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import api from '@/services/api';
 import { useToast } from '@/components/ui/use-toast';
 
@@ -176,60 +177,62 @@ const CategoryManagement = () => {
             </div>
 
             <div className="bg-card rounded-xl border border-border shadow-sm overflow-hidden">
-                <Table>
-                    <TableHeader className="bg-muted/50">
-                        <TableRow>
-                            <TableHead className="w-[100px]">ID</TableHead>
-                            <TableHead>Nome</TableHead>
-                            <TableHead>Slug</TableHead>
-                            <TableHead className="text-center">Produtos</TableHead>
-                            <TableHead className="text-right">Ações</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {filteredCategories.map((category) => (
-                            <TableRow key={category.id} className="group hover:bg-muted/30 transition-colors">
-                                <TableCell className="font-mono text-xs text-muted-foreground">
-                                    #{category.id}
-                                </TableCell>
-                                <TableCell>
-                                    <div className="flex items-center gap-2">
-                                        <FolderTree className="w-4 h-4 text-primary" />
-                                        <span className="font-bold">{category.name}</span>
-                                    </div>
-                                </TableCell>
-                                <TableCell className="font-mono text-xs text-muted-foreground italic">
-                                    {category.slug}
-                                </TableCell>
-                                <TableCell className="text-center">
-                                    <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/20">
-                                        {category.products_count || 0}
-                                    </Badge>
-                                </TableCell>
-                                <TableCell className="text-right">
-                                    <div className="flex justify-end gap-1">
-                                        <Button 
-                                            variant="ghost" 
-                                            size="icon" 
-                                            className="h-8 w-8 text-muted-foreground hover:text-primary"
-                                            onClick={() => handleOpenDialog(category)}
-                                        >
-                                            <Edit2 className="w-4 h-4" />
-                                        </Button>
-                                        <Button 
-                                            variant="ghost" 
-                                            size="icon" 
-                                            className="h-8 w-8 text-muted-foreground hover:text-destructive"
-                                            onClick={() => handleDelete(category.id)}
-                                        >
-                                            <Trash2 className="w-4 h-4" />
-                                        </Button>
-                                    </div>
-                                </TableCell>
+                <ScrollArea className="h-[600px] w-full">
+                    <Table>
+                        <TableHeader className="bg-muted/50 sticky top-0 z-10 shadow-sm">
+                            <TableRow>
+                                <TableHead className="w-[100px]">ID</TableHead>
+                                <TableHead>Nome</TableHead>
+                                <TableHead>Slug</TableHead>
+                                <TableHead className="text-center">Produtos</TableHead>
+                                <TableHead className="text-right">Ações</TableHead>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+                        </TableHeader>
+                        <TableBody>
+                            {filteredCategories.map((category) => (
+                                <TableRow key={category.id} className="group hover:bg-muted/30 transition-colors">
+                                    <TableCell className="font-mono text-xs text-muted-foreground">
+                                        #{category.id}
+                                    </TableCell>
+                                    <TableCell>
+                                        <div className="flex items-center gap-2">
+                                            <FolderTree className="w-4 h-4 text-primary" />
+                                            <span className="font-bold">{category.name}</span>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell className="font-mono text-xs text-muted-foreground italic">
+                                        {category.slug}
+                                    </TableCell>
+                                    <TableCell className="text-center">
+                                        <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/20">
+                                            {category.products_count || 0}
+                                        </Badge>
+                                    </TableCell>
+                                    <TableCell className="text-right">
+                                        <div className="flex justify-end gap-1">
+                                            <Button 
+                                                variant="ghost" 
+                                                size="icon" 
+                                                className="h-8 w-8 text-muted-foreground hover:text-primary"
+                                                onClick={() => handleOpenDialog(category)}
+                                            >
+                                                <Edit2 className="w-4 h-4" />
+                                            </Button>
+                                            <Button 
+                                                variant="ghost" 
+                                                size="icon" 
+                                                className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                                                onClick={() => handleDelete(category.id)}
+                                            >
+                                                <Trash2 className="w-4 h-4" />
+                                            </Button>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </ScrollArea>
 
                 {filteredCategories.length === 0 && !isLoading && (
                     <div className="py-20 flex flex-col items-center justify-center text-muted-foreground">
