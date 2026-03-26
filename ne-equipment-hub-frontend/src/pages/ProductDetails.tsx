@@ -108,7 +108,10 @@ const ProductDetails = () => {
         <div className="min-h-screen bg-gray-50/50 flex flex-col font-sans">
             <Header
                 currentPage="b2b"
-                onNavigate={() => navigate('/')}
+                onNavigate={(page) => {
+                    if (page === 'dashboard') navigate('/dashboard');
+                    else navigate('/');
+                }}
                 onQuoteClick={openQuoteForm}
                 onTransportClick={() => navigate('/servicos')}
             />
