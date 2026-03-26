@@ -269,8 +269,44 @@ api.defaults.adapter = async (config) => {
            }
         }
 
-        // 6. Orders
-        if (url === '/admin/orders' && method === 'get') return response(200, db.orders);
+        // 6. Dashboard (Admin)
+        if (url === '/admin/dashboard' && method === 'get') {
+          return response(200, {
+            kpis: [
+              { label: 'Receita Total', value: '4.2M MT', change: '+12.5%', trend: 'up', icon: 'DollarSign', color: 'text-primary' },
+              { label: 'Novas Cotações', value: String(db.quotes.length), change: '+3', trend: 'up', icon: 'FileText', color: 'text-gold' },
+              { label: 'Produtos Ativos', value: String(db.products.length), change: '0', trend: 'up', icon: 'Package', color: 'text-blue-600' },
+              { label: 'Conversão B2B', value: '18%', change: '-2%', trend: 'down', icon: 'TrendingUp', color: 'text-whatsapp' }
+            ],
+            revenueData: [
+              { month: 'Set', atual: 1200000, anterior: 1000000 },
+              { month: 'Out', atual: 1800000, anterior: 1500000 },
+              { month: 'Nov', atual: 2200000, anterior: 1900000 },
+              { month: 'Dez', atual: 3100000, anterior: 2800000 },
+              { month: 'Jan', atual: 3800000, anterior: 3400000 },
+              { month: 'Fev', atual: 4200000, anterior: 3900000 }
+            ],
+            statusDistribution: [
+              { name: 'Processando', value: 35, color: 'hsl(210, 100%, 20%)' },
+              { name: 'Enviado', value: 25, color: 'hsl(210, 40%, 50%)' },
+              { name: 'Entregue', value: 30, color: 'hsl(142, 70%, 45%)' },
+              { name: 'Pendente', value: 10, color: 'hsl(24, 95%, 53%)' }
+            ],
+            funnelData: [
+              { stage: 'Visitas', value: 1250 },
+              { stage: 'RFQs Criadas', value: 450 },
+              { stage: 'Negociações', value: 180 },
+              { stage: 'Pedidos', value: 85 }
+            ],
+            recentOrders: [], // Orders section removed, returning empty array
+            alerts: [
+              { type: 'critical', message: 'Novo pedido urgente pendente de aprovação', time: 'Há 5 min' },
+              { type: 'warning', message: 'Stock baixo: Cabo Industrial Blindado (SKU: CI-99)', time: 'Há 2 horas' }
+            ]
+          });
+        }
+
+        // 7. Orders
         // (Other order endpoints omitted for brevity, fallback will 404)
 
         // 7. Notifications
@@ -284,25 +320,32 @@ api.defaults.adapter = async (config) => {
           return response(200, {});
         }
 
-        // 8. Admin Dashboard
-        if (url === '/admin/dashboard' && method === 'get') {
-           return response(200, {
-             total_users: db.users.length,
-             total_quotes: db.quotes.length,
-             total_products: db.products.length,
-             total_sales: 0,
-             recent_quotes: db.quotes.slice(-5)
-           });
-        }
 
-        // Fallback
-        console.warn(`[Mock API] Unhandled route: ${config.method?.toUpperCase()} ${config.url}`);
-        return error(404, 'Not found in mock DB');
+
+        // Fallback for unhandled routes
+        console.warn(`[Mock API] Unhandled ${method?.toUpperCase()} ${url}`);
+        return response(200, { 
+          data: [], 
+          notifications: [], 
+          unread_count: 0,
+          kpis: [],
+          revenueData: [],
+          statusDistribution: [],
+          funnelData: [],
+          recentOrders: [],
+          alerts: []
+        }); 
       } catch (err) {
         console.error('[Mock API Error]', err);
-        reject(err);
+        return resolve({ 
+          status: 500, 
+          statusText: 'Internal Error', 
+          headers: {}, 
+          config, 
+          data: { message: 'Internal Mock Error' } 
+        });
       }
-    }, 300); // 300ms simulated network delay
+    }, 300);
   });
 };
 
