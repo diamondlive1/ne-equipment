@@ -314,6 +314,7 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
               <table className="w-full text-sm text-left">
                 <thead className="text-xs text-muted-foreground bg-muted/50 border-b border-border">
                   <tr>
+                    <th className="px-4 py-3 font-medium w-16">Foto</th>
                     <th className="px-4 py-3 font-medium">Produto</th>
                     <th className="px-4 py-3 font-medium text-center">Quantidade</th>
                     <th className="px-4 py-3 font-medium text-right">Preço Unit. (MT)</th>
@@ -328,6 +329,17 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
                     const subtotal = price * itemQuantity;
                     return (
                       <tr key={item.id} className="hover:bg-muted/30">
+                        <td className="px-4 py-4">
+                          <div className="w-12 h-12 rounded-lg border border-border overflow-hidden bg-muted/50">
+                            {(() => {
+                              const primaryImage = item.product?.images?.find(img => img.is_primary)?.image_path || item.product?.images?.[0]?.image_path;
+                              const imageUrl = primaryImage
+                                ? (primaryImage.startsWith('data:image') || primaryImage.startsWith('http') ? primaryImage : `${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}/storage/${primaryImage}`)
+                                : '/placeholder-product.png';
+                              return <img src={imageUrl} alt="" className="w-full h-full object-cover" />;
+                            })()}
+                          </div>
+                        </td>
                         <td className="px-4 py-4">
                           <p className="font-medium">{item.product?.name || 'Produto não encontrado'}</p>
                           {item.requested_price && (

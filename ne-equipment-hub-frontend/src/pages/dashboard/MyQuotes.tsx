@@ -370,6 +370,7 @@ const MyQuotes = () => {
                     <table className="w-full text-left border-collapse">
                       <thead className="bg-muted/10 text-[9px] uppercase font-bold text-muted-foreground border-b border-border">
                         <tr>
+                          <th className="px-3 py-1 w-10"></th>
                           <th className="px-3 py-1">Produto</th>
                           <th className="px-1 py-1 text-center">Qtd</th>
                           <th className="px-3 py-1 text-right">Total c/ IVA</th>
@@ -381,6 +382,17 @@ const MyQuotes = () => {
                           const totalWithIva = (p * item.quantity) * 1.16;
                           return (
                             <tr key={idx} className="hover:bg-muted/5">
+                              <td className="px-3 py-2">
+                                <div className="w-8 h-8 rounded border border-border overflow-hidden bg-muted/20">
+                                  {(() => {
+                                      const primaryImage = item.product?.images?.find((img: any) => img.is_primary)?.image_path || item.product?.images?.[0]?.image_path;
+                                      const imageUrl = primaryImage
+                                        ? (primaryImage.startsWith('data:image') || primaryImage.startsWith('http') ? primaryImage : `${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}/storage/${primaryImage}`)
+                                        : '/placeholder-product.png';
+                                      return <img src={imageUrl} alt="" className="w-full h-full object-cover" />;
+                                  })()}
+                                </div>
+                              </td>
                               <td className="px-3 py-2 font-medium">{item.product?.name}</td>
                               <td className="px-1 py-2 text-center text-muted-foreground">{item.quantity}</td>
                               <td className="px-3 py-2 text-right font-bold text-primary">
