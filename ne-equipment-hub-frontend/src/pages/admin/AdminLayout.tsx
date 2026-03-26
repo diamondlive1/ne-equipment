@@ -15,6 +15,7 @@ import {
   LogOut,
   Bell,
   Search,
+  Settings,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -28,6 +29,7 @@ import ProductForm from './ProductForm';
 import AdminQuoteList from './AdminQuoteList';
 import AdminQuoteDetail from './AdminQuoteDetail';
 import CategoryManagement from './CategoryManagement';
+import AdminSettings from './AdminSettings';
 import api from '@/services/api';
 
 type AdminSection =
@@ -38,7 +40,8 @@ type AdminSection =
   | 'tracking'
   | 'marketplace'
   | 'users'
-  | 'cms';
+  | 'cms'
+  | 'settings';
 
 interface NavItem {
   id: AdminSection;
@@ -56,6 +59,7 @@ const navItems: NavItem[] = [
   { id: 'marketplace', label: 'Marketplace', icon: Store },
   { id: 'users', label: 'Utilizadores & RBAC', icon: Users },
   { id: 'cms', label: 'CMS Institucional', icon: FileEdit },
+  { id: 'settings', label: 'Definições', icon: Settings },
 ];
 
 const AdminLayout = () => {
@@ -141,6 +145,8 @@ const AdminLayout = () => {
         return <AdminQuoteList onViewQuote={(id) => setViewingQuoteId(id)} />;
       case 'categories':
         return <CategoryManagement />;
+      case 'settings':
+        return <AdminSettings />;
       default:
         return (
           <div className="flex items-center justify-center h-96">

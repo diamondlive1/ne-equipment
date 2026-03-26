@@ -123,6 +123,35 @@ const MyQuotes = () => {
     }
   };
 
+  useEffect(() => {
+    if (!chatOpen || !selectedQuote) return;
+
+    const interval = setInterval(async () => {
+      try {
+        const res = await api.get(`/quotes/${selectedQuote.id}/messages`);
+        const updatedMessages = res.data;
+        
+        setQuotes(prev => prev.map(q => {
+          if (q.id === selectedQuote.id) {
+            return { ...q, messages: updatedMessages };
+          }
+          return q;
+        }));
+
+        setSelectedQuote(prev => {
+          if (prev?.id === selectedQuote.id) {
+            return { ...prev, messages: updatedMessages };
+          }
+          return prev;
+        });
+      } catch (error) {
+        console.error('Error polling client messages:', error);
+      }
+    }, 7000);
+
+    return () => clearInterval(interval);
+  }, [chatOpen, selectedQuote?.id]);
+
   const handleReportPayment = async (quoteId: number) => {
     try {
       const res = await api.post(`/quotes/${quoteId}/report-payment`);

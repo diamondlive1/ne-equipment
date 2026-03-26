@@ -94,7 +94,23 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
 
   useEffect(() => {
     fetchQuoteDetail();
+    
+    // Message polling
+    const interval = setInterval(() => {
+      fetchMessages();
+    }, 7000);
+
+    return () => clearInterval(interval);
   }, [quoteId]);
+
+  const fetchMessages = async () => {
+    try {
+      const messagesRes = await api.get(`/admin/quotes/${quoteId}/messages`);
+      setMessages(messagesRes.data);
+    } catch (error) {
+      console.error('Error polling messages:', error);
+    }
+  };
 
   const fetchQuoteDetail = async () => {
     try {
@@ -210,7 +226,8 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
     try {
       setSendingMsg(true);
       const res = await api.post(`/admin/quotes/${quoteId}/messages`, { message: newMessage });
-      setMessages([...messages, res.data.message]);
+      const newMsg = res.data.message;
+      setMessages(prev => [...prev, newMsg]);
       setNewMessage('');
     } catch (error) {
       console.error('Error sending message:', error);
