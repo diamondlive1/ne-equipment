@@ -8,8 +8,10 @@ import {
     Trash2,
     Image as ImageIcon,
     AlertCircle,
-    Loader2
+    Loader2,
+    Eye
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -47,6 +49,7 @@ const ProductList = ({ onAddProduct, onEditProduct }: ProductListProps) => {
     const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const { toast } = useToast();
+    const navigate = useNavigate();
 
     const fetchProducts = async () => {
         try {
@@ -136,7 +139,6 @@ const ProductList = ({ onAddProduct, onEditProduct }: ProductListProps) => {
                             <tr>
                                 <th className="px-6 py-4 font-bold">Produto</th>
                                 <th className="px-6 py-4 font-bold">Categoria</th>
-                                <th className="px-6 py-4 font-bold">Preço (MT)</th>
                                 <th className="px-6 py-4 font-bold">Stock</th>
                                 <th className="px-6 py-4 font-bold text-right">Acções</th>
                             </tr>
@@ -164,12 +166,9 @@ const ProductList = ({ onAddProduct, onEditProduct }: ProductListProps) => {
                                         </div>
                                     </td>
                                     <td className="px-6 py-4">
-                                        <Badge variant="secondary" className="font-medium">
+                                        <Badge variant="secondary" className="font-medium text-xs">
                                             {product.category?.name || 'Geral'}
                                         </Badge>
-                                    </td>
-                                    <td className="px-6 py-4 font-bold text-foreground">
-                                        {Number(product.price).toLocaleString('pt-MZ', { minimumFractionDigits: 2 })}
                                     </td>
                                     <td className="px-6 py-4 font-medium">
                                         <span className={product.stock_quantity < 5 ? 'text-destructive flex items-center gap-1 font-bold' : ''}>
@@ -185,6 +184,9 @@ const ProductList = ({ onAddProduct, onEditProduct }: ProductListProps) => {
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end" className="w-40">
+                                                <DropdownMenuItem onClick={() => navigate(`/product/${product.id}`)} className="gap-2">
+                                                    <Eye className="w-4 h-4" /> Visualizar
+                                                </DropdownMenuItem>
                                                 <DropdownMenuItem onClick={() => onEditProduct(product)} className="gap-2">
                                                     <Edit className="w-4 h-4" /> Editar
                                                 </DropdownMenuItem>
