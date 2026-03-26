@@ -21,6 +21,12 @@ class Quote extends Model
         'total_estimated_value',
         'admin_notes',
         'invoice_path',
+        'expires_at',
+        'delivery_info',
+    ];
+
+    protected $casts = [
+        'expires_at' => 'datetime',
     ];
 
     public function user(): BelongsTo

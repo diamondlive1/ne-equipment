@@ -18,7 +18,7 @@ class QuoteController extends Controller
      */
     public function index()
     {
-        $quotes = Quote::with(['user', 'items.product'])->orderBy('created_at', 'desc')->get();
+        $quotes = Quote::with(['user', 'items.product.images'])->orderBy('created_at', 'desc')->get();
         return response()->json($quotes);
     }
 
@@ -29,7 +29,7 @@ class QuoteController extends Controller
     {
         $user = Auth::user();
         $quotes = Quote::where('user_id', $user->id)
-            ->with(['items.product', 'messages.user:id,name'])
+            ->with(['items.product.images', 'messages.user:id,name'])
             ->orderBy('created_at', 'desc')
             ->get();
             
@@ -104,7 +104,7 @@ class QuoteController extends Controller
      */
     public function show($id)
     {
-        $quote = Quote::with(['user', 'items.product'])->findOrFail($id);
+        $quote = Quote::with(['user', 'items.product.images'])->findOrFail($id);
         return response()->json($quote);
     }
 
@@ -120,6 +120,8 @@ class QuoteController extends Controller
             'status' => 'sometimes|string|in:pending,responded,approved,rejected,converted,payment_reported,completed',
             'admin_notes' => 'sometimes|nullable|string',
             'total_estimated_value' => 'sometimes|numeric',
+            'expires_at' => 'sometimes|nullable|date',
+            'delivery_info' => 'sometimes|nullable|string|max:255',
         ]);
 
         DB::transaction(function () use ($quote, $validated, $oldStatus) {
@@ -150,7 +152,7 @@ class QuoteController extends Controller
 
         return response()->json([
             'message' => 'Cotação atualizada com sucesso',
-            'quote' => $quote->load(['user', 'items.product'])
+            'quote' => $quote->load(['user', 'items.product.images'])
         ]);
     }
 
@@ -170,7 +172,7 @@ class QuoteController extends Controller
             $quoteItem->update(['approved_price' => $itemData['approved_price']]);
         }
 
-        $quote = Quote::with(['user', 'items.product'])->findOrFail($id);
+        $quote = Quote::with(['user', 'items.product.images'])->findOrFail($id);
 
         // Recalcular total se necessário
         $total = 0;
@@ -300,7 +302,7 @@ class QuoteController extends Controller
 
         return response()->json([
             'message' => 'Pagamento reportado com sucesso',
-            'quote' => $quote->load(['items.product', 'messages'])
+            'quote' => $quote->load(['items.product.images', 'messages'])
         ]);
     }
 }

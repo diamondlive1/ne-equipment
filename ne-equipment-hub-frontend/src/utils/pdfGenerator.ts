@@ -17,6 +17,8 @@ interface QuoteData {
   company_name?: string;
   company_nif?: string;
   total_estimated_value: number;
+  expires_at?: string | null;
+  delivery_info?: string | null;
 }
 
 interface Settings {
@@ -141,7 +143,7 @@ export const generateQuotePDF = (quote: QuoteData, settings: Settings) => {
               <tr>
                 <td>${quote.quote_number || '---'}</td>
                 <td>${formatDateSafe(quote.created_at)}</td>
-                <td>${formatDateSafe(new Date(new Date(quote.created_at || new Date()).getTime() + 7 * 24 * 60 * 60 * 1000).toISOString())}</td>
+                <td>${quote.expires_at ? formatDateSafe(quote.expires_at) : formatDateSafe(new Date(new Date(quote.created_at || new Date()).getTime() + 7 * 24 * 60 * 60 * 1000).toISOString())}</td>
               </tr>
             </table>
           </div>
@@ -181,7 +183,9 @@ export const generateQuotePDF = (quote: QuoteData, settings: Settings) => {
           <div class="notes-section">
             <strong>Notas:</strong>
             <div class="notes-box">
-              Válido por 7 dias. Pagamento via transferência bancária.
+              ${quote.expires_at ? `Esta proposta é válida até ${formatDateSafe(quote.expires_at)}.` : 'Válido por 7 dias.'} 
+              ${quote.delivery_info ? `Prazo de entrega: ${quote.delivery_info}.` : 'Entrega em Maputo: 2 a 5 dias úteis.'}
+              Pagamento via transferência bancária.
             </div>
           </div>
           <div class="totals-section">

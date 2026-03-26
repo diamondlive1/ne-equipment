@@ -14,7 +14,9 @@ import {
   MessageSquare,
   Upload,
   FileDown,
-  RefreshCcw
+  RefreshCcw,
+  Clock,
+  Truck
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -70,6 +72,8 @@ interface QuoteDetail {
   };
   items: QuoteItem[];
   invoice_path: string | null;
+  expires_at: string | null;
+  delivery_info: string | null;
 }
 
 interface AdminQuoteDetailProps {
@@ -91,6 +95,8 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
   const [uploadingInvoice, setUploadingInvoice] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [settings, setSettings] = useState<any>({});
+  const [expirationDate, setExpirationDate] = useState('');
+  const [deliveryInfo, setDeliveryInfo] = useState('');
 
   useEffect(() => {
     fetchQuoteDetail();
@@ -131,6 +137,12 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
       });
       setEditedItems(itemsMap);
       setMessages(messagesRes.data);
+      if (quoteRes.data.expires_at) {
+        setExpirationDate(quoteRes.data.expires_at.split('T')[0]);
+      } else {
+        setExpirationDate('');
+      }
+      setDeliveryInfo(quoteRes.data.delivery_info || '');
     } catch (error) {
       console.error('Error fetching quote detail:', error);
     } finally {
@@ -161,11 +173,12 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
       await api.put(`/admin/quotes/${quoteId}/items`, itemsPayload);
 
       const total = itemsPayload.items.reduce((sum, item) => sum + (item.approved_price * item.quantity), 0);
-      
       await api.put(`/admin/quotes/${quoteId}`, {
         status,
         admin_notes: adminNotes,
-        total_estimated_value: total
+        total_estimated_value: total,
+        expires_at: expirationDate || null,
+        delivery_info: deliveryInfo || null
       });
 
       fetchQuoteDetail();
@@ -200,11 +213,12 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
       await api.put(`/admin/quotes/${quoteId}/items`, itemsPayload);
 
       const total = itemsPayload.items.reduce((sum, item) => sum + (item.approved_price * item.quantity), 0);
-
       await api.put(`/admin/quotes/${quoteId}`, {
         status: newStatus,
         admin_notes: adminNotes,
-        total_estimated_value: total
+        total_estimated_value: total,
+        expires_at: expirationDate || null,
+        delivery_info: deliveryInfo || null
       });
 
       await api.post(`/admin/quotes/${quoteId}/messages`, { 
@@ -439,8 +453,35 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
               </select>
             </div>
 
-            <div className="space-y-3 flex flex-col pt-2 border-t border-border">
-              <h4 className="font-semibold text-sm flex items-center gap-2 text-foreground">
+            <div className="space-y-4 flex flex-col pt-2 border-t border-border">
+              <div className="space-y-2">
+                <label className="text-sm font-medium flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-primary" /> Data de Vencimento da Proposta
+                </label>
+                <Input 
+                  type="date"
+                  value={expirationDate}
+                  onChange={(e) => setExpirationDate(e.target.value)}
+                  className="bg-background"
+                />
+                <p className="text-[10px] text-muted-foreground italic">
+                  * O cliente verá esta data como o limite para aprovação e pagamento.
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium flex items-center gap-2">
+                  <Truck className="w-4 h-4 text-primary" /> Prazo de Entrega Estimado
+                </label>
+                <Input 
+                  value={deliveryInfo}
+                  onChange={(e) => setDeliveryInfo(e.target.value)}
+                  placeholder="Ex: Entrega em Maputo, 2 a 5 dias úteis"
+                  className="bg-background"
+                />
+              </div>
+
+              <h4 className="font-semibold text-sm flex items-center gap-2 text-foreground pt-2">
                 <MessageSquare className="w-4 h-4 text-primary" /> Histórico de Conversa
               </h4>
               <div className="flex-1 bg-muted/20 border border-border rounded-lg p-3 min-h-[160px] max-h-[250px] overflow-y-auto space-y-3">
