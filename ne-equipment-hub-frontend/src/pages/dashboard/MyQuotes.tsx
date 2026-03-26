@@ -21,8 +21,22 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 import api from '@/services/api';
-import { formatDistanceToNow, format } from 'date-fns';
+import { formatDistanceToNow, format, isValid } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+
+const safeFormatDistance = (dateStr: string | undefined | null) => {
+  if (!dateStr) return 'agora mesmo';
+  const date = new Date(dateStr);
+  if (!isValid(date)) return 'recentemente';
+  return formatDistanceToNow(date, { addSuffix: true, locale: ptBR });
+};
+
+const safeFormat = (dateStr: string | undefined | null, formatStr: string) => {
+  if (!dateStr) return '';
+  const date = new Date(dateStr);
+  if (!isValid(date)) return '';
+  return format(date, formatStr, { locale: ptBR });
+};
 
 interface QuoteItem {
   id: number;
@@ -226,7 +240,7 @@ const MyQuotes = () => {
                     </div>
                     <div className="flex items-center gap-1.5 text-xs text-muted-foreground bg-muted/50 px-2 py-1 rounded-full">
                        <Clock className="w-3.5 h-3.5" />
-                       Atualizado {formatDistanceToNow(new Date(quote.updated_at), { addSuffix: true, locale: ptBR })}
+                       Atualizado {safeFormatDistance(quote.updated_at)}
                     </div>
                   </div>
 
@@ -360,7 +374,7 @@ const MyQuotes = () => {
                       {msg.message}
                     </div>
                     <span className="text-[10px] text-muted-foreground mt-1 px-1">
-                      {!msg.is_admin ? 'Você' : 'Suporte NE'} • {format(new Date(msg.created_at), "HH:mm, dd/MM")}
+                      {!msg.is_admin ? 'Você' : 'Suporte NE'} • {safeFormat(msg.created_at, "HH:mm, dd/MM")}
                     </span>
                   </div>
                 ))}

@@ -4,8 +4,15 @@ import { Eye, FileText, Search, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { format } from 'date-fns';
+import { format, isValid } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+
+const safeDateFormat = (dateStr: string | undefined | null, formatStr: string) => {
+  if (!dateStr) return 'Recente';
+  const date = new Date(dateStr);
+  if (!isValid(date)) return 'Recente';
+  return format(date, formatStr, { locale: ptBR });
+};
 import api from '@/services/api';
 
 interface Quote {
@@ -137,7 +144,7 @@ export default function AdminQuoteList({ onViewQuote }: AdminQuoteListProps) {
                       </div>
                     </td>
                     <td className="px-6 py-4 text-muted-foreground">
-                      {format(new Date(quote.created_at), "dd 'de' MMM, yyyy", { locale: ptBR })}
+                      {safeDateFormat(quote.created_at, "dd 'de' MMM, yyyy")}
                     </td>
                     <td className="px-6 py-4 font-medium italic text-muted-foreground">
                       {quote.total_estimated_value > 0 

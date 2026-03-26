@@ -65,8 +65,11 @@ api.defaults.adapter = async (config) => {
 
         const populateQuote = (quote: any, db: any) => {
           if (!quote) return null;
+          const now = new Date().toISOString();
           return {
             ...quote,
+            created_at: quote.created_at || now,
+            updated_at: quote.updated_at || quote.created_at || now,
             items: (quote.items || []).map((item: any) => {
               const product = db.products.find((p: any) => p.id === item.product_id || String(p.id) === String(item.product_id));
               return {
