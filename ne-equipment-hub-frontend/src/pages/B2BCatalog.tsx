@@ -36,16 +36,7 @@ const B2BCatalog = () => {
   const { openQuoteForm } = useQuote();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
-  const { t, language } = useLanguage();
-
-  const handleWhatsAppContact = () => {
-    const number = '258872574001';
-    const msg = language === 'EN' 
-      ? 'Hello NE Equipment! I am interested in B2B corporate equipment.' 
-      : 'Olá NE Equipment! Tenho interesse em equipamentos corporativos B2B.';
-    const url = `https://wa.me/${number}?text=${encodeURIComponent(msg)}`;
-    window.open(url, '_blank');
-  };
+  const { t } = useLanguage();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -146,12 +137,7 @@ const B2BCatalog = () => {
               <div className="mt-8 p-4 bg-gradient-to-br from-gold/20 to-gold/10 rounded-xl">
                 <h4 className="font-bold text-foreground text-sm mb-2">{t.b2bCatalog.needBulk}</h4>
                 <p className="text-xs text-muted-foreground mb-4">{t.b2bCatalog.bulkDesc}</p>
-                <Button 
-                  onClick={handleWhatsAppContact}
-                  className="w-full bg-gold hover:bg-gold-light text-navy-dark font-bold text-sm rounded-xl"
-                >
-                  {t.b2bCatalog.talkCommercial}
-                </Button>
+                <Button className="w-full bg-gold hover:bg-gold-light text-navy-dark font-bold text-sm rounded-xl">{t.b2bCatalog.talkCommercial}</Button>
               </div>
             </div>
           </motion.aside>

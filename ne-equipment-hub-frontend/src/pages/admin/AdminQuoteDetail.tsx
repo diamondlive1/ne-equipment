@@ -127,7 +127,7 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
     }));
   };
 
-  const handleSave = async () => {
+  const handleSave = async (silent = false) => {
     setSaving(true);
     try {
       // 1. Atualizar Itens
@@ -147,19 +147,26 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
 
       // Recarregar dados
       fetchQuoteDetail();
-      toast.success('Cotação atualizada!', { description: status === 'converted' ? 'Pedido gerado com sucesso.' : 'Informação enviada ao cliente.' });
+      if (!silent) {
+        toast.success('Alterações salvas!', { description: 'Os dados foram atualizados internamente.' });
+      }
     } catch (error) {
       console.error('Error saving quote:', error);
-      toast.error('Erro ao salvar a cotação', { description: 'Verifique os dados e tente novamente.' });
+      if (!silent) {
+        toast.error('Erro ao salvar a cotação');
+      }
+      throw error;
     } finally {
       setSaving(false);
     }
   };
 
-  const handleSendToClient = async () => {
-    setSaving(true);
+  const handleSendQuote = async () => {
     try {
-      // 1. Atualizar Itens
+      setSaving(true);
+      // Forçar status para responded se estiver pendente ou em negociação
+      const newStatus = 'responded';
+      
       const itemsPayload = {
         items: Object.entries(editedItems).map(([id, price]) => ({
           id: parseInt(id),
@@ -168,23 +175,21 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
       };
       await api.put(`/admin/quotes/${quoteId}/items`, itemsPayload);
 
-      // 2. Atualizar Status para 'responded'
       await api.put(`/admin/quotes/${quoteId}`, {
-        status: 'responded',
+        status: newStatus,
         admin_notes: adminNotes
       });
 
-      // 3. Enviar mensagem automática
+      // Enviar mensagem automática
       await api.post(`/admin/quotes/${quoteId}/messages`, { 
-        message: "Cotação enviada com sucesso! Verifique os novos preços no painel e já pode baixar o PDF da negociação para processar o pagamento." 
+        message: "Enviámos a proposta revista com os preços atualizados. Por favor, verifique e baixe o PDF para pagamento se estiver de acordo." 
       });
 
-      // Recarregar dados
+      toast.success('Cotação enviada!', { description: 'O cliente foi notificado da nova proposta.' });
       fetchQuoteDetail();
-      toast.success('Cotação enviada ao cliente com sucesso!');
     } catch (error) {
       console.error('Error sending quote:', error);
-      toast.error('Erro ao enviar a cotação');
+      toast.error('Erro ao enviar cotação');
     } finally {
       setSaving(false);
     }
@@ -259,22 +264,17 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
           </p>
         </div>
         <div className="ml-auto flex gap-3">
-          <Button 
-            onClick={handleSendToClient} 
-            disabled={saving} 
-            className="gap-2 bg-whatsapp hover:bg-whatsapp-dark text-white font-bold"
-          >
-            {saving ? <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div> : <Send className="w-4 h-4" />}
-            Enviar Cotação ao Cliente
-          </Button>
           <Button variant="outline" onClick={() => generateQuotePDF(quote, settings)} className="gap-2 border-gold text-gold hover:bg-gold hover:text-navy-dark font-bold">
             <FileDown className="w-4 h-4" />
             Exportar PDF
           </Button>
           <Button variant="outline" onClick={onBack}>Cancelar</Button>
-          <Button onClick={handleSave} disabled={saving} className="gap-2 border-primary text-primary hover:bg-primary/10 bg-transparent">
-            <Save className="w-4 h-4" />
-            Apenas Salvar
+          <Button variant="secondary" onClick={() => handleSave()} disabled={saving} className="gap-2">
+            Salvar Rascunho
+          </Button>
+          <Button onClick={handleSendQuote} disabled={saving} className="gap-2 bg-primary hover:bg-primary/90">
+            {saving ? <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div> : <Send className="w-4 h-4" />}
+            Enviar Cotação ao Cliente
           </Button>
         </div>
       </div>
