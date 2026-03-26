@@ -13,7 +13,8 @@ import {
   Send,
   MessageSquare,
   Upload,
-  FileDown
+  FileDown,
+  RefreshCcw
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -133,7 +134,6 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
     try {
       if (!quote) return;
       
-      // 1. Atualizar Itens - Preservar quantidade e ID do produto
       const itemsPayload = {
         items: quote.items.map(item => ({
           ...item,
@@ -144,8 +144,6 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
       };
       await api.put(`/admin/quotes/${quoteId}/items`, itemsPayload);
 
-      // 2. Atualizar Quote Geral 
-      // Calculamos o novo total localmente para enviar
       const total = itemsPayload.items.reduce((sum, item) => sum + (item.approved_price * item.quantity), 0);
       
       await api.put(`/admin/quotes/${quoteId}`, {
@@ -154,10 +152,9 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
         total_estimated_value: total
       });
 
-      // Recarregar dados
       fetchQuoteDetail();
       if (!silent) {
-        toast.success('Alterações salvas!', { description: 'Os dados foram atualizados internamente.' });
+        toast.success('Alterações salvas!');
       }
     } catch (error) {
       console.error('Error saving quote:', error);
@@ -194,12 +191,11 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
         total_estimated_value: total
       });
 
-      // Enviar mensagem automática
       await api.post(`/admin/quotes/${quoteId}/messages`, { 
         message: "Enviámos a proposta revista com os preços atualizados. Por favor, verifique e baixe o PDF para pagamento se estiver de acordo." 
       });
 
-      toast.success('Cotação enviada!', { description: 'O cliente foi notificado da nova proposta.' });
+      toast.success('Cotação enviada!');
       fetchQuoteDetail();
     } catch (error) {
       console.error('Error sending quote:', error);
@@ -226,27 +222,27 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
 
   const handleInvoiceUpload = async () => {
     if (!selectedFile) return;
-
     setUploadingInvoice(true);
     try {
       const formData = new FormData();
       formData.append('invoice', selectedFile);
-
-      const response = await api.post(`/admin/quotes/${quoteId}/upload-invoice`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-
-      toast.success('Factura anexada com sucesso!');
+      await api.post(`/admin/quotes/${quoteId}/upload-invoice`, formData);
+      toast.success('Factura anexada!');
       setSelectedFile(null);
       fetchQuoteDetail();
     } catch (error) {
       console.error('Error uploading invoice:', error);
-      toast.error('Erro ao fazer upload da factura');
+      toast.error('Erro no upload');
     } finally {
       setUploadingInvoice(false);
     }
+  };
+
+  const handleResetDB = async () => {
+      if (confirm('Atenção: Isto irá apagar todos os dados locais e repor a base de dados inicial. Deseja continuar?')) {
+          await api.post('/dev/reset-db');
+          window.location.reload();
+      }
   };
 
   if (loading || !quote) {
@@ -259,7 +255,8 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
 
   const liveTotal = quote.items.reduce((sum, item) => {
     const price = parseFloat(editedItems[item.id]) || 0;
-    return sum + (price * item.quantity);
+    const qty = item.quantity || 1; // DEFENSIVE: Default to 1 to avoid NaN
+    return sum + (price * qty);
   }, 0);
 
   return (
@@ -294,8 +291,6 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        {/* Coluna Principal: Itens da Cotação */}
         <div className="lg:col-span-2 space-y-6">
           <div className="bg-card rounded-xl border border-border overflow-hidden">
             <div className="p-4 border-b border-border bg-muted/30">
@@ -318,7 +313,7 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
                 <tbody className="divide-y divide-border">
                   {quote.items.map((item) => {
                     const price = parseFloat(editedItems[item.id]) || 0;
-                    const itemQuantity = item.quantity || 0;
+                    const itemQuantity = item.quantity || 1; // FALLBACK: Default to 1
                     const subtotal = price * itemQuantity;
                     return (
                       <tr key={item.id} className="hover:bg-muted/30">
@@ -329,7 +324,7 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
                           )}
                         </td>
                         <td className="px-4 py-4 text-center font-medium">
-                          {item.quantity || 0} un
+                          {itemQuantity} un
                         </td>
                         <td className="px-4 py-4 max-w-[150px]">
                           <Input 
@@ -376,7 +371,6 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
           </div>
         </div>
 
-        {/* Coluna Secundária: Cliente e Ações */}
         <div className="space-y-6">
           <div className="bg-card rounded-xl border border-border p-5">
             <h3 className="font-semibold flex items-center gap-2 mb-4">
@@ -405,7 +399,6 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
 
           <div className="bg-card rounded-xl border border-border p-5 space-y-4">
             <h3 className="font-semibold mb-2">Painel de Negociação</h3>
-            
             <div className="space-y-2">
               <label className="text-sm font-medium">Status da Cotação</label>
               <select 
@@ -423,34 +416,14 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
               </select>
             </div>
 
-            {quote.status === 'payment_reported' && (
-              <div className="bg-orange-50 border border-orange-200 text-orange-800 p-4 rounded-xl flex flex-col gap-3 animate-in fade-in slide-in-from-top-2">
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5" />
-                  <p className="font-bold text-sm">O cliente reportou o pagamento!</p>
-                </div>
-                <p className="text-xs">Verifique o comprovativo (anexado no chat ou fatura) e confirme a conclusão da negociação para gerar o pedido automaticamente.</p>
-                <Button 
-                  onClick={() => {
-                    setStatus('completed');
-                    toast.info('Clique em "Salvar Alterações" no topo para confirmar.');
-                  }} 
-                  className="bg-orange-600 hover:bg-orange-700 text-white font-bold"
-                >
-                  Marcar como Concluída
-                </Button>
-              </div>
-            )}
-
             <div className="space-y-3 flex flex-col pt-2 border-t border-border">
               <h4 className="font-semibold text-sm flex items-center gap-2 text-foreground">
                 <MessageSquare className="w-4 h-4 text-primary" /> Histórico de Conversa
               </h4>
-              
               <div className="flex-1 bg-muted/20 border border-border rounded-lg p-3 min-h-[160px] max-h-[250px] overflow-y-auto space-y-3">
                 {messages.length === 0 ? (
                   <p className="text-xs text-muted-foreground text-center flex items-center justify-center h-full opacity-60">
-                    Nenhuma mensagem ainda. Envie a primeira mensagem!
+                    Nenhuma mensagem ainda.
                   </p>
                 ) : messages.map((msg) => (
                   <div key={msg.id} className={`flex flex-col ${msg.is_admin ? 'items-end' : 'items-start'}`}>
@@ -463,86 +436,34 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
                   </div>
                 ))}
               </div>
-
               <div className="flex gap-2 items-center">
                 <Textarea 
-                  placeholder="Escreva uma mensagem para o cliente..."
+                  placeholder="Escreva uma mensagem..."
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                   className="min-h-[40px] h-[40px] py-2 resize-none text-sm"
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault();
-                      handleSendMessage();
-                    }
-                  }}
+                  onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
                 />
-                <Button 
-                  size="icon" 
-                  disabled={!newMessage.trim() || sendingMsg} 
-                  onClick={handleSendMessage}
-                  className="shrink-0 h-[40px] w-[40px] rounded-lg"
-                >
+                <Button size="icon" disabled={!newMessage.trim() || sendingMsg} onClick={handleSendMessage} className="shrink-0 h-[40px] w-[40px] rounded-lg">
                   <Send className="w-4 h-4" />
                 </Button>
               </div>
             </div>
-
-            {/* Upload de Factura */}
-            <div className="space-y-3 flex flex-col pt-4 border-t border-border mt-2">
-              <h4 className="font-semibold text-sm flex items-center gap-2 text-foreground">
-                <Upload className="w-4 h-4 text-primary" /> Factura / Recibo
-              </h4>
-              
-              {quote.invoice_path ? (
-                <div className="bg-green-50 border border-green-100 rounded-lg p-3 flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-green-700">
-                    <CheckCircle className="w-4 h-4" />
-                    <span className="text-xs font-medium">Factura Anexada</span>
-                  </div>
-                  <Button variant="ghost" size="sm" asChild className="h-8 text-green-700 hover:text-green-800 hover:bg-green-100">
-                    <a 
-                      href={`${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}/storage/${quote.invoice_path}`} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1.5"
-                    >
-                      <FileDown className="w-3.5 h-3.5" />
-                      Ver
-                    </a>
-                  </Button>
-                </div>
-              ) : (
-                <p className="text-[10px] text-muted-foreground italic">
-                  Anexe a factura para que o cliente possa efetuar o pagamento.
-                </p>
-              )}
-
-              <div className="flex flex-col gap-2">
-                <Input 
-                  type="file" 
-                  accept=".pdf,image/*"
-                  onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
-                  className="text-xs h-9 py-1 px-2"
-                />
-                <Button 
-                  size="sm" 
-                  disabled={!selectedFile || uploadingInvoice}
-                  onClick={handleInvoiceUpload}
-                  className="w-full gap-2 text-xs h-9"
-                >
-                  {uploadingInvoice ? (
-                    <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
-                  ) : (
-                    <Upload className="w-3.5 h-3.5" />
-                  )}
-                  {quote.invoice_path ? 'Substituir Factura' : 'Enviar Factura'}
-                </Button>
-              </div>
-            </div>
+          </div>
+          
+          {/* Reset DB Button at bottom of sidebar for troubleshooting */}
+          <div className="pt-4 mt-auto">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={handleResetDB}
+                className="w-full text-[10px] text-muted-foreground hover:text-destructive gap-2 opacity-50 hover:opacity-100"
+              >
+                  <RefreshCcw className="w-3 h-3" />
+                  Repor Dados da Plataforma (Troubleshooting)
+              </Button>
           </div>
         </div>
-
       </div>
     </div>
   );

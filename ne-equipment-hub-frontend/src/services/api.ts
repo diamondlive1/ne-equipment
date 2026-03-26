@@ -76,18 +76,13 @@ api.defaults.adapter = async (config) => {
           }
 
           const populatedItems = (quote.items || []).map((item: any, index: number) => {
-            // Find product using product_id. If item was ALREADY populated and saved back to DB,
-            // we should still have product_id.
             const pid = item.product_id || (item.product ? item.product.id : undefined);
             const product = db.products.find((p: any) => String(p.id) === String(pid));
             
-            if (!product) {
-              console.warn(`[Mock API] Product NOT found for id: ${pid} in item:`, item);
-            }
-
             return {
               ...item,
-              product_id: pid, // Ensure product_id is restored if it was in the nested product
+              product_id: pid,
+              quantity: item.quantity || 1, // Defensive fallback
               id: item.id || `item-${index}-${quote.id}`, 
               product: product ? {
                 id: product.id,
@@ -264,36 +259,11 @@ api.defaults.adapter = async (config) => {
            }
         }
 
-        // Messages
-        const handleMessage = (quoteId: string, isAdmin: boolean) => {
-           const quote = db.quotes.find(q => q.id === quoteId);
-           if (quote) {
-              const msg = {
-                 id: generateId(),
-                 message: data.message,
-                 is_admin: isAdmin,
-                 created_at: new Date().toISOString()
-              };
-              quote.messages = quote.messages || [];
-              quote.messages.push(msg);
-              saveDb(db);
-              return response(201, msg);
-           }
-           return error(404, 'Quote not found');
-        };
-        if (url.match(/^\/quotes\/[^/]+\/messages$/) && method === 'post') return handleMessage(url.split('/')[2], false);
-        if (url.match(/^\/admin\/quotes\/[^/]+\/messages$/) && method === 'post') return handleMessage(url.split('/')[3], true);
-        if (url.match(/^\/admin\/quotes\/[^/]+\/messages$/) && method === 'get') {
-           const id = url.split('/')[3];
-           const quote = db.quotes.find(q => q.id === id);
-           return response(200, quote?.messages || []);
-        }
-
-        // Misc
-        if (url.match(/^\/quotes\/[^/]+\/report-payment$/) && method === 'post') {
-           const id = url.split('/')[2];
-           const quote = db.quotes.find(q => q.id === id);
-           if (quote) { quote.status = 'payment_reported'; saveDb(db); return response(200, {}); }
+        // Reset DB (Secret Dev Route)
+        if (url === '/dev/reset-db' && method === 'post') {
+            localStorage.removeItem('ne_equipment_mock_db');
+            window.location.reload();
+            return response(200, { message: 'DB Reset' });
         }
 
         // Fallback
