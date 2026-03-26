@@ -89,8 +89,8 @@ const ProductList = ({ onAddProduct, onEditProduct }: ProductListProps) => {
     };
 
     const filteredProducts = products.filter(p =>
-        p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (p.sku && p.sku.toLowerCase().includes(searchTerm.toLowerCase()))
+        (p.name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (p.sku || "").toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     if (isLoading) {

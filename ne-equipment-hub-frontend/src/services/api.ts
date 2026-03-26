@@ -173,12 +173,16 @@ api.defaults.adapter = async (config) => {
           const user = db.users.find(u => u.id === token);
           const quote = { 
             id: generateId(), 
+            quote_number: `QT-${Math.floor(10000 + Math.random() * 90000)}`,
             user_id: user?.id, 
+            user: user ? { name: user.name, email: user.email } : null,
             status: 'pending', 
-            company_name: data.company_name,
-            company_nif: data.company_nif,
+            company_name: data.company_name || user?.company_name || '',
+            company_nif: data.company_nif || user?.nif || '',
             items: data.items || [],
+            total_estimated_value: 0,
             created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
             messages: []
           };
           db.quotes.push(quote);

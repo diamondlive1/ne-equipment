@@ -61,8 +61,8 @@ export default function AdminQuoteList({ onViewQuote }: AdminQuoteListProps) {
   };
 
   const filteredQuotes = quotes.filter(q => 
-    q.quote_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    q.user?.name.toLowerCase().includes(searchTerm.toLowerCase())
+    (q.quote_number || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (q.user?.name || "").toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   if (loading) {

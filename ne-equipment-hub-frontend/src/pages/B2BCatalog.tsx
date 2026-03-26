@@ -82,7 +82,9 @@ const B2BCatalog = () => {
 
   const filteredProducts = products.filter(p => {
     const matchesCategory = !selectedCategory || selectedCategory === 'all' || p.category?.slug === selectedCategory;
-    const matchesSearch = !searchTerm || p.name.toLowerCase().includes(searchTerm.toLowerCase()) || p.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const nameMatch = (p.name || "").toLowerCase().includes(searchTerm.toLowerCase());
+    const descMatch = (p.description || "").toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = !searchTerm || nameMatch || descMatch;
     return matchesCategory && matchesSearch;
   });
 

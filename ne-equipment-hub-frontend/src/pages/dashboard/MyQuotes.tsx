@@ -122,8 +122,8 @@ const MyQuotes = () => {
   };
 
   const filtered = quotes.filter(q => {
-    const matchId = q.quote_number.toLowerCase().includes(search.toLowerCase());
-    const matchProduct = q.items[0]?.product.name.toLowerCase().includes(search.toLowerCase());
+    const matchId = (q.quote_number || "").toLowerCase().includes(search.toLowerCase());
+    const matchProduct = q.items[0]?.product?.name?.toLowerCase().includes(search.toLowerCase()) || false;
     return matchId || matchProduct;
   });
 
