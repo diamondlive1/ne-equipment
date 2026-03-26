@@ -238,12 +238,6 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
     }
   };
 
-  const handleResetDB = async () => {
-      if (confirm('Atenção: Isto irá apagar todos os dados locais e repor a base de dados inicial. Deseja continuar?')) {
-          await api.post('/dev/reset-db');
-          window.location.reload();
-      }
-  };
 
   if (loading || !quote) {
     return (
@@ -451,18 +445,6 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
             </div>
           </div>
           
-          {/* Reset DB Button at bottom of sidebar for troubleshooting */}
-          <div className="pt-4 mt-auto">
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={handleResetDB}
-                className="w-full text-[10px] text-muted-foreground hover:text-destructive gap-2 opacity-50 hover:opacity-100"
-              >
-                  <RefreshCcw className="w-3 h-3" />
-                  Repor Dados da Plataforma (Troubleshooting)
-              </Button>
-          </div>
         </div>
       </div>
     </div>

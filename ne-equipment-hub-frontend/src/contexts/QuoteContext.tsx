@@ -18,10 +18,10 @@ export const QuoteProvider = ({ children }: { children: ReactNode }) => {
   const [isQuoteFormOpen, setIsQuoteFormOpen] = useState(false);
   const navigate = useNavigate();
   const { items, clearCart } = useCart();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
 
   const openQuoteForm = async () => {
-    if (isAuthenticated) {
+    if (isAuthenticated && user) {
       if (items.length === 0) {
         toast.error('O seu carrinho está vazio.');
         navigate('/');
@@ -35,10 +35,12 @@ export const QuoteProvider = ({ children }: { children: ReactNode }) => {
           quantity: item.quantity
         }));
 
-        // Enviar para o backend (Mock API ou Real)
+        // Enviar para o backend com os campos obrigatórios (Regra de Negócio)
         await api.post('/quotes', {
           items: quoteItems,
-          // Os outros dados (empresa, email) são pegos do user logado no backend ou mockDb
+          empresa: user.name, // Fallback to name if company_name not present
+          nif: user.nuit || '000000000', // Backend uses 'nif' but frontend uses 'nuit'
+          email: user.email
         });
 
         toast.success('Cotação solicitada com sucesso!');
