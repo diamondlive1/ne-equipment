@@ -156,7 +156,7 @@ const B2BCatalog = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
               {isLoading ? (
                 <div className="col-span-full py-20 text-center">
                   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold mx-auto"></div>
@@ -169,18 +169,20 @@ const B2BCatalog = () => {
 
                 return (
                   <motion.div key={product.id} onClick={() => navigate(`/product/${product.id}`)} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }} className="glass-card overflow-hidden hover:shadow-2xl transition-all group cursor-pointer">
-                    <div className="aspect-[4/3] relative overflow-hidden">
-                      <Badge className="absolute top-3 left-3 z-10 bg-navy-dark/80 backdrop-blur-sm text-white text-[10px]">{product.category?.name || 'Industrial'}</Badge>
+                    <div className="aspect-square relative overflow-hidden">
+                      <Badge className="absolute top-2 left-2 z-10 bg-navy-dark/80 backdrop-blur-sm text-white text-[8px] px-1.5 py-0">
+                        {product.category?.name || 'Industrial'}
+                      </Badge>
                       <img src={imageUrl} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                     </div>
-                    <div className="p-4">
-                      <h3 className="font-bold text-foreground mb-2 line-clamp-1">{product.name}</h3>
-                      <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{product.description}</p>
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs text-muted-foreground font-mono">SKU: {product.sku}</span>
-                        <Button size="sm" onClick={(e) => { e.stopPropagation(); handleAddToQuote(product); }} className="bg-gold hover:bg-gold-light text-navy-dark font-bold text-xs rounded-xl relative z-20">
+                    <div className="p-3">
+                      <h3 className="font-bold text-foreground mb-1 line-clamp-1 text-sm">{product.name}</h3>
+                      <p className="text-[10px] text-muted-foreground mb-3 line-clamp-2 leading-relaxed h-7">{product.description}</p>
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-[9px] text-muted-foreground font-mono truncate">SKU: {product.sku}</span>
+                        <Button size="sm" onClick={(e) => { e.stopPropagation(); handleAddToQuote(product); }} className="bg-gold hover:bg-gold-light text-navy-dark font-bold text-[10px] h-7 px-2 rounded-lg relative z-20 shrink-0">
                           {t.b2bCatalog.quote}
-                          <Plus className="w-3 h-3 ml-1" />
+                          <Plus className="w-2.5 h-2.5 ml-1" />
                         </Button>
                       </div>
                     </div>
