@@ -147,8 +147,11 @@ const AdminProductDetail = ({ productId, onBack, onEdit }: AdminProductDetailPro
                                 <p className="text-foreground font-medium">{product.brand || 'Original (NE Equipment)'}</p>
                             </div>
                             <div>
-                                <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Descrição Técnica</h4>
-                                <p className="text-sm text-foreground leading-relaxed whitespace-pre-line">{product.description}</p>
+                                <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">Descrição Técnica</h4>
+                                <div className="max-h-40 overflow-y-auto pr-2 custom-scrollbar">
+                                    <p className="text-sm text-foreground leading-relaxed whitespace-pre-line">{product.description || 'Nenhuma descrição disponível.'}</p>
+                                </div>
+
                             </div>
                         </div>
                     </div>
