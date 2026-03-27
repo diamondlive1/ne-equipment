@@ -56,7 +56,7 @@ const CustomerDashboard = ({ onBack, userName: propUserName = 'Utilizador' }: Cu
     <div className="bg-gray-50 min-h-screen pt-20 md:pt-28 pb-16 font-sans antialiased">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
 
-        {/* Breadcrumb profissional (estilo Alibaba Buyer Center) */}
+        {/* Breadcrumb profissional */}
         <nav className="mb-8 lg:mb-10">
           <ol className="flex items-center space-x-2 text-sm text-gray-500">
             <li>
@@ -80,7 +80,7 @@ const CustomerDashboard = ({ onBack, userName: propUserName = 'Utilizador' }: Cu
 
         <div className="flex flex-col lg:flex-row lg:gap-12">
 
-          {/* Sidebar corporativa (inspirada em My Alibaba: clean, bold ativo, ícones sutis) */}
+          {/* Sidebar corporativa */}
           <aside className="lg:w-72 flex-shrink-0">
             <nav className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
               <div className="p-4 border-b border-gray-100">

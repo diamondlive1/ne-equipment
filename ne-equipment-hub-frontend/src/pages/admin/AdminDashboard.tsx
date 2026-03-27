@@ -180,9 +180,6 @@ const AdminDashboard = () => {
         <Button className="bg-gold hover:bg-gold-light text-navy-dark font-bold gap-2 rounded-xl shadow-sm">
           <Plus className="w-4 h-4" /> Novo Produto
         </Button>
-        <Button variant="outline" className="font-semibold gap-2 border-primary text-primary rounded-xl translate-y-0 hover:-translate-y-0.5 transition-transform">
-          <Upload className="w-4 h-4" /> Importar do Alibaba
-        </Button>
       </div>
 
       {/* Main Charts Row */}
