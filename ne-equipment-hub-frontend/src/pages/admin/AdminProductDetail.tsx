@@ -148,7 +148,7 @@ const AdminProductDetail = ({ productId, onBack, onEdit }: AdminProductDetailPro
                             </div>
                             <div>
                                 <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">Descrição Técnica</h4>
-                                <div className="max-h-40 overflow-y-auto pr-2 custom-scrollbar">
+                                <div className="max-h-60 overflow-y-auto pr-2 custom-scrollbar">
                                     <p className="text-sm text-foreground leading-relaxed whitespace-pre-line">{product.description || 'Nenhuma descrição disponível.'}</p>
                                 </div>
 
