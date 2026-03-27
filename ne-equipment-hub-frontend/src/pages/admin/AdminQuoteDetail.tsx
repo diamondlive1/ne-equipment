@@ -185,10 +185,11 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
       if (!silent) {
         toast.success('Alterações salvas!');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving quote:', error);
       if (!silent) {
-        toast.error('Erro ao salvar a cotação');
+        const message = error.response?.data?.message || 'Erro ao salvar a cotação';
+        toast.error(message);
       }
       throw error;
     } finally {
@@ -227,9 +228,10 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
 
       toast.success('Cotação enviada!');
       fetchQuoteDetail();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error sending quote:', error);
-      toast.error('Erro ao enviar cotação');
+      const message = error.response?.data?.message || 'Erro ao enviar cotação';
+      toast.error(message);
     } finally {
       setSaving(false);
     }
