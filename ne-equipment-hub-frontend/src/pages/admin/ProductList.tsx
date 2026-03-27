@@ -11,7 +11,6 @@ import {
     Loader2,
     Eye
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -42,14 +41,15 @@ interface Product {
 interface ProductListProps {
     onAddProduct: () => void;
     onEditProduct: (product: Product) => void;
+    onViewProduct: (id: number) => void;
 }
 
-const ProductList = ({ onAddProduct, onEditProduct }: ProductListProps) => {
+const ProductList = ({ onAddProduct, onEditProduct, onViewProduct }: ProductListProps) => {
     const [products, setProducts] = useState<Product[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const { toast } = useToast();
-    const navigate = useNavigate();
+
 
     const fetchProducts = async () => {
         try {
@@ -184,8 +184,8 @@ const ProductList = ({ onAddProduct, onEditProduct }: ProductListProps) => {
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end" className="w-40">
-                                                <DropdownMenuItem onClick={() => navigate(`/product/${product.id}`)} className="gap-2">
-                                                    <Eye className="w-4 h-4" /> Visualizar
+                                                <DropdownMenuItem onClick={() => onViewProduct(product.id)} className="gap-2">
+                                                    <Eye className="w-4 h-4 text-primary" /> Visualizar Detalhes
                                                 </DropdownMenuItem>
                                                 <DropdownMenuItem onClick={() => onEditProduct(product)} className="gap-2">
                                                     <Edit className="w-4 h-4" /> Editar

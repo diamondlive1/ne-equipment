@@ -28,6 +28,7 @@ import ProductList from './ProductList';
 import ProductForm from './ProductForm';
 import AdminQuoteList from './AdminQuoteList';
 import AdminQuoteDetail from './AdminQuoteDetail';
+import AdminProductDetail from './AdminProductDetail';
 import CategoryManagement from './CategoryManagement';
 import AdminSettings from './AdminSettings';
 import api from '@/services/api';
@@ -69,6 +70,7 @@ const AdminLayout = () => {
   const [editingProduct, setEditingProduct] = useState<any>(null);
   const [viewingQuoteId, setViewingQuoteId] = useState<number | null>(null);
   const [viewingOrderId, setViewingOrderId] = useState<number | null>(null);
+  const [viewingProductId, setViewingProductId] = useState<number | null>(null);
   const [counts, setCounts] = useState<{ [key: string]: number }>({
     products: 0,
     rfqs: 5
@@ -127,10 +129,23 @@ const AdminLayout = () => {
             />
           );
         }
+        if (viewingProductId) {
+          return (
+            <AdminProductDetail 
+              productId={viewingProductId}
+              onBack={() => setViewingProductId(null)}
+              onEdit={(product) => {
+                setViewingProductId(null);
+                setEditingProduct(product);
+              }}
+            />
+          );
+        }
         return (
           <ProductList
             onAddProduct={() => setIsAddingProduct(true)}
             onEditProduct={(product) => setEditingProduct(product)}
+            onViewProduct={(id) => setViewingProductId(id)}
           />
         );
       case 'rfqs':
@@ -209,6 +224,7 @@ const AdminLayout = () => {
                   setEditingProduct(null);
                   setViewingQuoteId(null);
                   setViewingOrderId(null);
+                  setViewingProductId(null);
                 }}
                 className={cn(
                   'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group relative',
