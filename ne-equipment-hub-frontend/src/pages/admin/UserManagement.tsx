@@ -405,21 +405,7 @@ const UserManagement = () => {
                                 </div>
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest px-1">Equipa / Dep.</label>
-                                        <div className="relative">
-                                            <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/40" />
-                                            <select 
-                                                className="w-full h-12 pl-9 rounded-2xl border border-border/30 bg-muted/20 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 appearance-none"
-                                                value={memberFormData.team_id}
-                                                onChange={(e) => setMemberFormData({...memberFormData, team_id: e.target.value})}
-                                            >
-                                                <option value="">Sem Departamento</option>
-                                                {teams.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div className="space-y-2">
+                                    <div className="space-y-2 col-span-full">
                                         <label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest px-1">Senha de Acesso</label>
                                         <Input 
                                             required
@@ -443,7 +429,7 @@ const UserManagement = () => {
                                         ) : (
                                             <>
                                                 <Zap className="w-4 h-4 mr-2 text-gold animate-pulse" />
-                                                Confirmar Registo
+                                                Criar Funcionário
                                             </>
                                         )}
                                     </Button>
