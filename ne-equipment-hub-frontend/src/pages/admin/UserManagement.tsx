@@ -34,7 +34,7 @@ const UserManagement = () => {
         name: '',
         email: '',
         phone: '',
-        role: 'customer',
+        role: 'admin',
         password: ''
     });
 
@@ -82,12 +82,12 @@ const UserManagement = () => {
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                    <h2 className="text-2xl font-bold tracking-tight">Gestão de Utilizadores</h2>
-                    <p className="text-muted-foreground">Adicione e gira os acessos da plataforma.</p>
+                    <h2 className="text-2xl font-bold tracking-tight">Gestão da Equipa</h2>
+                    <p className="text-muted-foreground">Administre os acessos dos seus funcionários e gestores.</p>
                 </div>
                 <Button onClick={() => setIsModalOpen(true)} className="gap-2 bg-primary hover:bg-navy-dark rounded-xl h-11 px-6 shadow-lg shadow-primary/20">
                     <Plus className="w-5 h-5" />
-                    Novo Utilizador
+                    Adicionar Membro
                 </Button>
             </div>
 
@@ -95,12 +95,12 @@ const UserManagement = () => {
                 <CardHeader className="pb-3 border-b border-border/10">
                     <div className="flex items-center justify-between">
                         <CardTitle className="text-lg font-bold flex items-center gap-2">
-                            <Users className="w-5 h-5 text-primary" /> Lista de Utilizadores
+                            <Users className="w-5 h-5 text-primary" /> Membros da Equipa
                         </CardTitle>
                         <div className="relative w-64">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                             <Input 
-                                placeholder="Pesquisar por nome ou email..." 
+                                placeholder="Pesquisar por nome..." 
                                 className="pl-9 h-10 bg-muted/30 border-border/20"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -113,9 +113,9 @@ const UserManagement = () => {
                         <table className="w-full text-sm text-left">
                             <thead className="text-[10px] uppercase tracking-wider text-muted-foreground bg-muted/30 border-b border-border/10">
                                 <tr>
-                                    <th className="px-6 py-4 font-bold">Utilizador</th>
+                                    <th className="px-6 py-4 font-bold">Funcionário</th>
                                     <th className="px-6 py-4 font-bold">Contacto</th>
-                                    <th className="px-6 py-4 font-bold">Função / Role</th>
+                                    <th className="px-6 py-4 font-bold">Nível de Acesso</th>
                                     <th className="px-6 py-4 font-bold">Estado</th>
                                     <th className="px-6 py-4 font-bold text-right">Ações</th>
                                 </tr>
@@ -133,7 +133,7 @@ const UserManagement = () => {
                                 ) : filteredUsers.length === 0 ? (
                                     <tr>
                                         <td colSpan={5} className="px-6 py-12 text-center text-muted-foreground">
-                                            Nenhum utilizador encontrado.
+                                            Nenhum membro da equipa encontrado.
                                         </td>
                                     </tr>
                                 ) : (
@@ -210,8 +210,8 @@ const UserManagement = () => {
                                         <Shield className="w-5 h-5" />
                                     </div>
                                     <div>
-                                        <h3 className="font-bold text-lg">Criar Novo Utilizador</h3>
-                                        <p className="text-xs text-muted-foreground font-medium">Preencha os dados do utilizador abaixo.</p>
+                                        <h3 className="font-bold text-lg">Adicionar Membro à Equipa</h3>
+                                        <p className="text-xs text-muted-foreground font-medium">Configure os dados de acesso para o novo funcionário.</p>
                                     </div>
                                 </div>
                                 <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-muted rounded-full transition-colors">
@@ -265,14 +265,14 @@ const UserManagement = () => {
                             </div>
 
                             <div className="space-y-1.5">
-                                <label className="text-xs font-bold uppercase text-muted-foreground px-1">Função na Plataforma</label>
+                                <label className="text-xs font-bold uppercase text-muted-foreground px-1">Nível de Acesso</label>
                                 <select 
                                     className="w-full h-11 rounded-xl border border-border/30 bg-muted/10 px-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20"
                                     value={formData.role}
                                     onChange={(e) => setFormData({...formData, role: e.target.value})}
                                 >
-                                    <option value="customer">Cliente B2B (Visualização/RFQs)</option>
                                     <option value="admin">Administrador (Controle Total)</option>
+                                    {/* Outras roles internas podem ser adicionadas aqui no futuro */}
                                 </select>
                             </div>
 
@@ -299,7 +299,7 @@ const UserManagement = () => {
                                     ) : (
                                         <CheckCircle2 className="w-5 h-5 mr-2" />
                                     )}
-                                    Criar Utilizador Agora
+                                    Adicionar Funcionário
                                 </Button>
                             </div>
                         </form>

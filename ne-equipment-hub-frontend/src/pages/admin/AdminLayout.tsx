@@ -49,7 +49,7 @@ const navItems: NavItem[] = [
   { id: 'products', label: 'Produtos', icon: Package, badge: '0' },
   { id: 'categories', label: 'Categorias', icon: FolderTree },
   { id: 'rfqs', label: 'RFQs', icon: FileText, badge: '0' },
-  { id: 'users', label: 'Utilizadores & RBAC', icon: Users },
+  { id: 'users', label: 'Minha Equipa', icon: Users },
   { id: 'settings', label: 'Definições', icon: Settings },
 ];
 
