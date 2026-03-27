@@ -31,46 +31,57 @@ const pageVariants = {
 
 const Index = () => {
   const location = useLocation();
-  const [currentPage, setCurrentPage] = useState<PageType>(() => {
-    return location.pathname === '/dashboard' ? 'dashboard' : 'home';
-  });
-  const [transportFormOpen, setTransportFormOpen] = useState(false);
+  const navigate = useNavigate();
   const { openQuoteForm } = useQuote();
   const { isAuthenticated, user } = useAuth();
-  const navigate = useNavigate();
+  
+  const [transportFormOpen, setTransportFormOpen] = useState(false);
+
+  // Map paths to PageType
+  const getPageFromPath = (path: string): PageType => {
+    if (path === '/dashboard') return 'dashboard';
+    if (path === '/catalog') return 'b2b';
+    if (path === '/about') return 'about';
+    if (path === '/services') return 'services';
+    if (path === '/contact') return 'contact';
+    return 'home';
+  };
+
+  const [currentPage, setCurrentPage] = useState<PageType>(getPageFromPath(location.pathname));
 
   useEffect(() => {
-    if (location.pathname === '/dashboard') {
-      if (!isAuthenticated) {
-        navigate('/login', { state: { from: { pathname: '/dashboard' } } });
-      } else if (user?.role === 'admin') {
-        navigate('/admin');
-      } else {
-        setCurrentPage('dashboard');
-      }
-    } else if (location.pathname === '/') {
-      setCurrentPage('home');
-    }
-  }, [location.pathname, isAuthenticated, user, navigate]);
-
-  const handleNavigate = (page: PageType) => {
+    const page = getPageFromPath(location.pathname);
+    
+    // Auth protection for dashboard
     if (page === 'dashboard') {
       if (!isAuthenticated) {
         navigate('/login', { state: { from: { pathname: '/dashboard' } } });
         return;
-      }
-
-      if (user?.role === 'admin') {
+      } else if (user?.role === 'admin') {
         navigate('/admin');
         return;
       }
-      if (location.pathname !== '/dashboard') navigate('/dashboard');
-    } else {
-      if (location.pathname !== '/') navigate('/');
     }
+
     setCurrentPage(page);
+  }, [location.pathname, isAuthenticated, user, navigate]);
+
+  const handleNavigate = (page: PageType) => {
+    let path = '/';
+    if (page === 'dashboard') path = '/dashboard';
+    else if (page === 'b2b') path = '/catalog';
+    else if (page === 'about') path = '/about';
+    else if (page === 'services') path = '/services';
+    else if (page === 'contact') path = '/contact';
+
+    // Only navigate if path changes
+    if (location.pathname !== path) {
+      navigate(path);
+    }
+    
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
 
   return (
     <div className="min-h-screen bg-background">
