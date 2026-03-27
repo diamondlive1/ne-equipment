@@ -39,7 +39,7 @@ const UserManagement = () => {
         email: '',
         phone: '',
         role: 'admin',
-        is_superadmin: false, // Default to Operator (is_superadmin = false)
+        is_superadmin: false, // Default: Funcionário
         password: ''
     });
 
@@ -86,7 +86,7 @@ const UserManagement = () => {
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
                     <h2 className="text-2xl font-bold tracking-tight">Minha Equipa</h2>
-                    <p className="text-muted-foreground">Administre os funcionários da sua empresa.</p>
+                    <p className="text-muted-foreground">O Admin pode criar e gerir funcionários (operadores).</p>
                 </div>
             </div>
 
@@ -100,6 +100,7 @@ const UserManagement = () => {
                         onChange={(e) => setMemberSearchTerm(e.target.value)}
                     />
                 </div>
+                {/* Apenas o Admin principal cria funcionários */}
                 {currentUser?.is_superadmin && (
                     <Button onClick={() => setIsMemberModalOpen(true)} className="gap-2 bg-primary hover:bg-navy-dark rounded-xl h-11 px-6 shadow-lg shadow-primary/20 w-full sm:w-auto">
                         <Plus className="w-5 h-5" />
@@ -159,7 +160,7 @@ const UserManagement = () => {
                                                         : "bg-primary/5 text-primary border-primary/20"
                                                 )}
                                             >
-                                                {user.is_superadmin ? 'Admin' : 'Operador'}
+                                                {user.is_superadmin ? 'Admin' : 'Funcionário / Operador'}
                                             </Badge>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
@@ -257,14 +258,14 @@ const UserManagement = () => {
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest px-1">Nível de Acesso</label>
+                                        <label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest px-1">Papel</label>
                                         <select 
                                             value={memberFormData.is_superadmin ? 'admin' : 'operator'}
                                             onChange={(e) => setMemberFormData({...memberFormData, is_superadmin: e.target.value === 'admin'})}
                                             className="w-full h-12 bg-muted/20 border border-border/30 rounded-2xl px-4 text-sm focus:ring-primary/20 outline-none"
                                         >
-                                            <option value="operator">Operador</option>
-                                            <option value="admin">Admin</option>
+                                            <option value="operator">Funcionário (Operador)</option>
+                                            <option value="admin">Admin (Patrão)</option>
                                         </select>
                                     </div>
                                     <div className="space-y-2">
