@@ -39,6 +39,7 @@ const UserManagement = () => {
         email: '',
         phone: '',
         role: 'admin',
+        is_superadmin: false, // Default to Operator (is_superadmin = false)
         password: ''
     });
 
@@ -66,7 +67,7 @@ const UserManagement = () => {
             await api.post('/admin/users', memberFormData);
             toast.success('Funcionário criado com sucesso!');
             setIsMemberModalOpen(false);
-            setMemberFormData({ name: '', email: '', phone: '', role: 'admin', password: '' });
+            setMemberFormData({ name: '', email: '', phone: '', role: 'admin', is_superadmin: false, password: '' });
             fetchData();
         } catch (error: any) {
             toast.error(error.response?.data?.message || 'Erro ao adicionar membro');
@@ -102,7 +103,7 @@ const UserManagement = () => {
                 {currentUser?.is_superadmin && (
                     <Button onClick={() => setIsMemberModalOpen(true)} className="gap-2 bg-primary hover:bg-navy-dark rounded-xl h-11 px-6 shadow-lg shadow-primary/20 w-full sm:w-auto">
                         <Plus className="w-5 h-5" />
-                        Adicionar Trabalhador
+                        Novo Funcionário
                     </Button>
                 )}
             </div>
@@ -158,7 +159,7 @@ const UserManagement = () => {
                                                         : "bg-primary/5 text-primary border-primary/20"
                                                 )}
                                             >
-                                                {user.is_superadmin ? 'Superadmin' : 'Staff'}
+                                                {user.is_superadmin ? 'Admin' : 'Operador'}
                                             </Badge>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
@@ -255,7 +256,18 @@ const UserManagement = () => {
                                 </div>
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                    <div className="space-y-2 col-span-full">
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest px-1">Nível de Acesso</label>
+                                        <select 
+                                            value={memberFormData.is_superadmin ? 'admin' : 'operator'}
+                                            onChange={(e) => setMemberFormData({...memberFormData, is_superadmin: e.target.value === 'admin'})}
+                                            className="w-full h-12 bg-muted/20 border border-border/30 rounded-2xl px-4 text-sm focus:ring-primary/20 outline-none"
+                                        >
+                                            <option value="operator">Operador</option>
+                                            <option value="admin">Admin</option>
+                                        </select>
+                                    </div>
+                                    <div className="space-y-2">
                                         <label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest px-1">Senha de Acesso</label>
                                         <Input 
                                             required

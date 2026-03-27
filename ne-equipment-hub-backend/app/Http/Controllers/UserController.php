@@ -24,17 +24,17 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        // Apenas o Superadmin pode criar novos funcionários/admins
+        // Apenas o Admin principal (is_superadmin = true) pode criar novos funcionários/admins
         if (!$request->user() || !$request->user()->is_superadmin) {
             return response()->json(['message' => 'Apenas o administrador principal pode adicionar novos membros à equipa.'], 403);
         }
 
         $request->validate([
-
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'phone' => 'nullable|string|max:20',
             'role' => 'required|string|in:admin,customer',
+            'is_superadmin' => 'nullable|boolean',
             'password' => 'required|string|min:6',
         ]);
 
@@ -43,6 +43,7 @@ class UserController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'role' => $request->role,
+            'is_superadmin' => $request->is_superadmin ?? false,
             'password' => Hash::make($request->password),
             'is_active' => true,
         ]);
