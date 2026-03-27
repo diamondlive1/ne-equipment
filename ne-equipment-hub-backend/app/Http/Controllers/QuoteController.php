@@ -113,80 +113,98 @@ class QuoteController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $quote = Quote::findOrFail($id);
-        $oldStatus = $quote->status;
+        try {
+            $quote = Quote::findOrFail($id);
+            $oldStatus = $quote->status;
 
-        $validated = $request->validate([
-            'status' => 'sometimes|string|in:pending,responded,approved,rejected,converted,payment_reported,completed',
-            'admin_notes' => 'sometimes|nullable|string',
-            'total_estimated_value' => 'sometimes|numeric',
-            'expires_at' => 'sometimes|nullable|date',
-            'delivery_info' => 'sometimes|nullable|string|max:255',
-        ]);
+            $validated = $request->validate([
+                'status' => 'sometimes|string|in:pending,responded,approved,rejected,converted,payment_reported,completed',
+                'admin_notes' => 'sometimes|nullable|string',
+                'total_estimated_value' => 'sometimes|numeric',
+                'expires_at' => 'sometimes|nullable|date',
+                'delivery_info' => 'sometimes|nullable|string|max:255',
+            ]);
 
-        DB::transaction(function () use ($quote, $validated, $oldStatus) {
-            $quote->update($validated);
+            DB::transaction(function () use ($quote, $validated, $oldStatus) {
+                $quote->update($validated);
 
-            // Se o status mudou para convertido ou completed, criamos um pedido
-            if (isset($validated['status']) && in_array($validated['status'], ['converted', 'completed']) && !in_array($oldStatus, ['converted', 'completed'])) {
-                $orderNumber = 'ORD-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -4));
-                
-                $order = \App\Models\Order::create([
-                    'order_number' => $orderNumber,
-                    'user_id' => $quote->user_id,
-                    'status' => 'pending_payment',
-                    'total_amount' => $quote->total_estimated_value,
-                    'shipping_fee' => 0,
-                ]);
-
-                foreach ($quote->items as $item) {
-                    \App\Models\OrderItem::create([
-                        'order_id' => $order->id,
-                        'product_id' => $item->product_id,
-                        'quantity' => $item->quantity,
-                        'price_at_time' => $item->approved_price ?? $item->requested_price ?? 0,
+                // Se o status mudou para convertido ou completed, criamos um pedido
+                if (isset($validated['status']) && in_array($validated['status'], ['converted', 'completed']) && !in_array($oldStatus, ['converted', 'completed'])) {
+                    $orderNumber = 'ORD-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -4));
+                    
+                    $order = \App\Models\Order::create([
+                        'order_number' => $orderNumber,
+                        'user_id' => $quote->user_id,
+                        'status' => 'pending_payment',
+                        'total_amount' => $quote->total_estimated_value,
+                        'shipping_fee' => 0,
                     ]);
-                }
-            }
-        });
 
-        return response()->json([
-            'message' => 'Cotação atualizada com sucesso',
-            'quote' => $quote->load(['user', 'items.product.images'])
-        ]);
+                    foreach ($quote->items as $item) {
+                        \App\Models\OrderItem::create([
+                            'order_id' => $order->id,
+                            'product_id' => $item->product_id,
+                            'quantity' => $item->quantity,
+                            'price_at_time' => $item->approved_price ?? $item->requested_price ?? 0,
+                        ]);
+                    }
+                }
+            });
+
+            return response()->json([
+                'message' => 'Cotação atualizada com sucesso',
+                'quote' => $quote->load(['user', 'items.product.images'])
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro interno do servidor',
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ], 500);
+        }
     }
+
 
     /**
      * Atualizar preços aprovados para itens individuais de uma cotação.
      */
     public function updateItems(Request $request, $id)
     {
-        $request->validate([
-            'items' => 'required|array',
-            'items.*.id' => 'required|exists:quote_items,id',
-            'items.*.approved_price' => 'nullable|numeric',
-        ]);
+        try {
+            $request->validate([
+                'items' => 'required|array',
+                'items.*.id' => 'required|exists:quote_items,id',
+                'items.*.approved_price' => 'nullable|numeric',
+            ]);
 
-        foreach ($request->items as $itemData) {
-            $quoteItem = QuoteItem::where('quote_id', $id)->findOrFail($itemData['id']);
-            $quoteItem->update(['approved_price' => $itemData['approved_price']]);
+            foreach ($request->items as $itemData) {
+                $quoteItem = QuoteItem::where('quote_id', $id)->findOrFail($itemData['id']);
+                $quoteItem->update(['approved_price' => $itemData['approved_price']]);
+            }
+
+            $quote = Quote::with(['user', 'items.product.images'])->findOrFail($id);
+
+            // Recalcular total se necessário
+            $total = 0;
+            foreach ($quote->items as $item) {
+                $total += floatval($item->approved_price ?? $item->requested_price ?? 0) * intval($item->quantity);
+            }
+            
+            $quote->update(['total_estimated_value' => $total]);
+
+            return response()->json([
+                'message' => 'Itens da cotação atualizados com sucesso',
+                'quote' => $quote
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao atualizar itens da cotação',
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ], 500);
         }
-
-        $quote = Quote::with(['user', 'items.product.images'])->findOrFail($id);
-
-        // Recalcular total se necessário
-        $total = 0;
-        foreach ($quote->items as $item) {
-            $total += floatval($item->approved_price ?? $item->requested_price ?? 0) * intval($item->quantity);
-        }
-        
-        $quote->update(['total_estimated_value' => $total]);
-
-        return response()->json([
-            'message' => 'Itens da cotação atualizados com sucesso',
-            'quote' => $quote
-        ]);
     }
+
 
     /**
      * Listar mensagens do chat de uma cotação.

@@ -12,6 +12,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\TeamController;
+
 
 
 // Rotas abertas (não requerem token)
@@ -88,7 +90,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/admin/users', [UserController::class, 'index']);
     Route::post('/admin/users', [UserController::class, 'store']);
 
+    // Admin: Gestão de Equipas
+    Route::apiResource('/admin/teams', TeamController::class);
+
     // Admin Settings
+
 
     Route::put('/admin/settings', [SettingController::class, 'update']);
 });

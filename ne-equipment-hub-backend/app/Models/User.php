@@ -8,6 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -24,8 +26,10 @@ class User extends Authenticatable
         'password',
         'phone',
         'role',
+        'team_id',
         'nuit',
         'is_active',
+
         'is_superadmin',
         'avatar',
         'birth_date',
@@ -47,7 +51,13 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
+    public function team(): BelongsTo
+    {
+        return $this->belongsTo(Team::class);
+    }
+
     protected function casts(): array
+
     {
         return [
             'email_verified_at' => 'datetime',
