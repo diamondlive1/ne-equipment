@@ -20,9 +20,11 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import api from '@/services/api';
+import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 
 const UserManagement = () => {
+    const { user: currentUser } = useAuth();
     const [users, setUsers] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
@@ -85,10 +87,12 @@ const UserManagement = () => {
                     <h2 className="text-2xl font-bold tracking-tight">Gestão da Equipa</h2>
                     <p className="text-muted-foreground">Administre os acessos dos seus funcionários e gestores.</p>
                 </div>
-                <Button onClick={() => setIsModalOpen(true)} className="gap-2 bg-primary hover:bg-navy-dark rounded-xl h-11 px-6 shadow-lg shadow-primary/20">
-                    <Plus className="w-5 h-5" />
-                    Adicionar Membro
-                </Button>
+                {currentUser?.is_superadmin && (
+                    <Button onClick={() => setIsModalOpen(true)} className="gap-2 bg-primary hover:bg-navy-dark rounded-xl h-11 px-6 shadow-lg shadow-primary/20">
+                        <Plus className="w-5 h-5" />
+                        Adicionar Membro
+                    </Button>
+                )}
             </div>
 
             <Card className="glass-card border-border/50">

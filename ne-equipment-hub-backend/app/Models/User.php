@@ -26,9 +26,11 @@ class User extends Authenticatable
         'role',
         'nuit',
         'is_active',
+        'is_superadmin',
         'avatar',
         'birth_date',
     ];
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -50,6 +52,8 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_superadmin' => 'boolean',
         ];
     }
+
 }

@@ -9,8 +9,10 @@ export interface User {
     role: string;
     nuit?: string;
     is_active: boolean;
+    is_superadmin?: boolean;
     avatar?: string;
 }
+
 
 interface AuthContextType {
     user: User | null;
