@@ -11,6 +11,8 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\UserController;
+
 
 // Rotas abertas (não requerem token)
 Route::post('/login', [AuthController::class, 'login']);
@@ -82,6 +84,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
     Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead']);
 
+    // Admin: Gestão de Utilizadores
+    Route::get('/admin/users', [UserController::class, 'index']);
+    Route::post('/admin/users', [UserController::class, 'store']);
+
     // Admin Settings
+
     Route::put('/admin/settings', [SettingController::class, 'update']);
 });

@@ -13,7 +13,6 @@ import {
   ShoppingCart,
   Loader2,
   CheckCircle,
-  Settings,
   Save
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
@@ -68,19 +67,13 @@ const formatMZN = (v: number) => {
 const AdminDashboard = () => {
   const [data, setData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [settings, setSettings] = useState<Record<string, string>>({});
-  const [isSavingSettings, setIsSavingSettings] = useState(false);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
         setIsLoading(true);
-        const [dashRes, settingsRes] = await Promise.all([
-          api.get('/admin/dashboard'),
-          api.get('/settings')
-        ]);
-        setData(dashRes.data);
-        setSettings(settingsRes.data);
+        const response = await api.get('/admin/dashboard');
+        setData(response.data);
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
       } finally {
@@ -90,22 +83,7 @@ const AdminDashboard = () => {
     fetchDashboardData();
   }, []);
 
-  const handleUpdateSettings = async () => {
-    try {
-      setIsSavingSettings(true);
-      await api.put('/admin/settings', { settings });
-      toast.success('Configurações da loja atualizadas!');
-    } catch (error) {
-      console.error('Error updating settings:', error);
-      toast.error('Erro ao salvar configurações');
-    } finally {
-      setIsSavingSettings(false);
-    }
-  };
 
-  const handleSettingChange = (key: string, value: string) => {
-    setSettings(prev => ({ ...prev, [key]: value }));
-  };
 
   if (isLoading) {
     return (
@@ -340,97 +318,6 @@ const AdminDashboard = () => {
         </Card>
       </div>
 
-      {/* Loja Settings Section */}
-      <Card className="glass-card border-border/50 shadow-sm overflow-hidden mt-6">
-        <CardHeader className="bg-muted/30 pb-3 border-b border-border/10">
-          <CardTitle className="text-base font-bold flex items-center gap-2">
-            <Settings className="w-5 h-5 text-primary" /> Configurações de Pagamento (Dados Bancários)
-          </CardTitle>
-          <p className="text-xs text-muted-foreground">Estes dados serão exibidos dinamicamente aos clientes quando as cotações forem aprovadas.</p>
-        </CardHeader>
-        <CardContent className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Banco 1 */}
-            <div className="space-y-4 bg-muted/20 p-4 rounded-xl border border-border/30">
-              <h4 className="font-bold text-sm text-primary uppercase tracking-wider">Banco Principal</h4>
-              <div className="space-y-3">
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold uppercase text-muted-foreground px-1">Nome do Banco</label>
-                  <input 
-                    className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
-                    value={settings.bank_1_name || ''}
-                    onChange={(e) => handleSettingChange('bank_1_name', e.target.value)}
-                    placeholder="Ex: Millennium BIM"
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1">
-                    <label className="text-[10px] font-bold uppercase text-muted-foreground px-1">Nº Conta</label>
-                    <input 
-                      className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
-                      value={settings.bank_1_account || ''}
-                      onChange={(e) => handleSettingChange('bank_1_account', e.target.value)}
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-[10px] font-bold uppercase text-muted-foreground px-1">NIB</label>
-                    <input 
-                      className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
-                      value={settings.bank_1_nib || ''}
-                      onChange={(e) => handleSettingChange('bank_1_nib', e.target.value)}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Banco 2 */}
-            <div className="space-y-4 bg-muted/20 p-4 rounded-xl border border-border/30">
-              <h4 className="font-bold text-sm text-whatsapp uppercase tracking-wider">Banco Secundário</h4>
-              <div className="space-y-3">
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold uppercase text-muted-foreground px-1">Nome do Banco</label>
-                  <input 
-                    className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
-                    value={settings.bank_2_name || ''}
-                    onChange={(e) => handleSettingChange('bank_2_name', e.target.value)}
-                    placeholder="Ex: BCI"
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1">
-                    <label className="text-[10px] font-bold uppercase text-muted-foreground px-1">Nº Conta</label>
-                    <input 
-                      className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
-                      value={settings.bank_2_account || ''}
-                      onChange={(e) => handleSettingChange('bank_2_account', e.target.value)}
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-[10px] font-bold uppercase text-muted-foreground px-1">NIB</label>
-                    <input 
-                      className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
-                      value={settings.bank_2_nib || ''}
-                      onChange={(e) => handleSettingChange('bank_2_nib', e.target.value)}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-6 flex justify-end">
-            <Button 
-              onClick={handleUpdateSettings} 
-              disabled={isSavingSettings}
-              className="bg-navy-dark text-white font-bold gap-2 px-8 rounded-xl h-11 shadow-lg hover:shadow-xl transition-all"
-            >
-              {isSavingSettings ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-              Guardar Configurações da Loja
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 };
