@@ -8,9 +8,11 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useCart } from '@/hooks/useCart';
+import { useLanguage } from '@/i18n/LanguageContext';
 import { toast } from 'sonner';
 import api from '@/services/api';
 import { useQuote } from '@/contexts/QuoteContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 
 
@@ -38,6 +40,9 @@ const ProductDetails = () => {
     const navigate = useNavigate();
     const { addItem } = useCart();
     const { openQuoteForm } = useQuote();
+    const { user } = useAuth();
+    const isAdmin = user?.role === 'admin';
+    const { language } = useLanguage(); // Need this if not already imported
 
     const [product, setProduct] = useState<Product | null>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -222,12 +227,22 @@ const ProductDetails = () => {
                             </div>
 
                             <div className="space-y-3">
-                                <Button className="w-full bg-navy-dark hover:bg-navy text-white font-bold h-12 rounded-xl text-base" onClick={() => handleAddToCart(true)}>
-                                    Solicitar Cotação
-                                </Button>
-                                <Button variant="outline" onClick={() => handleAddToCart(false)} className="w-full border-gold text-navy-dark hover:bg-gold/10 font-bold h-12 rounded-xl">
-                                    Adicionar ao Carrinho
-                                </Button>
+                                {!isAdmin ? (
+                                    <>
+                                        <Button className="w-full bg-navy-dark hover:bg-navy text-white font-bold h-12 rounded-xl text-base" onClick={() => handleAddToCart(true)}>
+                                            Solicitar Cotação
+                                        </Button>
+                                        <Button variant="outline" onClick={() => handleAddToCart(false)} className="w-full border-gold text-navy-dark hover:bg-gold/10 font-bold h-12 rounded-xl">
+                                            Adicionar ao Carrinho
+                                        </Button>
+                                    </>
+                                ) : (
+                                    <div className="p-4 bg-muted/30 border border-dashed border-border rounded-xl text-center">
+                                        <p className="text-sm text-muted-foreground italic">
+                                            {language === 'PT' ? 'Administradores não podem solicitar cotações.' : 'Administrators cannot request quotes.'}
+                                        </p>
+                                    </div>
+                                )}
                             </div>
 
                             <div className="flex justify-center gap-6 mt-6 border-t border-gray-100 pt-6">

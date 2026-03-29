@@ -208,16 +208,22 @@ const Header = ({ currentPage, onNavigate, onQuoteClick, onTransportClick }: Hea
                           </div>
                         ))}
                         <div className="border-t pt-4">
-                          <Button 
-                            onClick={() => {
-                              onQuoteClick();
-                              setCartOpen(false);
-                            }} 
-                            className="w-full bg-primary hover:bg-navy-light font-bold text-white"
-                          >
-                            <FileText className="w-4 h-4 mr-2" />
-                            {isAuthenticated ? t.header.submitQuote : t.header.requestQuote}
-                          </Button>
+                          {user?.role !== 'admin' ? (
+                            <Button 
+                              onClick={() => {
+                                onQuoteClick();
+                                setCartOpen(false);
+                              }} 
+                              className="w-full bg-primary hover:bg-navy-light font-bold text-white"
+                            >
+                              <FileText className="w-4 h-4 mr-2" />
+                              {isAuthenticated ? t.header.submitQuote : t.header.requestQuote}
+                            </Button>
+                          ) : (
+                            <p className="text-xs text-muted-foreground text-center italic py-2">
+                              {language === 'PT' ? 'Admins não podem solicitar cotações.' : 'Admins cannot request quotes.'}
+                            </p>
+                          )}
                         </div>
                       </>
                     )}

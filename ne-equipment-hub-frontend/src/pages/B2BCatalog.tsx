@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 import { useLanguage } from '@/i18n/LanguageContext';
 import api from '@/services/api';
 import { useQuote } from '@/contexts/QuoteContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 // We will fetch categories dynamically from the backend
 interface Product {
@@ -32,8 +33,9 @@ const B2BCatalog = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [searchTerm, setSearchTerm] = useState('');
-  const { addItem } = useCart();
+  const { items, addItem } = useCart();
   const { openQuoteForm } = useQuote();
+  const { user } = useAuth();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
   const { t } = useLanguage();
@@ -54,9 +56,18 @@ const B2BCatalog = () => {
           icon: Factory // Default icon for dynamic categories
         }));
         
+        // Sort categories: "Industrial" should come first (after "all")
+        const sortedCats = fetchedCats.sort((a: any, b: any) => {
+          const isAIndustrial = a.name.toLowerCase().includes('industrial') || a.slug.toLowerCase().includes('industrial');
+          const isBIndustrial = b.name.toLowerCase().includes('industrial') || b.slug.toLowerCase().includes('industrial');
+          if (isAIndustrial && !isBIndustrial) return -1;
+          if (!isAIndustrial && isBIndustrial) return 1;
+          return 0;
+        });
+
         setCategories([
           { id: 'all', name: 'Todos os Produtos', icon: Grid },
-          ...fetchedCats
+          ...sortedCats
         ]);
 
       } catch (error) {
@@ -175,17 +186,19 @@ const B2BCatalog = () => {
                       </Badge>
                       <img src={imageUrl} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                       
-                      {/* Overlay Request Button */}
-                      <div className="absolute inset-0 bg-navy-dark/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-4">
-                        <Button 
-                          size="sm" 
-                          onClick={(e) => { e.stopPropagation(); handleAddToQuote(product); }} 
-                          className="bg-gold hover:bg-gold-light text-navy-dark font-bold text-[10px] h-8 px-3 rounded-full shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform"
-                        >
-                          {t.b2bCatalog.quote}
-                          <Plus className="w-3 h-3 ml-1" />
-                        </Button>
-                      </div>
+                      {/* Overlay Request Button - Hidden for Admins */}
+                      {user?.role !== 'admin' && (
+                        <div className="absolute inset-0 bg-navy-dark/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-4">
+                          <Button 
+                            size="sm" 
+                            onClick={(e) => { e.stopPropagation(); handleAddToQuote(product); }} 
+                            className="bg-gold hover:bg-gold-light text-navy-dark font-bold text-[10px] h-8 px-3 rounded-full shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform"
+                          >
+                            {t.b2bCatalog.quote}
+                            <Plus className="w-3 h-3 ml-1" />
+                          </Button>
+                        </div>
+                      )}
                     </div>
                     <div className="p-3">
                       <h3 className="font-bold text-foreground mb-1 line-clamp-1 text-sm">{product.name}</h3>

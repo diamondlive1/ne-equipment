@@ -55,7 +55,7 @@ export const translations = {
     about: {
       subtitle: 'CONHEÇA-NOS',
       title: 'Liderança em Procurement Industrial',
-      p1: 'A <strong>NE Equipment</strong> é uma empresa moçambicana de vanguarda, estrategicamente posicionada para servir o mercado da África Austral. Com escritórios em <strong>Maputo, Pemba e Joanesburgo</strong>, dominamos as complexidades do comércio transfronteiriço.',
+      p1: 'A <strong>NE Equipment</strong> é uma empresa moçambicana de vanguarda, estrategicamente posicionada para servir o mercado da África Austral. Com presença em <strong>Moçambique e South Africa</strong>, dominamos as complexidades do comércio transfronteiriço.',
       p2: 'Nascemos com a filosofia de colocar os objetivos estratégicos dos nossos clientes no coração do negócio. Não vendemos apenas equipamentos; desenhamos soluções de crescimento.',
       values: {
         professionalism: 'PROFISSIONALISMO',
@@ -109,7 +109,7 @@ export const translations = {
       },
       transport: {
         coverage: 'Cobertura Regional',
-        coverageDesc: 'Maputo, Pemba e África do Sul',
+        coverageDesc: 'Moçambique e South Africa',
         express: 'Expresso',
         expressDesc: 'Entrega prioritária em 24-48h',
         standard: 'Standard',
@@ -246,7 +246,7 @@ export const translations = {
     servicesPage: {
       title: 'Transporte & Entrega',
       titleHighlight: 'Regional',
-      description: 'Cobrimos o triângulo logístico Maputo-Pemba-Joanesburgo com frota própria e parceiros certificados. Rastreabilidade total e segurança de carga.',
+      description: 'Cobrimos as principais rotas logísticas entre Moçambique e South Africa com frota própria e parceiros certificados. Rastreabilidade total e segurança de carga.',
       fractional: 'Carga Fracionada ou Contentor',
       tracking: 'Rastreamento Online',
       freightSimulator: 'Simulador de Frete',
@@ -463,7 +463,7 @@ export const translations = {
       viewCatalog: 'View Catalog',
       stats: {
         experience: 'YEARS OF EXPERIENCE',
-        offices: 'REGIONAL OFFICES',
+        offices: 'REGIONAL PRESENCE',
         products: 'PRODUCTS IN CATALOG',
         commitment: 'ETHICAL COMMITMENT',
       },
@@ -482,7 +482,7 @@ export const translations = {
     about: {
       subtitle: 'GET TO KNOW US',
       title: 'Leadership in Industrial Procurement',
-      p1: '<strong>NE Equipment</strong> is a cutting-edge Mozambican company, strategically positioned to serve the Southern African market. With offices in <strong>Maputo, Pemba and Johannesburg</strong>, we master the complexities of cross-border trade.',
+      p1: '<strong>NE Equipment</strong> is a cutting-edge Mozambican company, strategically positioned to serve the Southern African market. With presence in <strong>Mozambique and South Africa</strong>, we master the complexities of cross-border trade.',
       p2: 'We were born with the philosophy of placing our clients\' strategic objectives at the heart of the business. We don\'t just sell equipment; we design growth solutions.',
       values: {
         professionalism: 'PROFESSIONALISM',
@@ -533,7 +533,7 @@ export const translations = {
       },
       transport: {
         coverage: 'Regional Coverage',
-        coverageDesc: 'Maputo, Pemba and South Africa',
+        coverageDesc: 'Mozambique and South Africa',
         express: 'Express',
         expressDesc: 'Priority delivery in 24-48h',
         standard: 'Standard',
@@ -662,7 +662,7 @@ export const translations = {
     servicesPage: {
       title: 'Transport & Delivery',
       titleHighlight: 'Regional',
-      description: 'We cover the Maputo-Pemba-Johannesburg logistics triangle with our own fleet and certified partners. Full traceability and cargo security.',
+      description: 'We cover the Mozambique and South Africa logistics routes with our own fleet and certified partners. Full traceability and cargo security.',
       fractional: 'Fractional or Container Cargo',
       tracking: 'Online Tracking',
       freightSimulator: 'Freight Simulator',

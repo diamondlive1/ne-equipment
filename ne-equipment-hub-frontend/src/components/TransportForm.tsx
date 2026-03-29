@@ -15,9 +15,8 @@ interface TransportFormProps {
 }
 
 const locations = [
-  'Maputo, Moçambique',
-  'Pemba, Moçambique',
-  'Joanesburgo, África do Sul',
+  'Moçambique',
+  'South Africa',
 ];
 
 const TransportForm = ({ isOpen, onClose }: TransportFormProps) => {
