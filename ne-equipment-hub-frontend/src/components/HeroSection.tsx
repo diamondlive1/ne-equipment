@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Truck, CheckCircle, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/i18n/LanguageContext';
+import { useAuth } from '@/contexts/AuthContext';
 import api from '@/services/api';
 
 interface HeroSectionProps {
@@ -24,6 +25,7 @@ const FALLBACK_IMAGES = [
 const HeroSection = ({ onQuoteClick }: HeroSectionProps) => {
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const { isAuthenticated } = useAuth();
   const [productImages, setProductImages] = useState<{id?: string | number, src: string, alt: string}[]>(FALLBACK_IMAGES);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -103,10 +105,12 @@ const HeroSection = ({ onQuoteClick }: HeroSectionProps) => {
                 {t.hero.subtitle}
               </p>
               <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
-                <Button onClick={onQuoteClick} size="lg" className="bg-gold hover:bg-gold-light text-navy-dark font-bold px-8 rounded-full shadow-lg shadow-gold/30">
-                  {t.hero.requestQuote}
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </Button>
+                {!isAuthenticated && (
+                  <Button onClick={onQuoteClick} size="lg" className="bg-gold hover:bg-gold-light text-navy-dark font-bold px-8 rounded-full shadow-lg shadow-gold/30">
+                    {t.hero.requestQuote}
+                    <ArrowRight className="ml-2 w-5 h-5" />
+                  </Button>
+                )}
                 <Button variant="outline" size="lg" className="bg-transparent border-white/30 text-white hover:bg-white/10 px-8 rounded-full backdrop-blur-sm" asChild>
                   <a href="#catalogo">{t.hero.viewCatalog}</a>
                 </Button>

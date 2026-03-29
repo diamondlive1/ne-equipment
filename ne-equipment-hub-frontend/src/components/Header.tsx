@@ -140,7 +140,7 @@ const Header = ({ currentPage, onNavigate, onQuoteClick, onTransportClick }: Hea
                   className="hidden md:flex items-center gap-2 text-sm font-semibold tracking-wide text-navy-dark hover:text-gold transition-colors duration-200"
                 >
                   <LogIn className="w-5 h-5" />
-                  <span>{language === 'PT' ? 'Entrar / Registar' : 'Login / Register'}</span>
+                  <span>{language === 'PT' ? 'Entrar' : 'Login'}</span>
                 </button>
               )}
 
@@ -277,6 +277,16 @@ const Header = ({ currentPage, onNavigate, onQuoteClick, onTransportClick }: Hea
                 >
                   <LogOut className="w-4 h-4" />
                   {language === 'PT' ? 'Sair da conta' : 'Logout'}
+                </button>
+              )}
+
+              {!isAuthenticated && (
+                <button
+                  onClick={() => { navigate('/login', { state: { from: location } }); setMobileMenuOpen(false); }}
+                  className="text-left py-3 px-4 rounded-xl text-sm font-semibold text-navy-dark hover:bg-gold/5 transition-colors flex items-center gap-2"
+                >
+                  <LogIn className="w-4 h-4 text-gold" />
+                  {language === 'PT' ? 'Entrar' : 'Login'}
                 </button>
               )}
 
