@@ -117,8 +117,8 @@ const HeroSection = ({ onQuoteClick }: HeroSectionProps) => {
               </div>
             </motion.div>
 
-            <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="hidden lg:block relative z-20">
-              <div className="relative h-[450px]">
+            <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="relative z-20 mt-12 lg:mt-0">
+              <div className="relative h-[300px] sm:h-[400px] lg:h-[450px]">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={currentIndex}
@@ -132,19 +132,19 @@ const HeroSection = ({ onQuoteClick }: HeroSectionProps) => {
                       to={productImages[currentIndex]?.id && productImages[currentIndex]?.id !== 'all' ? `/product/${productImages[currentIndex].id}` : '#catalogo'}
                       className="block group h-full"
                     >
-                      <div className="glass-card p-4 rounded-3xl h-full shadow-2xl hover:shadow-gold/20 transition-all duration-500 overflow-hidden">
-                        <div className="relative h-full w-full rounded-2xl overflow-hidden">
+                      <div className="glass-card p-3 sm:p-4 rounded-2xl sm:rounded-3xl h-full shadow-2xl hover:shadow-gold/20 transition-all duration-500 overflow-hidden">
+                        <div className="relative h-full w-full rounded-xl sm:rounded-2xl overflow-hidden">
                           <img 
                             src={productImages[currentIndex].src} 
                             alt={productImages[currentIndex].alt} 
                             className="w-full h-full object-cover transform scale-100 group-hover:scale-110 transition-transform duration-[2000ms]" 
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-navy-dark/90 via-navy-dark/20 to-transparent flex flex-col justify-end p-8">
+                          <div className="absolute inset-0 bg-gradient-to-t from-navy-dark/90 via-navy-dark/20 to-transparent flex flex-col justify-end p-4 sm:p-8">
                             <motion.span 
                               initial={{ opacity: 0, y: 20 }}
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ delay: 0.3 }}
-                              className="text-gold text-sm font-bold uppercase tracking-[0.2em] mb-2"
+                              className="text-gold text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] mb-1 sm:mb-2"
                             >
                               Equipamento Industrial
                             </motion.span>
@@ -152,7 +152,7 @@ const HeroSection = ({ onQuoteClick }: HeroSectionProps) => {
                               initial={{ opacity: 0, y: 20 }}
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ delay: 0.4 }}
-                              className="text-white text-3xl font-bold mb-4"
+                              className="text-white text-xl sm:text-2xl lg:text-3xl font-bold mb-2 sm:mb-4"
                             >
                               {productImages[currentIndex].alt}
                             </motion.h3>
@@ -160,10 +160,10 @@ const HeroSection = ({ onQuoteClick }: HeroSectionProps) => {
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
                               transition={{ delay: 0.5 }}
-                              className="flex items-center text-white/60 text-sm font-medium"
+                              className="flex items-center text-white/60 text-[10px] sm:text-xs font-medium"
                             >
                               Clique para ver detalhes
-                              <ArrowRight className="ml-2 w-4 h-4 text-gold" />
+                              <ArrowRight className="ml-2 w-3 h-3 sm:w-4 sm:h-4 text-gold" />
                             </motion.div>
                           </div>
                         </div>
@@ -173,12 +173,12 @@ const HeroSection = ({ onQuoteClick }: HeroSectionProps) => {
                 </AnimatePresence>
 
                 {/* Carousel Indicators */}
-                <div className="absolute -bottom-10 left-1/2 transform -translate-x-1/2 flex gap-3">
+                <div className="absolute -bottom-6 sm:-bottom-10 left-1/2 transform -translate-x-1/2 flex gap-2 sm:gap-3">
                   {productImages.map((_, idx) => (
                     <button
                       key={idx}
                       onClick={() => setCurrentIndex(idx)}
-                      className={`h-1.5 transition-all duration-500 rounded-full ${currentIndex === idx ? 'w-8 bg-gold' : 'w-2 bg-white/20'}`}
+                      className={`h-1 sm:h-1.5 transition-all duration-500 rounded-full ${currentIndex === idx ? 'w-6 sm:w-8 bg-gold' : 'w-1.5 sm:w-2 bg-white/20'}`}
                     />
                   ))}
                 </div>

@@ -216,7 +216,7 @@ const Header = ({ currentPage, onNavigate, onQuoteClick, onTransportClick }: Hea
                             className="w-full bg-primary hover:bg-navy-light font-bold text-white"
                           >
                             <FileText className="w-4 h-4 mr-2" />
-                            {t.header.requestQuote}
+                            {isAuthenticated ? t.header.submitQuote : t.header.requestQuote}
                           </Button>
                         </div>
                       </>
