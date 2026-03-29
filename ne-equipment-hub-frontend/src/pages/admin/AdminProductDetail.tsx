@@ -200,7 +200,7 @@ const AdminProductDetail = ({ productId, onBack, onEdit }: AdminProductDetailPro
                                     </div>
                                     <div className="p-4 bg-muted/20 rounded-xl border border-border">
                                         <p className="text-[10px] text-muted-foreground font-bold uppercase">Políticas de Entrega</p>
-                                        <p className="flex items-center gap-2 text-sm"><Truck className="w-3 h-3 text-primary" /> Maputo (2-5 dias úteis)</p>
+                                        <p className="flex items-center gap-2 text-sm"><Truck className="w-3 h-3 text-primary" /> Moçambique (2-5 dias úteis)</p>
                                     </div>
                                 </div>
                                 <div className="p-4 bg-yellow-50 rounded-xl border border-yellow-100 flex gap-3">

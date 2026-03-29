@@ -11,9 +11,9 @@ import { toast } from 'sonner';
 import { useLanguage } from '@/i18n/LanguageContext';
 
 const offices = [
-  { city: 'MAPUTO', address: 'Av. Vladimir Lenine Nr. 1447, 1º Andar Esquerdo', phone: '+258 84 311 4354', email: 'sales@neequipment.co.mz' },
-  { city: 'PEMBA', address: 'Av. 25 de Setembro, Bairro Cimento', phone: '+258 87 319 71 52', email: 'geral@neequipment.co.mz' },
-  { city: 'JOANESBURGO', address: 'Stanford Gardens 2, Bedfordview', phone: '+27 (63) 123 34 07', email: 'sales@neequipment.co.za' },
+  { city: 'MOÇAMBIQUE', address: 'Av. Vladimir Lenine Nr. 1447, 1º Andar Esquerdo, Maputo', phone: '+258 84 311 4354', email: 'sales@neequipment.co.mz' },
+  { city: 'MOÇAMBIQUE (PEMBA)', address: 'Av. 25 de Setembro, Bairro Cimento, Pemba', phone: '+258 87 319 71 52', email: 'geral@neequipment.co.mz' },
+  { city: 'SOUTH AFRICA', address: 'Stanford Gardens 2, Bedfordview, Johannesburg', phone: '+27 (63) 123 34 07', email: 'sales@neequipment.co.za' },
 ];
 
 const Contact = () => {

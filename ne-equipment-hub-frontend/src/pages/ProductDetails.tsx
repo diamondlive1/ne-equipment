@@ -202,7 +202,7 @@ const ProductDetails = () => {
                                 <div className="flex items-start gap-3">
                                     <Truck className="w-5 h-5 text-gold-dark mt-0.5" />
                                     <div>
-                                        <p className="font-bold text-navy-dark">Entrega em Maputo</p>
+                                        <p className="font-bold text-navy-dark">Entrega em Moçambique</p>
                                         <p className="text-gray-500">2 a 5 dias úteis</p>
                                     </div>
                                 </div>

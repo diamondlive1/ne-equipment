@@ -60,9 +60,8 @@ const Services = () => {
                   <Select value={origin} onValueChange={setOrigin}>
                     <SelectTrigger className="mt-1 rounded-xl"><SelectValue placeholder={t.servicesPage.selectLabel} /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="maputo">Maputo (MZ)</SelectItem>
-                      <SelectItem value="pemba">Pemba (MZ)</SelectItem>
-                      <SelectItem value="joburg">Joanesburgo (ZA)</SelectItem>
+                      <SelectItem value="mozambique">Moçambique (MZ)</SelectItem>
+                      <SelectItem value="southafrica">South Africa (ZA)</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -71,9 +70,8 @@ const Services = () => {
                   <Select value={destination} onValueChange={setDestination}>
                     <SelectTrigger className="mt-1 rounded-xl"><SelectValue placeholder={t.servicesPage.selectLabel} /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="maputo">Maputo (MZ)</SelectItem>
-                      <SelectItem value="pemba">Pemba (MZ)</SelectItem>
-                      <SelectItem value="joburg">Joanesburgo (ZA)</SelectItem>
+                      <SelectItem value="mozambique">Moçambique (MZ)</SelectItem>
+                      <SelectItem value="southafrica">South Africa (ZA)</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

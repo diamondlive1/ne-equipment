@@ -184,7 +184,7 @@ export const generateQuotePDF = (quote: QuoteData, settings: Settings) => {
             <strong>Notas:</strong>
             <div class="notes-box">
               ${quote.expires_at ? `Esta proposta é válida até ${formatDateSafe(quote.expires_at)}.` : 'Válido por 7 dias.'} 
-              ${quote.delivery_info ? `Prazo de entrega: ${quote.delivery_info}.` : 'Entrega em Maputo: 2 a 5 dias úteis.'}
+              ${quote.delivery_info ? `Prazo de entrega: ${quote.delivery_info}.` : 'Entrega em Moçambique: 2 a 5 dias úteis.'}
               Pagamento via transferência bancária.
             </div>
           </div>

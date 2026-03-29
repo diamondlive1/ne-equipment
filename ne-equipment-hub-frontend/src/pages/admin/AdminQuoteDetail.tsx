@@ -478,7 +478,7 @@ export default function AdminQuoteDetail({ quoteId, onBack }: AdminQuoteDetailPr
                 <Input 
                   value={deliveryInfo}
                   onChange={(e) => setDeliveryInfo(e.target.value)}
-                  placeholder="Ex: Entrega em Maputo, 2 a 5 dias úteis"
+                  placeholder="Ex: Entrega em Moçambique, 2 a 5 dias úteis"
                   className="bg-background"
                 />
               </div>
