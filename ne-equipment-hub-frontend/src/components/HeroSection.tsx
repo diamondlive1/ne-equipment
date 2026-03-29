@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useNavigate, Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Truck, CheckCircle, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/i18n/LanguageContext';
@@ -21,8 +22,10 @@ const FALLBACK_IMAGES = [
 ];
 
 const HeroSection = ({ onQuoteClick }: HeroSectionProps) => {
+  const navigate = useNavigate();
   const { t } = useLanguage();
-  const [productImages, setProductImages] = useState<{src: string, alt: string}[]>(FALLBACK_IMAGES);
+  const [productImages, setProductImages] = useState<{id?: string | number, src: string, alt: string}[]>(FALLBACK_IMAGES);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -34,16 +37,19 @@ const HeroSection = ({ onQuoteClick }: HeroSectionProps) => {
           const dynamicImages = productsWithImages.map((p: any) => {
             const primaryImg = p.images.find((i: any) => i.is_primary) || p.images[0];
             return {
+              id: p.id,
               src: primaryImg.image_path?.startsWith('data:image') || primaryImg.image_path?.startsWith('http') ? primaryImg.image_path : `${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}/storage/${primaryImg.image_path}`,
               alt: p.name
             };
           });
           
-          // Ensure we have at least 8 images to keep the marquee looking full by filling with fallbacks if needed
           const finalImages = [...dynamicImages];
           let i = 0;
           while (finalImages.length < 8) {
-            finalImages.push(FALLBACK_IMAGES[i % FALLBACK_IMAGES.length]);
+            finalImages.push({
+              ...FALLBACK_IMAGES[i % FALLBACK_IMAGES.length],
+              id: 'all'
+            });
             i++;
           }
           
@@ -55,6 +61,14 @@ const HeroSection = ({ onQuoteClick }: HeroSectionProps) => {
     };
     fetchImages();
   }, []);
+
+  // Auto-play interval for carousel
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % productImages.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [productImages.length]);
 
   const stats = [
     { value: '8+', label: t.hero.stats.experience },
@@ -99,19 +113,70 @@ const HeroSection = ({ onQuoteClick }: HeroSectionProps) => {
               </div>
             </motion.div>
 
-            <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="hidden lg:block">
-              <div className="relative">
-                <div className="glass-card p-6 rounded-3xl">
-                  <div className="grid grid-cols-2 gap-4">
-                    {productImages.slice(0, 4).map((img, index) => (
-                      <motion.div key={index} initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }} className="relative overflow-hidden rounded-xl group">
-                        <img src={img.src} alt={img.alt} className="w-full h-32 object-cover transition-transform duration-500 group-hover:scale-110" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-navy-dark/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
-                          <span className="text-white text-sm font-medium">{img.alt}</span>
+            <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="hidden lg:block relative z-20">
+              <div className="relative h-[450px]">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentIndex}
+                    initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 1.05, y: -10 }}
+                    transition={{ duration: 1, ease: "easeInOut" }}
+                    className="absolute inset-0"
+                  >
+                    <Link 
+                      to={productImages[currentIndex]?.id && productImages[currentIndex]?.id !== 'all' ? `/product/${productImages[currentIndex].id}` : '#catalogo'}
+                      className="block group h-full"
+                    >
+                      <div className="glass-card p-4 rounded-3xl h-full shadow-2xl hover:shadow-gold/20 transition-all duration-500 overflow-hidden">
+                        <div className="relative h-full w-full rounded-2xl overflow-hidden">
+                          <img 
+                            src={productImages[currentIndex].src} 
+                            alt={productImages[currentIndex].alt} 
+                            className="w-full h-full object-cover transform scale-100 group-hover:scale-110 transition-transform duration-[2000ms]" 
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-navy-dark/90 via-navy-dark/20 to-transparent flex flex-col justify-end p-8">
+                            <motion.span 
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: 0.3 }}
+                              className="text-gold text-sm font-bold uppercase tracking-[0.2em] mb-2"
+                            >
+                              Equipamento Industrial
+                            </motion.span>
+                            <motion.h3 
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: 0.4 }}
+                              className="text-white text-3xl font-bold mb-4"
+                            >
+                              {productImages[currentIndex].alt}
+                            </motion.h3>
+                            <motion.div
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ delay: 0.5 }}
+                              className="flex items-center text-white/60 text-sm font-medium"
+                            >
+                              Clique para ver detalhes
+                              <ArrowRight className="ml-2 w-4 h-4 text-gold" />
+                            </motion.div>
+                          </div>
                         </div>
-                      </motion.div>
-                    ))}
-                  </div>
+                      </div>
+                    </Link>
+                  </motion.div>
+                </AnimatePresence>
+
+                {/* Carousel Indicators */}
+                <div className="absolute -bottom-10 left-1/2 transform -translate-x-1/2 flex gap-3">
+                  {productImages.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setCurrentIndex(idx)}
+                      className={`h-1.5 transition-all duration-500 rounded-full ${currentIndex === idx ? 'w-8 bg-gold' : 'w-2 bg-white/20'}`}
+                    />
+                  ))}
                 </div>
               </div>
             </motion.div>
