@@ -48,6 +48,8 @@ Route::get('/debug-check', function() {
 // Rotas Protegidas (requerem Sanctum token)
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
+    Route::put('/user/profile', [AuthController::class, 'updateProfile']);
+    Route::put('/user/password', [AuthController::class, 'updatePassword']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
     // Gestão de Produtos

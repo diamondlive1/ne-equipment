@@ -36,6 +36,12 @@ class User extends Authenticatable
         'assigned_category_id',
     ];
 
+
+    public function addresses(): HasMany
+    {
+        return $this->hasMany(Address::class);
+    }
+
     public function assignedCategory(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'assigned_category_id');

@@ -1,6 +1,17 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import api from '../services/api';
 
+export interface Address {
+    id: number;
+    user_id: number;
+    type: string;
+    province: string;
+    district: string;
+    neighborhood?: string;
+    street_address: string;
+    is_default: boolean;
+}
+
 export interface User {
     id: number;
     name: string;
@@ -11,6 +22,7 @@ export interface User {
     is_active: boolean;
     is_superadmin?: boolean;
     avatar?: string;
+    addresses?: Address[];
 }
 
 
@@ -20,6 +32,7 @@ interface AuthContextType {
     login: (data: any) => Promise<void>;
     register: (data: any) => Promise<void>;
     logout: () => Promise<void>;
+    updateUser: (newUser: User) => void;
     isAuthenticated: boolean;
 }
 
@@ -91,6 +104,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             login,
             register,
             logout,
+            updateUser: (newUser: User) => setUser(newUser),
             isAuthenticated: !!user
         }}>
             {children}
