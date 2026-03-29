@@ -8,7 +8,7 @@ export const translations = {
       b2c: 'LOJA B2C',
       services: 'SERVIÇOS',
       contact: 'CONTACTOS',
-      requestQuote: 'SOLICITAR COTAÇÃO',
+      requestQuote: 'REGISTAR CONTA',
     },
     // Header
     header: {
@@ -20,7 +20,7 @@ export const translations = {
       noQuoteItems: 'Nenhum item para cotação',
       total: 'Total',
       checkout: 'Finalizar Compra',
-      requestQuote: 'Solicitar Cotação',
+      requestQuote: 'Registar Conta',
       clearCart: 'Limpar Carrinho',
       units: 'unid.',
     },
@@ -30,7 +30,7 @@ export const translations = {
       title: 'Equipamentos e Soluções para o seu',
       titleHighlight: 'Negócio',
       subtitle: 'Procurement, logística e venda de equipamentos industriais para toda a África Austral.',
-      requestQuote: 'Solicitar Cotação',
+      requestQuote: 'Registar Conta',
       viewCatalog: 'Ver Catálogo',
       stats: {
         experience: 'ANOS DE EXPERIÊNCIA',
@@ -105,10 +105,6 @@ export const translations = {
         sourcingDesc: 'Aquisição de produtos e equipamentos de fornecedores globais',
         supplyChain: 'Gestão de Supply Chain',
         supplyChainDesc: 'Optimização da cadeia de suprimentos end-to-end',
-        customs: 'Desalfandegamento',
-        customsDesc: 'Tratamento completo de processos aduaneiros',
-        storage: 'Armazenagem',
-        storageDesc: 'Soluções de armazenamento seguro e organizado',
       },
       transport: {
         coverage: 'Cobertura Regional',
@@ -228,7 +224,7 @@ export const translations = {
       talkCommercial: 'FALAR COM COMERCIAL',
       showing: 'EXIBINDO:',
       products: 'PRODUTOS',
-      quote: 'COTAÇÃO',
+      quote: 'SOLICITAR',
       addedToQuote: 'Adicionado ao pedido de cotação',
     },
     // B2C Shop Page
@@ -441,7 +437,7 @@ export const translations = {
       b2c: 'B2C SHOP',
       services: 'SERVICES',
       contact: 'CONTACTS',
-      requestQuote: 'REQUEST QUOTE',
+      requestQuote: 'REGISTER ACCOUNT',
     },
     header: {
       quote: '"Success is a perfume you cannot spray on others without a few drops falling on yourself."',
@@ -452,7 +448,7 @@ export const translations = {
       noQuoteItems: 'No items for quotation',
       total: 'Total',
       checkout: 'Checkout',
-      requestQuote: 'Request Quote',
+      requestQuote: 'Register Account',
       clearCart: 'Clear Cart',
       units: 'units',
     },
@@ -461,7 +457,7 @@ export const translations = {
       title: 'Equipment and Solutions for your',
       titleHighlight: 'Business',
       subtitle: 'Procurement, logistics, and industrial equipment sales across Southern Africa.',
-      requestQuote: 'Request Quote',
+      requestQuote: 'Register Account',
       viewCatalog: 'View Catalog',
       stats: {
         experience: 'YEARS OF EXPERIENCE',
@@ -532,10 +528,6 @@ export const translations = {
         sourcingDesc: 'Acquisition of products and equipment from global suppliers',
         supplyChain: 'Supply Chain Management',
         supplyChainDesc: 'End-to-end supply chain optimization',
-        customs: 'Customs Clearance',
-        customsDesc: 'Complete handling of customs processes',
-        storage: 'Warehousing',
-        storageDesc: 'Secure and organized storage solutions',
       },
       transport: {
         coverage: 'Regional Coverage',
@@ -649,7 +641,7 @@ export const translations = {
       talkCommercial: 'TALK TO SALES',
       showing: 'SHOWING:',
       products: 'PRODUCTS',
-      quote: 'QUOTE',
+      quote: 'REQUEST',
       addedToQuote: 'Added to quotation request',
     },
     b2cShop: {

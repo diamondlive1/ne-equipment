@@ -33,7 +33,13 @@ class User extends Authenticatable
         'is_superadmin',
         'avatar',
         'birth_date',
+        'assigned_category_id',
     ];
+
+    public function assignedCategory(): BelongsTo
+    {
+        return $this->belongsTo(Category::class, 'assigned_category_id');
+    }
 
 
     /**

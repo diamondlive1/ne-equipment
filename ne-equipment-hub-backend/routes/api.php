@@ -13,14 +13,15 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TeamController;
-
-
+use App\Http\Controllers\NewsletterController;
 
 // Rotas abertas (não requerem token)
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
+Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe']);
 
 Route::get('/products', [ProductController::class, 'index']);
+
 Route::get('/products/{id}', [ProductController::class, 'show']);
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/settings', [SettingController::class, 'index']);

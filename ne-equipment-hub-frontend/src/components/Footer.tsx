@@ -5,9 +5,11 @@ import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { useLanguage } from '@/i18n/LanguageContext';
 import logoNE from '@/assets/logo-ne-equipment.png';
+import api from '@/services/api';
 
 const Footer = () => {
   const [email, setEmail] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { t } = useLanguage();
 
   const quickLinks = [
@@ -18,11 +20,20 @@ const Footer = () => {
     { name: t.footer.quickLinks.contact, href: '#' },
   ];
 
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email) {
+    if (!email || isSubmitting) return;
+
+    setIsSubmitting(true);
+    try {
+      await api.post('/newsletter/subscribe', { email });
       toast.success(t.footer.subscribed);
       setEmail('');
+    } catch (error) {
+      console.error('Newsletter error:', error);
+      toast.error('Erro ao subscrever. Tente novamente.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -89,8 +100,10 @@ const Footer = () => {
             <h3 className="text-sm font-bold uppercase tracking-wider mb-6 text-gold">{t.footer.newsletter}</h3>
             <p className="text-sm text-white/60 mb-4">{t.footer.newsletterDesc}</p>
             <form onSubmit={handleNewsletterSubmit} className="flex gap-2">
-              <Input type="email" placeholder={t.footer.emailPlaceholder} value={email} onChange={(e) => setEmail(e.target.value)} className="bg-white/10 border-white/20 text-white placeholder:text-white/40 rounded-xl" />
-              <Button type="submit" className="bg-gold hover:bg-gold-light text-navy-dark px-4 font-bold rounded-xl">{t.footer.send}</Button>
+              <Input type="email" placeholder={t.footer.emailPlaceholder} value={email} onChange={(e) => setEmail(e.target.value)} disabled={isSubmitting} className="bg-white/10 border-white/20 text-white placeholder:text-white/40 rounded-xl" />
+              <Button type="submit" disabled={isSubmitting} className="bg-gold hover:bg-gold-light text-navy-dark px-4 font-bold rounded-xl">
+                {isSubmitting ? '...' : t.footer.send}
+              </Button>
             </form>
           </div>
         </div>

@@ -17,8 +17,6 @@ const ServicesSection = ({ onTransportClick }: ServicesSectionProps) => {
   const procurementServices = [
     { icon: Globe, title: t.services.procurement.sourcing, description: t.services.procurement.sourcingDesc },
     { icon: Package, title: t.services.procurement.supplyChain, description: t.services.procurement.supplyChainDesc },
-    { icon: FileCheck, title: t.services.procurement.customs, description: t.services.procurement.customsDesc },
-    { icon: Warehouse, title: t.services.procurement.storage, description: t.services.procurement.storageDesc },
   ];
 
   const transportServices = [

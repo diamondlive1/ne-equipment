@@ -18,9 +18,17 @@ class ProductController extends Controller
     {
         $query = Product::with('images', 'category');
 
+        // By default, only show approved products
+        // If the request comes from an admin context (checked via auth), show all
+        if (!$request->user() || !$request->user()->is_superadmin) {
+            $query->where('is_approved', true);
+        }
+
         if ($request->has('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%')
+            $query->where(function($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%')
                   ->orWhere('description', 'like', '%' . $request->search . '%');
+            });
         }
 
         return response()->json($query->get());

@@ -57,7 +57,7 @@ const HeroSection = ({ onQuoteClick }: HeroSectionProps) => {
   }, []);
 
   const stats = [
-    { value: '15+', label: t.hero.stats.experience },
+    { value: '8+', label: t.hero.stats.experience },
     { value: '3', label: t.hero.stats.offices },
     { value: '500+', label: t.hero.stats.products },
     { value: '100%', label: t.hero.stats.commitment },

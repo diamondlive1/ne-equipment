@@ -92,12 +92,12 @@ const B2BCatalog = () => {
     <div className="min-h-screen bg-background pt-32 pb-20" ref={ref}>
       <div className="bg-gradient-to-r from-navy-dark to-navy py-12 mb-8">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <motion.div initial={{ opacity: 0, x: -30 }} animate={isInView ? { opacity: 1, x: 0 } : {}} transition={{ duration: 0.6 }}>
               <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white">
                 {t.b2bCatalog.title} <span className="text-gold">{t.b2bCatalog.titleHighlight}</span>
               </h1>
-              <p className="text-white/70 mt-2">{t.b2bCatalog.subtitle}</p>
+              <p className="text-white/70 mt-2">Equipamento Industrial — {t.b2bCatalog.subtitle}</p>
             </motion.div>
             <motion.div initial={{ opacity: 0, x: 30 }} animate={isInView ? { opacity: 1, x: 0 } : {}} transition={{ duration: 0.6, delay: 0.1 }} className="flex gap-4">
               <Input
@@ -168,27 +168,37 @@ const B2BCatalog = () => {
                   : '/placeholder-product.png';
 
                 return (
-                  <motion.div key={product.id} onClick={() => navigate(`/product/${product.id}`)} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }} className="glass-card overflow-hidden hover:shadow-2xl transition-all group cursor-pointer">
+                  <motion.div key={product.id} onClick={() => navigate(`/product/${product.id}`)} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }} className="glass-card overflow-hidden hover:shadow-2xl transition-all group cursor-pointer relative">
                     <div className="aspect-square relative overflow-hidden">
                       <Badge className="absolute top-2 left-2 z-10 bg-navy-dark/80 backdrop-blur-sm text-white text-[8px] px-1.5 py-0">
                         {product.category?.name || 'Industrial'}
                       </Badge>
                       <img src={imageUrl} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                      
+                      {/* Overlay Request Button */}
+                      <div className="absolute inset-0 bg-navy-dark/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-4">
+                        <Button 
+                          size="sm" 
+                          onClick={(e) => { e.stopPropagation(); handleAddToQuote(product); }} 
+                          className="bg-gold hover:bg-gold-light text-navy-dark font-bold text-[10px] h-8 px-3 rounded-full shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform"
+                        >
+                          {t.b2bCatalog.quote}
+                          <Plus className="w-3 h-3 ml-1" />
+                        </Button>
+                      </div>
                     </div>
                     <div className="p-3">
                       <h3 className="font-bold text-foreground mb-1 line-clamp-1 text-sm">{product.name}</h3>
                       <p className="text-[10px] text-muted-foreground mb-3 line-clamp-2 leading-relaxed h-7">{product.description}</p>
                       <div className="flex items-center justify-between gap-2">
                         <span className="text-[9px] text-muted-foreground font-mono truncate">SKU: {product.sku}</span>
-                        <Button size="sm" onClick={(e) => { e.stopPropagation(); handleAddToQuote(product); }} className="bg-gold hover:bg-gold-light text-navy-dark font-bold text-[10px] h-7 px-2 rounded-lg relative z-20 shrink-0">
-                          {t.b2bCatalog.quote}
-                          <Plus className="w-2.5 h-2.5 ml-1" />
-                        </Button>
+                        <div className="w-1.5 h-1.5 rounded-full bg-gold/50" />
                       </div>
                     </div>
                   </motion.div>
                 );
               })}
+              {/* end products map */}
             </div>
 
             {filteredProducts.length === 0 && !isLoading && (

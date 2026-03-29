@@ -11,7 +11,6 @@ const PaymentMethods = () => {
 
   const paymentMethods = [
     { region: t.payment.regions.mozambique, icon: Smartphone, methods: ['M-Pesa', 'E-Mola', 'Multicaixa'], color: 'gold' },
-    { region: t.payment.regions.southAfrica, icon: CreditCard, methods: ['Credit Cards', 'EFT', 'SnapScan'], color: 'navy' },
     { region: t.payment.regions.international, icon: Globe, methods: ['PayPal', t.payment.methods.bankTransfer], color: 'gold' },
     { region: t.payment.regions.b2b, icon: Building2, methods: [t.payment.methods.billing, t.payment.methods.commercialTerms], color: 'navy' },
   ];
