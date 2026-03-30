@@ -148,7 +148,15 @@ const B2BCatalog = () => {
               <div className="mt-8 p-4 bg-gradient-to-br from-gold/20 to-gold/10 rounded-xl">
                 <h4 className="font-bold text-foreground text-sm mb-2">{t.b2bCatalog.needBulk}</h4>
                 <p className="text-xs text-muted-foreground mb-4">{t.b2bCatalog.bulkDesc}</p>
-                <Button className="w-full bg-gold hover:bg-gold-light text-navy-dark font-bold text-sm rounded-xl">{t.b2bCatalog.talkCommercial}</Button>
+                <Button 
+                  onClick={() => {
+                    const message = encodeURIComponent(language === 'PT' ? 'Olá! Gostaria de falar com o comercial sobre o catálogo B2B.' : 'Hello! I would like to talk to sales about the B2B catalog.');
+                    window.open(`https://wa.me/258843114354?text=${message}`, '_blank');
+                  }}
+                  className="w-full bg-gold hover:bg-gold-light text-navy-dark font-bold text-sm rounded-xl"
+                >
+                  {t.b2bCatalog.talkCommercial}
+                </Button>
               </div>
             </div>
           </motion.aside>
