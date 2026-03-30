@@ -18,7 +18,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useLanguage } from '@/i18n/LanguageContext';
 import logoNE from '@/assets/logo-ne-equipment.png';
 
-type PageType = 'home' | 'about' | 'b2b' | 'contact' | 'dashboard';
+type PageType = 'home' | 'about' | 'b2b' | 'services' | 'contact' | 'dashboard';
 
 interface HeaderProps {
   currentPage: PageType;
@@ -46,6 +46,7 @@ const Header = ({ currentPage, onNavigate, onQuoteClick }: HeaderProps) => {
     { label: t.nav.home, page: 'home' },
     { label: t.nav.about, page: 'about' },
     { label: t.nav.b2b, page: 'b2b' },
+    { label: t.nav.services, page: 'services' },
     { label: t.nav.contact, page: 'contact' },
   ];
 

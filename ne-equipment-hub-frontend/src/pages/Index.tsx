@@ -16,10 +16,11 @@ import Footer from '@/components/Footer';
 
 // Full Page Components
 import B2BCatalog from '@/pages/B2BCatalog';
+import Services from '@/pages/Services';
 import Contact from '@/pages/Contact';
 import CustomerDashboard from '@/pages/CustomerDashboard';
 
-type PageType = 'home' | 'about' | 'b2b' | 'contact' | 'dashboard';
+type PageType = 'home' | 'about' | 'b2b' | 'services' | 'contact' | 'dashboard';
 
 const pageVariants = {
   initial: { opacity: 0, y: 20 },
@@ -38,6 +39,7 @@ const Index = () => {
     if (path === '/dashboard') return 'dashboard';
     if (path === '/catalog') return 'b2b';
     if (path === '/about') return 'about';
+    if (path === '/services') return 'services';
     if (path === '/contact') return 'contact';
     return 'home';
   };
@@ -66,6 +68,7 @@ const Index = () => {
     if (page === 'dashboard') path = '/dashboard';
     else if (page === 'b2b') path = '/catalog';
     else if (page === 'about') path = '/about';
+    else if (page === 'services') path = '/services';
     else if (page === 'contact') path = '/contact';
 
     // Only navigate if path changes
@@ -121,6 +124,12 @@ const Index = () => {
         {currentPage === 'b2b' && (
           <motion.main key="b2b" variants={pageVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
             <B2BCatalog />
+          </motion.main>
+        )}
+        
+        {currentPage === 'services' && (
+          <motion.main key="services" variants={pageVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
+            <Services />
           </motion.main>
         )}
 
