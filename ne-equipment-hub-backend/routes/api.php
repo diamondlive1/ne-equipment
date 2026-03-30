@@ -92,6 +92,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // Admin: Gestão de Utilizadores
     Route::get('/admin/users', [UserController::class, 'index']);
     Route::post('/admin/users', [UserController::class, 'store']);
+    Route::put('/admin/users/{id}', [UserController::class, 'update']);
+    Route::delete('/admin/users/{id}', [UserController::class, 'destroy']);
 
     // Admin: Gestão de Equipas
     Route::apiResource('/admin/teams', TeamController::class);
