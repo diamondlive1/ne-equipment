@@ -11,17 +11,15 @@ import BrandsCarousel from '@/components/BrandsCarousel';
 import ServicesSection from '@/components/ServicesSection';
 import PaymentMethods from '@/components/PaymentMethods';
 import QuoteForm from '@/components/QuoteForm';
-import TransportForm from '@/components/TransportForm';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import Footer from '@/components/Footer';
 
 // Full Page Components
 import B2BCatalog from '@/pages/B2BCatalog';
-import Services from '@/pages/Services';
 import Contact from '@/pages/Contact';
 import CustomerDashboard from '@/pages/CustomerDashboard';
 
-type PageType = 'home' | 'about' | 'b2b' | 'services' | 'contact' | 'dashboard';
+type PageType = 'home' | 'about' | 'b2b' | 'contact' | 'dashboard';
 
 const pageVariants = {
   initial: { opacity: 0, y: 20 },
@@ -34,15 +32,12 @@ const Index = () => {
   const navigate = useNavigate();
   const { openQuoteForm } = useQuote();
   const { isAuthenticated, user } = useAuth();
-  
-  const [transportFormOpen, setTransportFormOpen] = useState(false);
 
   // Map paths to PageType
   const getPageFromPath = (path: string): PageType => {
     if (path === '/dashboard') return 'dashboard';
     if (path === '/catalog') return 'b2b';
     if (path === '/about') return 'about';
-    if (path === '/services') return 'services';
     if (path === '/contact') return 'contact';
     return 'home';
   };
@@ -71,7 +66,6 @@ const Index = () => {
     if (page === 'dashboard') path = '/dashboard';
     else if (page === 'b2b') path = '/catalog';
     else if (page === 'about') path = '/about';
-    else if (page === 'services') path = '/services';
     else if (page === 'contact') path = '/contact';
 
     // Only navigate if path changes
@@ -89,7 +83,6 @@ const Index = () => {
         currentPage={currentPage}
         onNavigate={handleNavigate}
         onQuoteClick={openQuoteForm}
-        onTransportClick={() => setTransportFormOpen(true)}
       />
 
       <AnimatePresence mode="wait">
@@ -106,7 +99,7 @@ const Index = () => {
             <AboutSection />
             <CatalogSection onNavigateB2B={() => handleNavigate('b2b')} />
             <BrandsCarousel />
-            <ServicesSection onTransportClick={() => setTransportFormOpen(true)} />
+            <ServicesSection />
             <PaymentMethods />
           </motion.main>
         )}
@@ -131,11 +124,6 @@ const Index = () => {
           </motion.main>
         )}
 
-        {currentPage === 'services' && (
-          <motion.main key="services" variants={pageVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
-            <Services />
-          </motion.main>
-        )}
 
         {currentPage === 'contact' && (
           <motion.main key="contact" variants={pageVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
@@ -152,7 +140,6 @@ const Index = () => {
 
       <Footer />
       <WhatsAppButton />
-      <TransportForm isOpen={transportFormOpen} onClose={() => setTransportFormOpen(false)} />
     </div>
   );
 };

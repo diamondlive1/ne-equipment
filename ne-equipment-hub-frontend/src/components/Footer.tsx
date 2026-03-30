@@ -16,7 +16,6 @@ const Footer = () => {
     { name: t.footer.quickLinks.home, href: '#' },
     { name: t.footer.quickLinks.about, href: '#' },
     { name: t.footer.quickLinks.b2b, href: '#' },
-    { name: t.footer.quickLinks.services, href: '#' },
     { name: t.footer.quickLinks.contact, href: '#' },
   ];
 

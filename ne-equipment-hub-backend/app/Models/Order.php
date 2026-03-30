@@ -16,7 +16,6 @@ class Order extends Model
         'user_id',
         'status',
         'total_amount',
-        'shipping_fee',
         'delivery_address_id',
     ];
 

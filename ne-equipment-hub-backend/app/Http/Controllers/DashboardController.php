@@ -151,8 +151,6 @@ class DashboardController extends Controller
                     'nuit' => $order->user->nuit ?? 'N/A',
                     'value' => number_format($order->total_amount, 0, ',', '.'),
                     'status' => $order->status,
-                    'origin' => 'Local/Import', // Poderia ser estendido no Order
-                    'eta' => $order->created_at->addDays(15)->format('d M') // Exemplo de ETA simulado sem mock
                 ];
             });
 

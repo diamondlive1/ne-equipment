@@ -4,7 +4,6 @@ import {
   MessageSquare, 
   Gavel, 
   TrendingDown, 
-  ChevronRight, 
   ArrowRight,
   Clock,
   CheckCircle2,
@@ -279,12 +278,6 @@ const MyQuotes = () => {
                       <div className="flex items-center gap-1.5 text-xs text-red-600 bg-red-50 border border-red-100 px-2 py-1 rounded-full font-bold">
                         <AlertCircle className="w-3.5 h-3.5" />
                         Expira em {safeFormat(quote.expires_at, "dd/MM/yyyy")}
-                      </div>
-                    )}
-                    {quote.delivery_info && (
-                      <div className="flex items-center gap-1.5 text-xs text-blue-600 bg-blue-50 border border-blue-100 px-2 py-1 rounded-full font-bold">
-                        <Truck className="w-3.5 h-3.5" />
-                        {quote.delivery_info}
                       </div>
                     )}
                   </div>

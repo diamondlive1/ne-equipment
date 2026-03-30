@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import {
   ChevronRight,
-  Home, Package, FileText, Truck, MapPin, User, LogOut, ShoppingCart
+  Home, Package, FileText, MapPin, User, LogOut, ShoppingCart
 } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
 import { useAuth } from '@/contexts/AuthContext';

@@ -137,7 +137,6 @@ class QuoteController extends Controller
                         'user_id' => $quote->user_id,
                         'status' => 'pending_payment',
                         'total_amount' => $quote->total_estimated_value,
-                        'shipping_fee' => 0,
                     ]);
 
                     foreach ($quote->items as $item) {
