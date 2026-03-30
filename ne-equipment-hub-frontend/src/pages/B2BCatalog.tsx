@@ -167,7 +167,10 @@ const B2BCatalog = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            <div className={viewMode === 'grid' 
+              ? "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4" 
+              : "flex flex-col gap-4"
+            }>
               {isLoading ? (
                 <div className="col-span-full py-20 text-center">
                   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold mx-auto"></div>
@@ -177,6 +180,55 @@ const B2BCatalog = () => {
                 const imageUrl = primaryImage
                   ? (primaryImage.startsWith('data:image') || primaryImage.startsWith('http') ? primaryImage : `${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}/storage/${primaryImage}`)
                   : '/placeholder-product.png';
+
+                if (viewMode === 'list') {
+                  return (
+                    <motion.div 
+                      key={product.id} 
+                      onClick={() => navigate(`/product/${product.id}`)} 
+                      initial={{ opacity: 0, x: -20 }} 
+                      animate={{ opacity: 1, x: 0 }} 
+                      transition={{ delay: index * 0.05 }} 
+                      className="glass-card overflow-hidden hover:shadow-xl transition-all group cursor-pointer flex flex-col sm:flex-row items-center gap-6 p-4 border border-border/50"
+                    >
+                      <div className="w-full sm:w-48 h-48 sm:h-32 shrink-0 rounded-xl overflow-hidden relative">
+                        <Badge className="absolute top-2 left-2 z-10 bg-navy-dark/80 backdrop-blur-sm text-white text-[8px] px-1.5 py-0">
+                          {product.category?.name || 'Industrial'}
+                        </Badge>
+                        <img src={imageUrl} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                      </div>
+                      
+                      <div className="flex-1 flex flex-col sm:flex-row justify-between gap-6 w-full">
+                        <div className="space-y-2 text-left">
+                          <div className="flex items-center gap-3">
+                            <h3 className="font-bold text-lg text-foreground group-hover:text-gold transition-colors">{product.name}</h3>
+                            <Badge variant="outline" className="text-[10px] border-gold/20 text-gold uppercase tracking-tighter h-5">{product.brand || 'Original'}</Badge>
+                          </div>
+                          <p className="text-xs text-muted-foreground line-clamp-2 max-w-2xl">{product.description}</p>
+                          <div className="flex items-center gap-4 text-[11px] text-muted-foreground tabular-nums">
+                            <span className="bg-muted px-2 py-0.5 rounded font-mono">SKU: {product.sku}</span>
+                            <span className="flex items-center gap-1"><Shield className="w-3 h-3 text-gold" /> Qualidade Garantida</span>
+                          </div>
+                        </div>
+
+                        <div className="flex sm:flex-col items-center justify-center gap-3 shrink-0 pt-4 sm:pt-0 border-t sm:border-t-0 sm:border-l border-border/50 sm:pl-6">
+                           {user?.role !== 'admin' && (
+                            <Button 
+                              onClick={(e) => { e.stopPropagation(); handleAddToQuote(product); }} 
+                              className="bg-gold hover:bg-gold-light text-navy-dark font-bold text-xs h-10 w-full sm:w-32 rounded-xl shadow-lg transition-all active:scale-95"
+                            >
+                              {t.b2bCatalog.quote}
+                              <Plus className="w-4 h-4 ml-2" />
+                            </Button>
+                           )}
+                           <Button variant="ghost" className="text-xs text-muted-foreground hover:text-navy-dark h-10 w-full sm:w-32 rounded-xl">
+                              Ver Detalhes
+                           </Button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                }
 
                 return (
                   <motion.div key={product.id} onClick={() => navigate(`/product/${product.id}`)} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }} className="glass-card overflow-hidden hover:shadow-2xl transition-all group cursor-pointer relative">
