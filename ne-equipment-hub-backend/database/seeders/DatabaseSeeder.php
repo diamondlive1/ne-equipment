@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Admin NE',
                 'password' => Hash::make('admin123'),
                 'role' => 'admin',
+                'is_superadmin' => true,
                 'phone' => '+258 84 000 0000',
             ]
         );

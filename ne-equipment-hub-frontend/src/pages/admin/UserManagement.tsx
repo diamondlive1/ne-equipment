@@ -344,12 +344,12 @@ const UserManagement = () => {
                                     <div className="space-y-2">
                                         <label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest px-1">Papel</label>
                                         <select 
-                                            value={memberFormData.is_superadmin ? 'admin' : 'operator'}
-                                            onChange={(e) => setMemberFormData({...memberFormData, is_superadmin: e.target.value === 'admin'})}
+                                            value={memberFormData.role}
+                                            onChange={(e) => setMemberFormData({...memberFormData, role: e.target.value})}
                                             className="w-full h-12 bg-muted/20 border border-border/30 rounded-2xl px-4 text-sm focus:ring-primary/20 outline-none"
                                         >
-                                            <option value="operator">Funcionário (Operador)</option>
-                                            <option value="admin">Admin (Patrão)</option>
+                                            <option value="admin">Administrador (Gestão)</option>
+                                            <option value="customer">Cliente (B2B)</option>
                                         </select>
                                     </div>
                                     <div className="space-y-2">
