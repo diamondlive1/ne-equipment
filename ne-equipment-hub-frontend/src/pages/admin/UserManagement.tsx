@@ -153,13 +153,10 @@ const UserManagement = () => {
                         onChange={(e) => setMemberSearchTerm(e.target.value)}
                     />
                 </div>
-                {/* Apenas o Admin principal cria funcionários */}
-                {currentUser?.is_superadmin && (
-                    <Button onClick={() => { resetForm(); setIsMemberModalOpen(true); }} className="gap-2 bg-primary hover:bg-navy-dark rounded-xl h-11 px-6 shadow-lg shadow-primary/20 w-full sm:w-auto text-sm font-bold uppercase tracking-wider">
-                        <Plus className="w-5 h-5" />
-                        Novo Funcionário
-                    </Button>
-                )}
+                <Button onClick={() => { resetForm(); setIsMemberModalOpen(true); }} className="gap-2 bg-primary hover:bg-navy-dark rounded-xl h-11 px-6 shadow-lg shadow-primary/20 w-full sm:w-auto text-sm font-bold uppercase tracking-wider">
+                    <Plus className="w-5 h-5" />
+                    Novo Funcionário
+                </Button>
             </div>
 
             <Card className="glass-card border-border/50 overflow-hidden">

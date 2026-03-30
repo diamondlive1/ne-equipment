@@ -24,9 +24,9 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        // Apenas o Admin principal (is_superadmin = true) pode criar novos funcionários/admins
-        if (!$request->user() || !$request->user()->is_superadmin) {
-            return response()->json(['message' => 'Apenas o administrador principal pode adicionar novos membros à equipa.'], 403);
+        // Administradores podem adicionar novos membros à equipa.
+        if (!$request->user() || $request->user()->role !== 'admin') {
+            return response()->json(['message' => 'Apenas administradores podem adicionar novos membros à equipa.'], 403);
         }
 
         $request->validate([
@@ -61,8 +61,8 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if (!$request->user() || !$request->user()->is_superadmin) {
-            return response()->json(['message' => 'Apenas o administrador principal pode editar membros da equipa.'], 403);
+        if (!$request->user() || $request->user()->role !== 'admin') {
+            return response()->json(['message' => 'Apenas administradores podem editar membros da equipa.'], 403);
         }
 
         $user = User::findOrFail($id);
@@ -101,8 +101,8 @@ class UserController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        if (!$request->user() || !$request->user()->is_superadmin) {
-            return response()->json(['message' => 'Apenas o administrador principal pode remover membros da equipa.'], 403);
+        if (!$request->user() || $request->user()->role !== 'admin') {
+            return response()->json(['message' => 'Apenas administradores podem remover membros da equipa.'], 403);
         }
 
         $user = User::findOrFail($id);

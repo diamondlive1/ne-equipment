@@ -118,7 +118,13 @@ const Header = ({ currentPage, onNavigate, onQuoteClick }: HeaderProps) => {
               {isAuthenticated ? (
                 <div className="hidden md:flex items-center gap-4">
                   <button
-                    onClick={() => onNavigate('dashboard')}
+                    onClick={() => {
+                      if (user?.role === 'admin') {
+                        navigate('/admin');
+                      } else {
+                        onNavigate('dashboard');
+                      }
+                    }}
                     className={`flex items-center gap-2 text-sm font-semibold tracking-wide transition-colors duration-200 ${currentPage === 'dashboard' ? 'text-gold' : 'text-navy-dark hover:text-gold'}`}
                   >
                     <UserCircle className="w-5 h-5" />
@@ -168,7 +174,14 @@ const Header = ({ currentPage, onNavigate, onQuoteClick }: HeaderProps) => {
                   <div className="mt-6 mb-2">
                     {isAuthenticated ? (
                       <Button
-                        onClick={() => { onNavigate('dashboard'); setCartOpen(false); }}
+                        onClick={() => { 
+                          if (user?.role === 'admin') {
+                            navigate('/admin');
+                          } else {
+                            onNavigate('dashboard'); 
+                          }
+                          setCartOpen(false); 
+                        }}
                         variant="outline"
                         className="w-full border-primary text-primary font-bold gap-2"
                       >
@@ -270,6 +283,24 @@ const Header = ({ currentPage, onNavigate, onQuoteClick }: HeaderProps) => {
                   {item.label}
                 </button>
               ))}
+
+              {isAuthenticated && (
+                <button
+                  onClick={() => { 
+                    if (user?.role === 'admin') {
+                      navigate('/admin');
+                    } else {
+                      onNavigate('dashboard'); 
+                    }
+                    setMobileMenuOpen(false); 
+                  }}
+                  className={`text-left py-3 px-4 rounded-xl text-sm font-semibold transition-colors flex items-center gap-2 ${currentPage === 'dashboard' ? 'text-gold bg-gold/10' : 'text-navy-dark hover:text-gold hover:bg-gold/5'
+                    }`}
+                >
+                  <UserCircle className="w-5 h-5 text-gold" />
+                  <span>{user?.name || (language === 'PT' ? 'A Minha Conta' : 'My Account')}</span>
+                </button>
+              )}
 
               {isAuthenticated && (
                 <button
