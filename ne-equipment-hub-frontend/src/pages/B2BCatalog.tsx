@@ -38,7 +38,7 @@ const B2BCatalog = () => {
   const { user } = useAuth();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   useEffect(() => {
     const fetchData = async () => {
