@@ -18,13 +18,15 @@ class OrderController extends Controller
         $user = Auth::user();
         $query = Order::with(['user', 'items.product', 'deliveryAddress'])->orderBy('created_at', 'desc');
 
-        // Se o admin tiver uma categoria atribuída e não for superadmin, filtrar
+        // Se o admin tiver uma categoria atribuída e for filtrado (removido para acesso total)
+        /*
         if ($user && !$user->is_superadmin && $user->assigned_category_id) {
             $categoryId = $user->assigned_category_id;
             $query->whereHas('items.product', function ($q) use ($categoryId) {
                 $q->where('category_id', $categoryId);
             });
         }
+        */
 
         return response()->json($query->get());
     }

@@ -21,13 +21,15 @@ class QuoteController extends Controller
         $user = Auth::user();
         $query = Quote::with(['user', 'items.product.images'])->orderBy('created_at', 'desc');
 
-        // Se o admin tiver uma categoria atribuída e não for superadmin, filtrar
+        // Se o admin tiver uma categoria atribuída e for filtrado (removido para dar acesso total a todos os admins)
+        /*
         if ($user && !$user->is_superadmin && $user->assigned_category_id) {
             $categoryId = $user->assigned_category_id;
             $query->whereHas('items.product', function ($q) use ($categoryId) {
                 $q->where('category_id', $categoryId);
             });
         }
+        */
 
         return response()->json($query->get());
     }

@@ -20,7 +20,7 @@ class ProductController extends Controller
 
         // By default, only show approved products
         // If the request comes from an admin context (checked via auth), show all
-        if (!$request->user() || !$request->user()->is_superadmin) {
+        if (!$request->user() || $request->user()->role !== 'admin') {
             $query->where('is_approved', true);
         }
 
