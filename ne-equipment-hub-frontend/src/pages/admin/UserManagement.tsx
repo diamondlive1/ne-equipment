@@ -353,20 +353,17 @@ const UserManagement = () => {
                                     <div className="space-y-2">
                                         <label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest px-1">Papel / Acesso</label>
                                         <select 
-                                            value={memberFormData.is_superadmin ? 'superadmin' : (memberFormData.category_ids.length > 0 ? 'worker' : 'admin')}
+                                            value={memberFormData.category_ids.length > 0 ? 'worker' : 'admin'}
                                             onChange={(e) => {
                                                 const val = e.target.value;
-                                                if (val === 'superadmin') {
-                                                    setMemberFormData({...memberFormData, is_superadmin: true, category_ids: []});
-                                                } else if (val === 'admin') {
+                                                if (val === 'admin') {
                                                     setMemberFormData({...memberFormData, is_superadmin: false, category_ids: []});
                                                 } else {
                                                     setMemberFormData({...memberFormData, is_superadmin: false});
                                                 }
                                             }}
-                                            className="w-full h-12 bg-muted/20 border border-border/30 rounded-2xl px-4 text-sm focus:ring-primary/20 outline-none font-medium"
+                                            className="w-full h-12 bg-muted/20 border border-border/30 rounded-2xl px-4 text-sm focus:ring-primary/20 outline-none font-medium text-foreground"
                                         >
-                                            <option value="superadmin">Super Admin (Acesso Total)</option>
                                             <option value="admin">Administrador (Geral)</option>
                                             <option value="worker">Funcionário (Operador)</option>
                                         </select>
