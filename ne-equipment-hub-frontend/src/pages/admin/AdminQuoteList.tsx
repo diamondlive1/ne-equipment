@@ -108,16 +108,16 @@ export default function AdminQuoteList({ onViewQuote }: AdminQuoteListProps) {
       </div>
 
       <div className="bg-card rounded-xl border border-border overflow-hidden">
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto overflow-y-auto max-h-[65vh]">
           <table className="w-full text-sm text-left">
-            <thead className="text-xs text-muted-foreground bg-muted/50 uppercase border-b border-border">
+            <thead className="text-xs text-muted-foreground bg-muted/50 uppercase border-b border-border sticky top-0 z-10">
               <tr>
-                <th className="px-6 py-4 font-medium">Nº Cotação</th>
-                <th className="px-6 py-4 font-medium">Cliente</th>
-                <th className="px-6 py-4 font-medium">Data</th>
-                <th className="px-6 py-4 font-medium">Valor Total</th>
-                <th className="px-6 py-4 font-medium">Status</th>
-                <th className="px-6 py-4 font-medium text-right">Ações</th>
+                <th className="px-6 py-4 font-medium bg-muted/50">Nº Cotação</th>
+                <th className="px-6 py-4 font-medium bg-muted/50">Cliente</th>
+                <th className="px-6 py-4 font-medium bg-muted/50">Data</th>
+                <th className="px-6 py-4 font-medium bg-muted/50">Valor Total</th>
+                <th className="px-6 py-4 font-medium bg-muted/50">Status</th>
+                <th className="px-6 py-4 font-medium text-right bg-muted/50">Ações</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
