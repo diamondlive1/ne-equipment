@@ -62,7 +62,7 @@ export const generateQuotePDF = (quote: QuoteData, settings: Settings) => {
           body { font-family: 'Inter', system-ui, -apple-system, sans-serif; color: #1a1a1a; margin: 0; padding: 40px; line-height: 1.4; }
           .header { display: flex; justify-content: space-between; border-bottom: 2px solid #EAB308; padding-bottom: 20px; margin-bottom: 30px; }
           .logo-section { flex: 1; }
-          .logo-box { background: #1a1a1a; color: #EAB308; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 24px; border: 2px solid #EAB308; margin-bottom: 10px; }
+          .logo-img { height: 50px; width: auto; margin-bottom: 10px; }
           .company-info { font-size: 10px; text-align: center; flex: 1; }
           .contacts-info { font-size: 10px; text-align: right; flex: 1; }
           
@@ -107,8 +107,7 @@ export const generateQuotePDF = (quote: QuoteData, settings: Settings) => {
       <body>
         <div class="header">
           <div class="logo-section">
-            <div class="logo-box">NE</div>
-            <div style="font-size: 12px; font-weight: bold;">EQUIPMENT</div>
+            <img src="/favicon.png" alt="NE Equipment" class="logo-img" />
           </div>
           <div class="company-info">
             <p style="font-weight: bold; margin-bottom: 5px;">NE EQUIPMENT LDA</p>
