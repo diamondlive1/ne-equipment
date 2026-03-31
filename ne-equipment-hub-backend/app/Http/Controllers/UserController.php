@@ -14,7 +14,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return response()->json(User::where('role', 'admin')->with(['team', 'assignedCategory'])->get());
+        return response()->json(User::where('role', 'admin')->with(['team', 'assignedCategory', 'categories'])->get());
     }
 
 
@@ -37,6 +37,8 @@ class UserController extends Controller
             'is_superadmin' => 'nullable|boolean',
             'password' => 'required|string|min:6',
             'assigned_category_id' => 'nullable|exists:categories,id',
+            'category_ids' => 'nullable|array',
+            'category_ids.*' => 'exists:categories,id',
         ]);
 
         $user = User::create([
@@ -50,9 +52,13 @@ class UserController extends Controller
             'assigned_category_id' => $request->assigned_category_id,
         ]);
 
+        if ($request->filled('category_ids')) {
+            $user->categories()->sync($request->category_ids);
+        }
+
         return response()->json([
             'message' => 'Utilizador criado com sucesso',
-            'user' => $user->load('assignedCategory')
+            'user' => $user->load(['assignedCategory', 'categories'])
         ], 201);
     }
 
@@ -74,6 +80,8 @@ class UserController extends Controller
             'is_superadmin' => 'nullable|boolean',
             'password' => 'nullable|string|min:6',
             'assigned_category_id' => 'nullable|exists:categories,id',
+            'category_ids' => 'nullable|array',
+            'category_ids.*' => 'exists:categories,id',
         ]);
 
         $data = [
@@ -90,9 +98,12 @@ class UserController extends Controller
 
         $user->update($data);
 
+        // Sync multiple categories
+        $user->categories()->sync($request->category_ids ?? []);
+
         return response()->json([
             'message' => 'Utilizador atualizado com sucesso',
-            'user' => $user->load('assignedCategory')
+            'user' => $user->load(['assignedCategory', 'categories'])
         ]);
     }
 

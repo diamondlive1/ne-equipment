@@ -64,7 +64,11 @@ const formatMZN = (v: number) => {
   return (v / 1000000).toFixed(1) + 'M';
 };
 
-const AdminDashboard = () => {
+interface AdminDashboardProps {
+  onAddProduct?: () => void;
+}
+
+const AdminDashboard = ({ onAddProduct }: AdminDashboardProps) => {
   const [data, setData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -155,7 +159,10 @@ const AdminDashboard = () => {
 
       {/* Quick Actions Row */}
       <div className="flex flex-wrap gap-3">
-        <Button className="bg-gold hover:bg-gold-light text-navy-dark font-bold gap-2 rounded-xl shadow-sm">
+        <Button
+          className="bg-gold hover:bg-gold-light text-navy-dark font-bold gap-2 rounded-xl shadow-sm"
+          onClick={onAddProduct}
+        >
           <Plus className="w-4 h-4" /> Novo Produto
         </Button>
       </div>

@@ -46,7 +46,7 @@ const UserManagement = () => {
         role: 'admin',
         is_superadmin: false,
         password: '',
-        assigned_category_id: ''
+        category_ids: [] as string[]
     });
 
     useEffect(() => {
@@ -111,7 +111,7 @@ const UserManagement = () => {
             role: 'admin', 
             is_superadmin: false, 
             password: '', 
-            assigned_category_id: '' 
+            category_ids: []
         });
     };
 
@@ -124,7 +124,9 @@ const UserManagement = () => {
             role: user.role || 'admin',
             is_superadmin: !!user.is_superadmin,
             password: '',
-            assigned_category_id: user.assigned_category_id || ''
+            category_ids: Array.isArray(user.categories) 
+                ? user.categories.map((c: any) => String(c.id))
+                : (user.assigned_category_id ? [String(user.assigned_category_id)] : [])
         });
         setIsMemberModalOpen(true);
     };
@@ -214,21 +216,26 @@ const UserManagement = () => {
                                                 {user.is_superadmin ? 'Admin' : 'Operador'}
                                             </Badge>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            {user.assigned_category ? (
-                                                <div className="flex items-center gap-2">
-                                                    <div className="w-7 h-7 rounded-lg bg-gold/10 flex items-center justify-center text-gold">
-                                                        <Layers className="w-3.5 h-3.5" />
+                                        <td className="px-6 py-4">
+                                            {(() => {
+                                                const cats = user.categories && user.categories.length > 0
+                                                    ? user.categories
+                                                    : (user.assigned_category ? [user.assigned_category] : []);
+                                                return cats.length > 0 ? (
+                                                    <div className="flex flex-wrap gap-1">
+                                                        {cats.map((cat: any) => (
+                                                            <div key={cat.id} className="flex items-center gap-1 bg-gold/10 text-gold px-2 py-0.5 rounded-lg text-[11px] font-semibold">
+                                                                <Layers className="w-3 h-3" />
+                                                                {cat.name}
+                                                            </div>
+                                                        ))}
                                                     </div>
-                                                    <span className="text-xs font-semibold text-foreground">
-                                                        {user.assigned_category.name}
+                                                ) : (
+                                                    <span className="text-[10px] text-muted-foreground uppercase font-black tracking-widest bg-muted px-2 py-0.5 rounded">
+                                                        Geral / Todos
                                                     </span>
-                                                </div>
-                                            ) : (
-                                                <span className="text-[10px] text-muted-foreground uppercase font-black tracking-widest bg-muted px-2 py-0.5 rounded">
-                                                    Geral / Todos
-                                                </span>
-                                            )}
+                                                );
+                                            })()}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="flex items-center gap-1.5 text-whatsapp text-[11px] font-bold">
@@ -368,22 +375,43 @@ const UserManagement = () => {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest px-1">Categoria de Responsabilidade</label>
-                                    <div className="relative">
-                                        <Layers className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/40" />
-                                        <select 
-                                            value={memberFormData.assigned_category_id}
-                                            onChange={(e) => setMemberFormData({...memberFormData, assigned_category_id: e.target.value})}
-                                            className="w-full h-12 pl-9 bg-muted/20 border border-border/30 rounded-2xl px-4 text-sm focus:ring-primary/20 outline-none appearance-none"
-                                        >
-                                            <option value="">Todas as Categorias (Geral)</option>
-                                            {categories.map(cat => (
-                                                <option key={cat.id} value={cat.id}>{cat.name}</option>
-                                            ))}
-                                        </select>
+                                    <label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest px-1">Categorias de Responsabilidade</label>
+                                    <div className="border border-border/30 rounded-2xl bg-muted/20 p-3 max-h-48 overflow-y-auto space-y-1">
+                                        <label className="flex items-center gap-3 px-2 py-1.5 rounded-xl cursor-pointer hover:bg-muted/40 transition-colors">
+                                            <input
+                                                type="checkbox"
+                                                className="w-4 h-4 rounded accent-primary"
+                                                checked={memberFormData.category_ids.length === 0}
+                                                onChange={() => setMemberFormData({ ...memberFormData, category_ids: [] })}
+                                            />
+                                            <span className="text-sm font-semibold text-muted-foreground">Todas as Categorias (Geral)</span>
+                                        </label>
+                                        <div className="border-t border-border/20 my-1" />
+                                        {categories.map(cat => {
+                                            const checked = memberFormData.category_ids.includes(String(cat.id));
+                                            return (
+                                                <label key={cat.id} className="flex items-center gap-3 px-2 py-1.5 rounded-xl cursor-pointer hover:bg-muted/40 transition-colors">
+                                                    <input
+                                                        type="checkbox"
+                                                        className="w-4 h-4 rounded accent-primary"
+                                                        checked={checked}
+                                                        onChange={() => {
+                                                            const newIds = checked
+                                                                ? memberFormData.category_ids.filter(id => id !== String(cat.id))
+                                                                : [...memberFormData.category_ids, String(cat.id)];
+                                                            setMemberFormData({ ...memberFormData, category_ids: newIds });
+                                                        }}
+                                                    />
+                                                    <div className="flex items-center gap-2">
+                                                        <Layers className="w-3.5 h-3.5 text-gold" />
+                                                        <span className="text-sm font-medium text-foreground">{cat.name}</span>
+                                                    </div>
+                                                </label>
+                                            );
+                                        })}
                                     </div>
                                     <p className="text-[10px] text-muted-foreground italic px-1">
-                                        * O funcionário será responsável por gerir orçamentos e pedidos desta categoria.
+                                        * O funcionário será responsável por gerir orçamentos e pedidos das categorias selecionadas.
                                     </p>
                                 </div>
 

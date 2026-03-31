@@ -105,7 +105,14 @@ const AdminLayout = () => {
   const renderContent = () => {
     switch (section) {
       case 'overview':
-        return <AdminDashboard />;
+        return (
+          <AdminDashboard
+            onAddProduct={() => {
+              setSection('products');
+              setIsAddingProduct(true);
+            }}
+          />
+        );
       case 'products':
         if (isAddingProduct || editingProduct) {
           return (
