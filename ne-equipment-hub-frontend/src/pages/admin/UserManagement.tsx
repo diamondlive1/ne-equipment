@@ -206,9 +206,16 @@ const UserManagement = () => {
                                         <td className="px-6 py-4 whitespace-nowrap text-center">
                                             <Badge 
                                                 variant="outline" 
-                                                className="font-bold text-[10px] uppercase px-2 py-0.5 bg-navy-dark text-white border-none"
+                                                className={cn(
+                                                    "font-bold text-[10px] uppercase px-2 py-0.5 border-none",
+                                                    user.is_superadmin 
+                                                        ? "bg-gold text-navy-dark" 
+                                                        : (user.categories?.length > 0 ? "bg-navy-dark text-white" : "bg-primary text-white")
+                                                )}
                                             >
-                                                Funcionário
+                                                {user.is_superadmin 
+                                                    ? 'Super Admin' 
+                                                    : (user.categories?.length > 0 ? 'Funcionário' : 'Admin')}
                                             </Badge>
                                         </td>
                                         <td className="px-6 py-4">
@@ -344,13 +351,24 @@ const UserManagement = () => {
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest px-1">Papel</label>
+                                        <label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest px-1">Papel / Acesso</label>
                                         <select 
-                                            value="admin"
-                                            onChange={(e) => setMemberFormData({...memberFormData, role: e.target.value, is_superadmin: false})}
-                                            className="w-full h-12 bg-muted/20 border border-border/30 rounded-2xl px-4 text-sm focus:ring-primary/20 outline-none"
+                                            value={memberFormData.is_superadmin ? 'superadmin' : (memberFormData.category_ids.length > 0 ? 'worker' : 'admin')}
+                                            onChange={(e) => {
+                                                const val = e.target.value;
+                                                if (val === 'superadmin') {
+                                                    setMemberFormData({...memberFormData, is_superadmin: true, category_ids: []});
+                                                } else if (val === 'admin') {
+                                                    setMemberFormData({...memberFormData, is_superadmin: false, category_ids: []});
+                                                } else {
+                                                    setMemberFormData({...memberFormData, is_superadmin: false});
+                                                }
+                                            }}
+                                            className="w-full h-12 bg-muted/20 border border-border/30 rounded-2xl px-4 text-sm focus:ring-primary/20 outline-none font-medium"
                                         >
-                                            <option value="admin">Funcionário</option>
+                                            <option value="superadmin">Super Admin (Acesso Total)</option>
+                                            <option value="admin">Administrador (Geral)</option>
+                                            <option value="worker">Funcionário (Operador)</option>
                                         </select>
                                     </div>
                                     <div className="space-y-2">
