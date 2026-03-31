@@ -209,11 +209,13 @@ const UserManagement = () => {
                                                 className={cn(
                                                     "font-bold text-[10px] uppercase px-2 py-0.5",
                                                     user.is_superadmin 
-                                                        ? "bg-navy-dark text-white border-none" 
-                                                        : "bg-primary/5 text-primary border-primary/20"
+                                                        ? "bg-gradient-to-r from-gold to-amber-500 text-white border-none shadow-md" 
+                                                        : user.role === 'admin'
+                                                            ? "bg-navy-dark text-white border-none"
+                                                            : "bg-primary/5 text-primary border-primary/20"
                                                 )}
                                             >
-                                                {user.is_superadmin ? 'Admin' : 'Operador'}
+                                                {user.is_superadmin ? 'Super User' : user.role === 'admin' ? 'Admin' : 'Cliente'}
                                             </Badge>
                                         </td>
                                         <td className="px-6 py-4">
@@ -351,10 +353,18 @@ const UserManagement = () => {
                                     <div className="space-y-2">
                                         <label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest px-1">Papel</label>
                                         <select 
-                                            value={memberFormData.role}
-                                            onChange={(e) => setMemberFormData({...memberFormData, role: e.target.value})}
+                                            value={memberFormData.role === 'admin' && memberFormData.is_superadmin ? 'superuser' : memberFormData.role}
+                                            onChange={(e) => {
+                                                const val = e.target.value;
+                                                if (val === 'superuser') {
+                                                    setMemberFormData({...memberFormData, role: 'admin', is_superadmin: true});
+                                                } else {
+                                                    setMemberFormData({...memberFormData, role: val, is_superadmin: false});
+                                                }
+                                            }}
                                             className="w-full h-12 bg-muted/20 border border-border/30 rounded-2xl px-4 text-sm focus:ring-primary/20 outline-none"
                                         >
+                                            <option value="superuser">Super User (Acesso Total)</option>
                                             <option value="admin">Administrador (Gestão)</option>
                                             <option value="customer">Cliente (B2B)</option>
                                         </select>
