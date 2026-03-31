@@ -323,6 +323,18 @@ export const translations = {
         smsNotif: 'Receber SMS de alertas',
       },
     },
+    notifications: {
+      title: 'Notificações',
+      unread: 'Não lidas',
+      markAsRead: 'Marcar como lida',
+      markAllRead: 'Marcar todas como lidas',
+      viewAll: 'Ver tudo',
+      empty: 'Nenhuma notificação nova',
+      newQuote: 'Nova Cotação',
+      quoteUpdate: 'Atualização de Cotação',
+      orderUpdate: 'Atualização de Pedido',
+      message: 'Nova Mensagem',
+    },
   },
   EN: {
     nav: {
@@ -631,6 +643,18 @@ export const translations = {
         pushNotif: 'Browser push notifications',
         smsNotif: 'Receive SMS alerts',
       },
+    },
+    notifications: {
+      title: 'Notifications',
+      unread: 'Unread',
+      markAsRead: 'Mark as read',
+      markAllRead: 'Mark all as read',
+      viewAll: 'View all',
+      empty: 'No new notifications',
+      newQuote: 'New Quote',
+      quoteUpdate: 'Quote Update',
+      orderUpdate: 'Order Update',
+      message: 'New Message',
     },
   },
 } as const;

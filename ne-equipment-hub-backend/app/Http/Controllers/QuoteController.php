@@ -158,6 +158,17 @@ class QuoteController extends Controller
                         ]);
                     }
                 }
+
+                // Notificar o Cliente se o status mudou
+                if (isset($validated['status']) && $validated['status'] !== $oldStatus) {
+                    $quote->user->notify(new Notification([
+                        'type' => 'quote_status_updated',
+                        'title' => 'Atualização na sua Cotação',
+                        'message' => "O status da sua cotação #{$quote->quote_number} foi alterado para: " . strtoupper($quote->status),
+                        'quote_id' => $quote->id,
+                        'status' => $quote->status
+                    ]));
+                }
             });
 
             return response()->json([
@@ -249,6 +260,32 @@ class QuoteController extends Controller
             'is_admin' => $isAdmin
         ]);
 
+        // Notificar a outra parte
+        if ($isAdmin) {
+            // Admin mandou mensagem -> Notifica Cliente
+            $quote->user->notify(new Notification([
+                'type' => 'new_quote_message',
+                'title' => 'Nova Mensagem na Cotação',
+                'message' => "O gestor enviou uma nova mensagem na sua cotação #{$quote->quote_number}",
+                'quote_id' => $quote->id,
+                'user_name' => $user->name
+            ]));
+        } else {
+            // Cliente mandou mensagem -> Notifica Admins
+            $admins = User::where('role', 'admin')->get();
+            $notificationData = [
+                'type' => 'new_quote_message',
+                'title' => 'Nova Mensagem de Cliente',
+                'message' => "O cliente {$user->name} enviou uma mensagem na cotação #{$quote->quote_number}",
+                'quote_id' => $quote->id,
+                'user_name' => $user->name
+            ];
+
+            foreach ($admins as $admin) {
+                $admin->notify(new Notification($notificationData));
+            }
+        }
+
         return response()->json([
             'success' => true,
             'message' => $message->load('user:id,name')
@@ -280,6 +317,14 @@ class QuoteController extends Controller
                 'message' => 'A loja anexou uma Factura / Recibo para esta Negociação.',
                 'is_admin' => true
             ]);
+
+            // Notificar Cliente
+            $quote->user->notify(new Notification([
+                'type' => 'invoice_uploaded',
+                'title' => 'Factura / Recibo Disponível',
+                'message' => "Uma Factura / Recibo foi anexada à sua cotação #{$quote->quote_number}",
+                'quote_id' => $quote->id
+            ]));
 
             return response()->json([
                 'message' => 'Fatura anexada com sucesso!',

@@ -65,6 +65,15 @@ class OrderController extends Controller
             foreach ($admins as $admin) {
                 $admin->notify(new Notification($notificationData));
             }
+
+            // Notificar Cliente
+            $order->user->notify(new Notification([
+                'type' => 'order_status_updated',
+                'title' => 'Atualização no seu Pedido',
+                'message' => "O status do seu pedido #{$order->order_number} foi alterado para: " . strtoupper($order->status),
+                'order_id' => $order->id,
+                'status' => $order->status
+            ]));
         }
 
         return response()->json([

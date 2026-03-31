@@ -3,6 +3,7 @@ import {
   ChevronRight,
   Home, Package, FileText, MapPin, User, LogOut, ShoppingCart
 } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 import { useCart } from '@/hooks/useCart';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -17,11 +18,18 @@ interface CustomerDashboardProps {
 }
 
 const CustomerDashboard = ({ onBack, userName: propUserName = 'Utilizador' }: CustomerDashboardProps) => {
-  const [activeSection, setActiveSection] = useState('home');
+  const location = useLocation();
+  const [activeSection, setActiveSection] = useState(location.state?.section || 'home');
   const { items: cartItems } = useCart();
   const { user, logout } = useAuth();
 
   const userName = user?.name || propUserName;
+
+  useEffect(() => {
+    if (location.state?.section) {
+      setActiveSection(location.state.section);
+    }
+  }, [location.state]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });

@@ -19,8 +19,9 @@ import B2BCatalog from '@/pages/B2BCatalog';
 import Services from '@/pages/Services';
 import Contact from '@/pages/Contact';
 import CustomerDashboard from '@/pages/CustomerDashboard';
+import Notifications from '@/pages/Notifications';
 
-type PageType = 'home' | 'about' | 'b2b' | 'services' | 'contact' | 'dashboard';
+type PageType = 'home' | 'about' | 'b2b' | 'services' | 'contact' | 'dashboard' | 'notifications';
 
 const pageVariants = {
   initial: { opacity: 0, y: 20 },
@@ -41,6 +42,7 @@ const Index = () => {
     if (path === '/about') return 'about';
     if (path === '/services') return 'services';
     if (path === '/contact') return 'contact';
+    if (path === '/notifications') return 'notifications';
     return 'home';
   };
 
@@ -70,6 +72,7 @@ const Index = () => {
     else if (page === 'about') path = '/about';
     else if (page === 'services') path = '/services';
     else if (page === 'contact') path = '/contact';
+    else if (page === 'notifications') path = '/notifications';
 
     // Only navigate if path changes
     if (location.pathname !== path) {
@@ -143,6 +146,12 @@ const Index = () => {
         {currentPage === 'dashboard' && (
           <motion.main key="dashboard" variants={pageVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
             <CustomerDashboard onBack={() => handleNavigate('home')} />
+          </motion.main>
+        )}
+
+        {currentPage === 'notifications' && (
+          <motion.main key="notifications" variants={pageVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }} className="pt-24">
+            <Notifications />
           </motion.main>
         )}
       </AnimatePresence>

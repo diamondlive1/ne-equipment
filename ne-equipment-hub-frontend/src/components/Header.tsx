@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ShoppingCart, FileText, Menu, X, Trash2, Plus, Minus, Phone, Mail, LayoutDashboard, LogIn, UserCircle, LogOut } from 'lucide-react';
+import { NotificationBell } from '@/components/NotificationBell';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -18,7 +19,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useLanguage } from '@/i18n/LanguageContext';
 import logoNE from '@/assets/logo-ne-equipment.png';
 
-type PageType = 'home' | 'about' | 'b2b' | 'services' | 'contact' | 'dashboard';
+type PageType = 'home' | 'about' | 'b2b' | 'services' | 'contact' | 'dashboard' | 'notifications';
 
 interface HeaderProps {
   currentPage: PageType;
@@ -148,6 +149,8 @@ const Header = ({ currentPage, onNavigate, onQuoteClick }: HeaderProps) => {
                   <span>{language === 'PT' ? 'Entrar' : 'Login'}</span>
                 </button>
               )}
+
+              <NotificationBell />
 
               <Sheet open={cartOpen} onOpenChange={setCartOpen}>
                 <SheetTrigger asChild>
