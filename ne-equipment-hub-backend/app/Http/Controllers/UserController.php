@@ -16,9 +16,21 @@ class UserController extends Controller
     public function index()
     {
         try {
-            // Vamos carregar todos os administradores sem filtros de relação por agora
-            // para garantir que a lista aparece.
-            $users = User::where('role', 'admin')->with(['assignedCategory', 'categories'])->get();
+            $query = User::where('role', 'admin');
+            
+            $relations = [];
+            if (Schema::hasColumn('users', 'assigned_category_id')) {
+                $relations[] = 'assignedCategory';
+            }
+            if (Schema::hasTable('user_categories')) {
+                $relations[] = 'categories';
+            }
+            
+            if (!empty($relations)) {
+                $query->with($relations);
+            }
+            
+            $users = $query->get();
             return response()->json($users);
         } catch (\Exception $e) {
             \Log::error('Erro ao listar funcionários: ' . $e->getMessage());
@@ -82,9 +94,20 @@ class UserController extends Controller
                 }
             }
 
+            $relations = [];
+            if (Schema::hasColumn('users', 'assigned_category_id')) {
+                $relations[] = 'assignedCategory';
+            }
+            if (Schema::hasTable('user_categories')) {
+                $relations[] = 'categories';
+            }
+            if (!empty($relations)) {
+                $user->load($relations);
+            }
+
             return response()->json([
                 'message' => 'Utilizador criado com sucesso',
-                'user' => $user->load(['assignedCategory', 'categories'])
+                'user' => $user
             ], 201);
         } catch (\Exception $e) {
             \Log::error('Erro ao criar funcionário: ' . $e->getMessage());
@@ -143,9 +166,20 @@ class UserController extends Controller
                 $user->categories()->sync($request->category_ids ?? []);
             }
 
+            $relations = [];
+            if (Schema::hasColumn('users', 'assigned_category_id')) {
+                $relations[] = 'assignedCategory';
+            }
+            if (Schema::hasTable('user_categories')) {
+                $relations[] = 'categories';
+            }
+            if (!empty($relations)) {
+                $user->load($relations);
+            }
+
             return response()->json([
                 'message' => 'Utilizador atualizado com sucesso',
-                'user' => $user->load(['assignedCategory', 'categories'])
+                'user' => $user
             ]);
         } catch (\Exception $e) {
             \Log::error('Erro ao atualizar funcionário: ' . $e->getMessage());
