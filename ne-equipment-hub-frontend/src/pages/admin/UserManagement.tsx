@@ -141,7 +141,7 @@ const UserManagement = () => {
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
                     <h2 className="text-2xl font-bold tracking-tight">Minha Equipa</h2>
-                    <p className="text-muted-foreground">O Admin pode criar e gerir funcionários (operadores).</p>
+                    <p className="text-muted-foreground">Gestão completa de acessos e permissões para operadores e administradores.</p>
                 </div>
             </div>
 
