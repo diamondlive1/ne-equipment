@@ -76,10 +76,10 @@ const UserManagement = () => {
         try {
             if (memberFormData.id) {
                 await api.put(`/admin/users/${memberFormData.id}`, memberFormData);
-                toast.success('Funcionário atualizado com sucesso!');
+                toast.success('Colaborador atualizado com sucesso!');
             } else {
                 await api.post('/admin/users', memberFormData);
-                toast.success('Funcionário criado com sucesso!');
+                toast.success('Colaborador criado com sucesso!');
             }
             setIsMemberModalOpen(false);
             resetForm();
@@ -152,7 +152,7 @@ const UserManagement = () => {
                 <div className="relative w-full sm:w-72">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <Input 
-                        placeholder="Procurar funcionário..." 
+                        placeholder="Procurar colaborador..." 
                         className="pl-9 bg-card border-border/50 h-10 rounded-xl"
                         value={memberSearchTerm}
                         onChange={(e) => setMemberSearchTerm(e.target.value)}
@@ -160,7 +160,7 @@ const UserManagement = () => {
                 </div>
                 <Button onClick={() => { resetForm(); setIsMemberModalOpen(true); }} className="gap-2 bg-primary hover:bg-navy-dark rounded-xl h-11 px-6 shadow-lg shadow-primary/20 w-full sm:w-auto text-sm font-bold uppercase tracking-wider">
                     <Plus className="w-5 h-5" />
-                    Novo Funcionário
+                    Novo Colaborador
                 </Button>
             </div>
 
@@ -189,7 +189,7 @@ const UserManagement = () => {
                             ) : filteredUsers.length === 0 ? (
                                 <tr>
                                     <td colSpan={4} className="px-6 py-12 text-center text-muted-foreground">
-                                        Nenhum funcionário encontrado.
+                                        Nenhum colaborador encontrado.
                                     </td>
                                 </tr>
                             ) : (
@@ -218,7 +218,7 @@ const UserManagement = () => {
                                             >
                                                 {user.is_superadmin 
                                                     ? 'Super Admin' 
-                                                    : (user.categories?.length > 0 ? 'Funcionário' : 'Admin')}
+                                                    : (user.categories?.length > 0 ? 'Colaborador' : 'Admin')}
                                             </Badge>
                                         </td>
                                         <td className="px-6 py-4">
@@ -298,7 +298,7 @@ const UserManagement = () => {
                                             <UserPlus className="w-6 h-6 text-gold" />
                                         </div>
                                         <div>
-                                            <h3 className="font-bold text-2xl">{memberFormData.id ? 'Editar Funcionário' : 'Novo Funcionário'}</h3>
+                                            <h3 className="font-bold text-2xl">{memberFormData.id ? 'Editar Colaborador' : 'Novo Colaborador'}</h3>
                                             <p className="text-xs text-white/60 font-medium">Configure os dados de acesso administrativo.</p>
                                         </div>
                                     </div>
@@ -368,7 +368,7 @@ const UserManagement = () => {
                                             className="w-full h-12 bg-muted/20 border border-border/30 rounded-2xl px-4 text-sm focus:ring-primary/20 outline-none font-medium text-foreground"
                                         >
                                             <option value="admin">Administrador (Geral)</option>
-                                            <option value="worker">Funcionário (Operador)</option>
+                                            <option value="worker">Colaborador (Operador)</option>
                                         </select>
                                     </div>
                                     <div className="space-y-2">
@@ -423,7 +423,7 @@ const UserManagement = () => {
                                         })}
                                     </div>
                                     <p className="text-[10px] text-muted-foreground italic px-1">
-                                        * O funcionário será responsável por gerir orçamentos e pedidos das categorias selecionadas.
+                                        * O colaborador será responsável por gerir orçamentos e pedidos das categorias selecionadas.
                                     </p>
                                 </div>
 
@@ -438,7 +438,7 @@ const UserManagement = () => {
                                         ) : (
                                             <>
                                                 <Zap className="w-4 h-4 mr-2 text-gold animate-pulse" />
-                                                {memberFormData.id ? 'Salvar Alterações' : 'Criar Funcionário'}
+                                                {memberFormData.id ? 'Salvar Alterações' : 'Criar Colaborador'}
                                             </>
                                         )}
                                     </Button>
