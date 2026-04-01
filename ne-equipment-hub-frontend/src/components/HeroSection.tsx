@@ -118,14 +118,17 @@ const HeroSection = ({ onQuoteClick }: HeroSectionProps) => {
             </motion.div>
 
             <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="relative z-20 mt-12 lg:mt-0">
-              <div className="relative h-[300px] sm:h-[400px] lg:h-[450px]">
-                <AnimatePresence mode="wait">
+              <div className="relative h-[300px] sm:h-[400px] lg:h-[450px] overflow-hidden">
+                <AnimatePresence initial={false}>
                   <motion.div
                     key={currentIndex}
-                    initial={{ opacity: 0, scale: 0.95, y: 10 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 1.05, y: -10 }}
-                    transition={{ duration: 1, ease: "easeInOut" }}
+                    initial={{ x: "100%", opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    exit={{ x: "-100%", opacity: 0 }}
+                    transition={{ 
+                      x: { type: "tween", duration: 0.8, ease: [0.4, 0, 0.2, 1] },
+                      opacity: { duration: 0.4 }
+                    }}
                     className="absolute inset-0"
                   >
                     <Link 
