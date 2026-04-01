@@ -65,7 +65,10 @@ class UserController extends Controller
             $user = User::create($userData);
 
             if ($request->filled('category_ids') && method_exists($user, 'categories')) {
-                $user->categories()->sync($request->category_ids);
+                // Verificar se a tabela intermédia existe no Railway antes de sincronizar
+                if (Schema::hasTable('user_categories')) {
+                    $user->categories()->sync($request->category_ids);
+                }
             }
 
             return response()->json([

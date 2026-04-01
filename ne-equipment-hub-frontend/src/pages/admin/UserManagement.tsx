@@ -85,7 +85,10 @@ const UserManagement = () => {
             resetForm();
             fetchData();
         } catch (error: any) {
-            toast.error(error.response?.data?.message || 'Erro ao guardar membro');
+            const errorMsg = error.response?.data?.message || error.response?.data?.error || 'Erro ao guardar membro';
+            const details = error.response?.data?.errors ? Object.values(error.response.data.errors).flat().join(', ') : '';
+            toast.error(`${errorMsg}${details ? ': ' + details : ''}`);
+            console.error('Error in handleCreateOrUpdateMember:', error);
         } finally {
             setSubmittingMember(false);
         }
