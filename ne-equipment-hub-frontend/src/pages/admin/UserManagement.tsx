@@ -356,7 +356,7 @@ const UserManagement = () => {
                                     <div className="space-y-2">
                                         <label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest px-1">Papel / Acesso</label>
                                         <select 
-                                            value={memberFormData.category_ids.length > 0 ? 'worker' : 'admin'}
+                                            value={memberFormData.role === 'admin' && memberFormData.category_ids.length === 0 ? 'admin' : 'worker'}
                                             onChange={(e) => {
                                                 const val = e.target.value;
                                                 if (val === 'admin') {

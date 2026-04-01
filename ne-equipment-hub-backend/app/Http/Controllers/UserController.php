@@ -18,7 +18,7 @@ class UserController extends Controller
         try {
             // Vamos carregar todos os administradores sem filtros de relação por agora
             // para garantir que a lista aparece.
-            $users = User::where('role', 'admin')->get();
+            $users = User::where('role', 'admin')->with(['assignedCategory', 'categories'])->get();
             return response()->json($users);
         } catch (\Exception $e) {
             \Log::error('Erro ao listar funcionários: ' . $e->getMessage());
