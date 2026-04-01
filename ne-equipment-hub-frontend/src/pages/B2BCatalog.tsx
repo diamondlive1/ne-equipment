@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
-import { ChevronRight, Plus, Grid, List, Factory, Shield, Stethoscope, Droplets, Wheat, Monitor, Sofa, Waves, Tv, Dumbbell } from 'lucide-react';
+import { ChevronRight, Plus, Grid, List, Factory, Shield, Stethoscope, Droplets, Wheat, Monitor, Sofa, Waves, Tv, Dumbbell, Lock, LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -174,6 +174,31 @@ const B2BCatalog = () => {
                 <button onClick={() => setViewMode('list')} className={`p-2 ${viewMode === 'list' ? 'bg-navy-dark text-white' : 'bg-card'}`}><List className="w-4 h-4" /></button>
               </div>
             </div>
+
+            {!user && (
+              <motion.div 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-8 p-4 bg-navy-dark/5 border border-dashed border-navy-dark/20 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center shrink-0">
+                    <Lock className="w-5 h-5 text-gold" />
+                  </div>
+                  <p className="text-sm font-medium text-muted-foreground leading-relaxed">
+                    {t.catalog.b2bNotice}
+                  </p>
+                </div>
+                <Button 
+                  onClick={() => navigate('/login')} 
+                  size="sm" 
+                  className="bg-gold hover:bg-gold-light text-navy-dark font-bold rounded-xl whitespace-nowrap shadow-lg shadow-gold/20"
+                >
+                  <LogIn className="w-4 h-4 mr-2" />
+                  {language === 'PT' ? 'Entrar / Login' : 'Sign In'}
+                </Button>
+              </motion.div>
+            )}
 
             <div className={viewMode === 'grid' 
               ? "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4" 

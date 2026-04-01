@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { motion } from 'framer-motion';
-import { Star, ShieldCheck, Truck, Clock, Heart, Share2, Plus, Minus, Check, AlertCircle, Loader2, MapPin, X, Send } from 'lucide-react';
+import { Star, ShieldCheck, Truck, Clock, Heart, Share2, Plus, Minus, Check, AlertCircle, Loader2, MapPin, X, Send, Lock, LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -42,7 +42,7 @@ const ProductDetails = () => {
     const { openQuoteForm } = useQuote();
     const { user } = useAuth();
     const isAdmin = user?.role === 'admin';
-    const { language } = useLanguage(); // Need this if not already imported
+    const { t, language } = useLanguage();
 
     const [product, setProduct] = useState<Product | null>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -244,6 +244,23 @@ const ProductDetails = () => {
                             </div>
 
                             <div className="space-y-3">
+                                {!user && (
+                                    <div className="mb-4 p-4 bg-navy-dark/5 border border-dashed border-navy-dark/20 rounded-xl flex flex-col gap-3">
+                                        <p className="text-[11px] text-muted-foreground leading-relaxed flex items-start gap-2">
+                                            <Lock className="w-3.5 h-3.5 text-gold shrink-0 mt-0.5" />
+                                            {t.catalog.b2bNotice}
+                                        </p>
+                                        <Button 
+                                            onClick={() => navigate('/login')} 
+                                            variant="outline" 
+                                            size="sm" 
+                                            className="w-full gap-2 border-gold text-navy-dark hover:bg-gold hover:text-navy-dark font-bold rounded-xl h-9 text-xs"
+                                        >
+                                            <LogIn className="w-3.5 h-3.5" />
+                                            {language === 'PT' ? 'Entrar / Login' : 'Sign In'}
+                                        </Button>
+                                    </div>
+                                )}
                                 {!isAdmin ? (
                                     <>
                                         <Button className="w-full bg-navy-dark hover:bg-navy text-white font-bold h-12 rounded-xl text-base" onClick={() => handleAddToCart(true)}>

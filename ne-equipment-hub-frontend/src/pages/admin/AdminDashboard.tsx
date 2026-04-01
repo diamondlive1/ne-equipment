@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import api from '@/services/api';
+import logoNE from '@/assets/logo-ne-equipment.png';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -125,6 +126,30 @@ const AdminDashboard = ({ onAddProduct }: AdminDashboardProps) => {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-700">
+      {/* Branded Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-navy-dark p-6 rounded-2xl text-white relative overflow-hidden shadow-xl">
+        <div className="absolute -top-12 -right-12 w-64 h-64 bg-gold/10 rounded-full blur-3xl" />
+        <div className="absolute -bottom-12 -left-12 w-48 h-48 bg-white/5 rounded-full blur-2xl" />
+        
+        <div className="flex items-center gap-6 relative z-10">
+          <div className="p-3 bg-white rounded-2xl shadow-lg shrink-0">
+            <img src={logoNE} alt="NE Equipment" className="h-10 md:h-14 w-auto object-contain" />
+          </div>
+          <div>
+            <h1 className="text-xl md:text-2xl font-bold tracking-tight">Painel de Controlo</h1>
+            <p className="text-white/60 text-sm font-medium">Gestão Estratégica & Procurement Regional</p>
+          </div>
+        </div>
+        
+        <div className="flex items-center gap-4 relative z-10 bg-white/5 p-3 rounded-xl backdrop-blur-sm border border-white/10">
+          <div className="text-right">
+            <p className="text-[10px] uppercase font-bold text-gold tracking-widest">Sistema Ativo</p>
+            <p className="text-xs font-mono">{new Date().toLocaleDateString('pt-PT')}</p>
+          </div>
+          <div className="w-2 h-2 rounded-full bg-whatsapp animate-pulse" />
+        </div>
+      </div>
+
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {kpis.map((kpi: any, i: number) => {

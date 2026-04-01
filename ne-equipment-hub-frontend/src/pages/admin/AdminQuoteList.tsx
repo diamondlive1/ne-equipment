@@ -108,8 +108,8 @@ export default function AdminQuoteList({ onViewQuote }: AdminQuoteListProps) {
       </div>
 
       <div className="bg-card rounded-xl border border-border overflow-hidden">
-        <div className="overflow-x-auto overflow-y-auto max-h-[65vh]">
-          <table className="w-full text-sm text-left">
+        <div className="overflow-x-auto overflow-y-auto max-h-[65vh] [direction:rtl]">
+          <table className="w-full text-sm text-left [direction:ltr]">
             <thead className="text-xs text-muted-foreground bg-muted/50 uppercase border-b border-border sticky top-0 z-10">
               <tr>
                 <th className="px-6 py-4 font-medium bg-muted/50">Nº Cotação</th>

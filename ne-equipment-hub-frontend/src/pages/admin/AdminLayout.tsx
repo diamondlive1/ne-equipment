@@ -28,6 +28,7 @@ import CategoryManagement from './CategoryManagement';
 import UserManagement from './UserManagement';
 import AdminSettings from './AdminSettings';
 import api from '@/services/api';
+import logoNE from '@/assets/logo-ne-equipment.png';
 
 type AdminSection =
   | 'overview'
@@ -185,11 +186,16 @@ const AdminLayout = () => {
         )}
       >
         <div className="flex items-center gap-3 px-4 h-16 border-b border-sidebar-border shrink-0">
-          <div className="w-8 h-8 rounded-lg bg-sidebar-primary flex items-center justify-center text-sidebar-primary-foreground font-black text-xs">
-            NE
-          </div>
+          <img 
+            src={logoNE} 
+            alt="NE Equipment" 
+            className={cn(
+              "transition-all duration-300 object-contain",
+              collapsed ? "w-8 h-8" : "w-12 h-12"
+            )} 
+          />
           {!collapsed && (
-            <span className="font-bold text-sm tracking-wide whitespace-nowrap uppercase">
+            <span className="font-bold text-sm tracking-wide whitespace-nowrap uppercase text-white">
               Admin Panel
             </span>
           )}

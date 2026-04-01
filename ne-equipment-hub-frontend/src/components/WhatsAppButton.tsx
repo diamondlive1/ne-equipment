@@ -4,7 +4,7 @@ import { MessageCircle, X } from 'lucide-react';
 import { useLanguage } from '@/i18n/LanguageContext';
 
 const offices = [
-  { name: 'Moçambique', flag: '🇲🇿', numbers: ['+258 84 311 4354', '+258 87 319 71 52', '+258 87 257 4001'] },
+  { name: 'Moçambique', flag: '🇲🇿', numbers: ['+258 84 311 4354', '+258 87 319 71 52'] },
   { name: 'South Africa', flag: '🇿🇦', numbers: ['+27 (63) 123 34 07', '+27 (78) 951-5256'] },
 ];
 

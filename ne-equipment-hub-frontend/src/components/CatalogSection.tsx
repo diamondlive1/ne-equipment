@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { Lock, ArrowRight, Loader2 } from 'lucide-react';
+import { Lock, ArrowRight, Loader2, LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/i18n/LanguageContext';
+import { useAuth } from '@/contexts/AuthContext';
 import api from '@/services/api';
 
 interface CatalogSectionProps {
@@ -12,7 +13,8 @@ interface CatalogSectionProps {
 const CatalogSection = ({ onNavigateB2B }: CatalogSectionProps) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const { user } = useAuth();
 
   const [categories, setCategories] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -68,12 +70,31 @@ const CatalogSection = ({ onNavigateB2B }: CatalogSectionProps) => {
         </motion.div>
 
         <div className="max-w-6xl mx-auto">
-          <div className="mb-8 p-4 glass-card bg-navy-dark/5">
-            <p className="text-center text-sm text-muted-foreground">
-              <Lock className="w-4 h-4 inline mr-2" />
-              {t.catalog.b2bNotice}
-            </p>
-          </div>
+          {!user && (
+            <div className="mb-8 p-4 glass-card bg-navy-dark/5 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <p className="text-center text-sm text-muted-foreground">
+                <Lock className="w-4 h-4 inline mr-2" />
+                {t.catalog.b2bNotice}
+              </p>
+              <Button 
+                onClick={() => window.location.href = '/login'} 
+                variant="outline" 
+                size="sm" 
+                className="gap-2 border-gold text-navy-dark hover:bg-gold hover:text-navy-dark font-bold rounded-xl"
+              >
+                <LogIn className="w-4 h-4" />
+                {language === 'PT' ? 'Entrar' : 'Login'}
+              </Button>
+            </div>
+          )}
+          {user && (
+            <div className="mb-8 p-4 glass-card bg-navy-dark/5">
+              <p className="text-center text-sm text-muted-foreground">
+                <Lock className="w-4 h-4 inline mr-2" />
+                {t.catalog.b2bNotice}
+              </p>
+            </div>
+          )}
           {isLoading ? (
             <div className="flex justify-center items-center py-20">
               <Loader2 className="w-8 h-8 animate-spin text-gold" />
