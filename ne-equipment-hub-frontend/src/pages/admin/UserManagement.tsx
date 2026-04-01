@@ -46,7 +46,8 @@ const UserManagement = () => {
         role: 'admin',
         is_superadmin: false,
         password: '',
-        category_ids: [] as string[]
+        category_ids: [] as string[],
+        _workerMode: false
     });
 
     useEffect(() => {
@@ -114,11 +115,16 @@ const UserManagement = () => {
             role: 'admin', 
             is_superadmin: false, 
             password: '', 
-            category_ids: []
+            category_ids: [],
+            _workerMode: false
         });
     };
 
     const openEditModal = (user: any) => {
+        const catIds = Array.isArray(user.categories) 
+            ? user.categories.map((c: any) => String(c.id))
+            : (user.assigned_category_id ? [String(user.assigned_category_id)] : []);
+            
         setMemberFormData({
             id: user.id,
             name: user.name || '',
@@ -127,9 +133,8 @@ const UserManagement = () => {
             role: user.role || 'admin',
             is_superadmin: !!user.is_superadmin,
             password: '',
-            category_ids: Array.isArray(user.categories) 
-                ? user.categories.map((c: any) => String(c.id))
-                : (user.assigned_category_id ? [String(user.assigned_category_id)] : [])
+            category_ids: catIds,
+            _workerMode: catIds.length > 0
         });
         setIsMemberModalOpen(true);
     };
@@ -356,13 +361,13 @@ const UserManagement = () => {
                                     <div className="space-y-2">
                                         <label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest px-1">Papel / Acesso</label>
                                         <select 
-                                            value={memberFormData.role === 'admin' && memberFormData.category_ids.length === 0 ? 'admin' : 'worker'}
+                                            value={memberFormData._workerMode ? 'worker' : 'admin'}
                                             onChange={(e) => {
                                                 const val = e.target.value;
                                                 if (val === 'admin') {
-                                                    setMemberFormData({...memberFormData, role: 'admin', is_superadmin: false, category_ids: []});
+                                                    setMemberFormData({...memberFormData, role: 'admin', is_superadmin: false, category_ids: [], _workerMode: false});
                                                 } else {
-                                                    setMemberFormData({...memberFormData, role: 'admin', is_superadmin: false});
+                                                    setMemberFormData({...memberFormData, role: 'admin', is_superadmin: false, _workerMode: true});
                                                 }
                                             }}
                                             className="w-full h-12 bg-muted/20 border border-border/30 rounded-2xl px-4 text-sm focus:ring-primary/20 outline-none font-medium text-foreground"
