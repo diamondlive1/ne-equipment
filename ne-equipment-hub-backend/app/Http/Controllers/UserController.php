@@ -24,9 +24,9 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        // Administradores podem adicionar novos membros à equipa.
+        // Administradores têm permissão para adicionar novos membros à equipa.
         if (!$request->user() || $request->user()->role !== 'admin') {
-            return response()->json(['message' => 'Apenas administradores podem adicionar novos membros à equipa.'], 403);
+            return response()->json(['message' => 'Apenas utilizadores com privilégios de administrador podem adicionar membros.'], 403);
         }
 
         $request->validate([
@@ -68,7 +68,7 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         if (!$request->user() || $request->user()->role !== 'admin') {
-            return response()->json(['message' => 'Apenas administradores podem editar membros da equipa.'], 403);
+            return response()->json(['message' => 'Apenas utilizadores com privilégios de administrador podem editar membros.'], 403);
         }
 
         $user = User::findOrFail($id);
@@ -113,7 +113,7 @@ class UserController extends Controller
     public function destroy(Request $request, $id)
     {
         if (!$request->user() || $request->user()->role !== 'admin') {
-            return response()->json(['message' => 'Apenas administradores podem remover membros da equipa.'], 403);
+            return response()->json(['message' => 'Apenas utilizadores com privilégios de administrador podem remover membros.'], 403);
         }
 
         $user = User::findOrFail($id);
