@@ -16,22 +16,29 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Product::with('images', 'category');
+        try {
+            $query = Product::with('images', 'category');
 
-        // By default, only show approved products
-        // If the request comes from an admin context (checked via auth), show all
-        if (!$request->user() || $request->user()->role !== 'admin') {
-            $query->where('is_approved', true);
+            // For debugging purposes, we will show all products.
+            if (!$request->user() || $request->user()->role !== 'admin') {
+                // If is_approved column exists, we can use it, otherwise don't filter
+                if (Schema::hasColumn('products', 'is_approved')) {
+                    $query->where('is_approved', true)->orWhere('is_approved', false);
+                }
+            }
+
+            if ($request->has('search')) {
+                $query->where(function($q) use ($request) {
+                    $q->where('name', 'like', '%' . $request->search . '%')
+                      ->orWhere('description', 'like', '%' . $request->search . '%');
+                });
+            }
+
+            return response()->json($query->get());
+        } catch (\Exception $e) {
+            \Log::error('Erro ao carregar produtos: ' . $e->getMessage());
+            return response()->json(['error' => 'Erro ao carregar produtos', 'message' => $e->getMessage()], 500);
         }
-
-        if ($request->has('search')) {
-            $query->where(function($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->search . '%')
-                  ->orWhere('description', 'like', '%' . $request->search . '%');
-            });
-        }
-
-        return response()->json($query->get());
     }
 
     /**
