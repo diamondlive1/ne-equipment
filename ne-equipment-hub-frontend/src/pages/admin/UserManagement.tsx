@@ -357,9 +357,9 @@ const UserManagement = () => {
                                             onChange={(e) => {
                                                 const val = e.target.value;
                                                 if (val === 'admin') {
-                                                    setMemberFormData({...memberFormData, is_superadmin: false, category_ids: []});
+                                                    setMemberFormData({...memberFormData, role: 'admin', is_superadmin: false, category_ids: []});
                                                 } else {
-                                                    setMemberFormData({...memberFormData, is_superadmin: false});
+                                                    setMemberFormData({...memberFormData, role: 'admin', is_superadmin: false});
                                                 }
                                             }}
                                             className="w-full h-12 bg-muted/20 border border-border/30 rounded-2xl px-4 text-sm focus:ring-primary/20 outline-none font-medium text-foreground"
