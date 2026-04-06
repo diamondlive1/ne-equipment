@@ -9,7 +9,7 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function __PIK3_up(): void
+    public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
             $table->boolean('is_superadmin')->default(false)->after('role');
