@@ -35,13 +35,18 @@ class DatabaseSeeder extends Seeder
                 'name' => 'John Customer',
                 'password' => Hash::make('password'),
                 'role' => 'customer',
+                'is_superadmin' => false,
                 'phone' => '+258 84 123 4567',
             ]
         );
 
+        $this->command->info('✓ Users seeded successfully.');
+
         // 2. Create Categories
-        $catEpi = Category::create(['name' => "EPI'S", 'slug' => 'epi']);
-        $catHospital = Category::create(['name' => 'Hospitalar', 'slug' => 'hospital']);
+        $catEpi = Category::updateOrCreate(['slug' => 'epi'], ['name' => "EPI'S"]);
+        $catHospital = Category::updateOrCreate(['slug' => 'hospital'], ['name' => 'Hospitalar']);
+
+        $this->command->info('✓ Categories seeded successfully.');
 
         // 3. Create Products
 
@@ -73,5 +78,6 @@ class DatabaseSeeder extends Seeder
         ]);
         ProductImage::create(['product_id' => $prod3->id, 'image_path' => 'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=800&h=600&fit=crop', 'is_primary' => true]);
 
+        $this->command->info('✓ Products seeded successfully.');
     }
 }
